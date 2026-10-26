@@ -1,0 +1,1061 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+</head>
+<body>
+<title>FBS Serve</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Layout: sticky top bar, left module rail on desktop (scroll strip on phone), content column max 1200px. Tokens from the Savora design system. */
+:root{
+  --surface-page:#FAF7F2;--surface-card:#FFFFFF;--surface-sunken:#F0EBE1;
+  --ink:#1B1B18;--ink-muted:#5A564E;--border-control:#8A8479;--hairline:#E3DDD2;
+  --brand:#B8321A;--brand-hover:#962612;--brand-active:#7A1E0E;--on-brand:#FFFFFF;--brand-tint:#FBE6E0;
+  --secondary:#1F5D3A;--secondary-hover:#17482D;--secondary-active:#103520;--on-secondary:#FFFFFF;
+  --accent:#F4C95D;--on-accent:#1B1B18;
+  --disabled-bg:#E6E1D8;--disabled-ink:#5F5A51;--focus:#1B4FD8;
+  --success:#1F6B3F;--success-tint:#DDF0E4;--warning:#7A4E00;--warning-tint:#FFF0CC;--error:#A31621;--error-tint:#FBE3E4;
+  --info:#1B4FD8;--info-tint:#E3EAFB;
+  --shadow-card:0 1px 2px rgba(27,27,24,.08),0 4px 12px rgba(27,27,24,.06);
+  --shadow-lift:0 2px 4px rgba(27,27,24,.10),0 10px 24px rgba(27,27,24,.12);
+  --font:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --r-sm:8px;--r-md:12px;--r-lg:20px;--r-pill:999px;--tap:48px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --surface-page:#16130F;--surface-card:#211D18;--surface-sunken:#0F0D0A;
+  --ink:#F6F1E8;--ink-muted:#BDB6A9;--border-control:#8F8777;--hairline:#3A342C;
+  --brand:#FF7A5C;--brand-hover:#FF9279;--brand-active:#FFB09D;--on-brand:#16130F;--brand-tint:#3A1D16;
+  --secondary:#7FD4A0;--secondary-hover:#9BE0B5;--secondary-active:#B7EACA;--on-secondary:#10200F;
+  --disabled-bg:#2B2620;--disabled-ink:#A39C8E;--focus:#8FB0FF;
+  --success:#6FD59A;--success-tint:#12261B;--warning:#F2C14E;--warning-tint:#2E2410;--error:#FF8A8F;--error-tint:#341517;
+  --info:#8FB0FF;--info-tint:#18213A;
+  --shadow-card:0 1px 2px rgba(0,0,0,.5),0 4px 12px rgba(0,0,0,.35);
+  --shadow-lift:0 2px 4px rgba(0,0,0,.6),0 10px 24px rgba(0,0,0,.5);
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --surface-page:#16130F;--surface-card:#211D18;--surface-sunken:#0F0D0A;
+  --ink:#F6F1E8;--ink-muted:#BDB6A9;--border-control:#8F8777;--hairline:#3A342C;
+  --brand:#FF7A5C;--brand-hover:#FF9279;--brand-active:#FFB09D;--on-brand:#16130F;--brand-tint:#3A1D16;
+  --secondary:#7FD4A0;--secondary-hover:#9BE0B5;--secondary-active:#B7EACA;--on-secondary:#10200F;
+  --disabled-bg:#2B2620;--disabled-ink:#A39C8E;--focus:#8FB0FF;
+  --success:#6FD59A;--success-tint:#12261B;--warning:#F2C14E;--warning-tint:#2E2410;--error:#FF8A8F;--error-tint:#341517;
+  --info:#8FB0FF;--info-tint:#18213A;
+  --shadow-card:0 1px 2px rgba(0,0,0,.5),0 4px 12px rgba(0,0,0,.35);
+  --shadow-lift:0 2px 4px rgba(0,0,0,.6),0 10px 24px rgba(0,0,0,.5);
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--surface-page);color:var(--ink);font:400 16px/26px var(--font)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface-card)}
+h1,h2,h3,h4,p{margin:0}
+h1{font-size:36px;line-height:44px;text-wrap:balance}
+h2{font-size:28px;line-height:36px;text-wrap:balance}
+h3{font-size:22px;line-height:30px}
+.num{font-variant-numeric:tabular-nums}
+.muted{color:var(--ink-muted)}
+.caption{font-size:14px;line-height:20px}
+.label{font-size:14px;line-height:20px;font-weight:700}
+.ic{flex:none}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+
+/* Top bar */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface-card);border-bottom:1px solid var(--hairline)}
+.top-in{display:flex;align-items:center;gap:16px;min-height:64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:8px;font-weight:700;font-size:22px;color:var(--brand)}
+.brand small{font-size:14px;color:var(--ink-muted);font-weight:400}
+.spacer{flex:1}
+.seg{display:inline-flex;background:var(--surface-sunken);border-radius:var(--r-pill);padding:4px;gap:4px}
+.seg button{min-height:40px;border:0;background:none;border-radius:var(--r-pill);padding:0 16px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;color:var(--ink-muted)}
+.seg button:hover{color:var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--surface-card);color:var(--ink);box-shadow:var(--shadow-card)}
+
+/* Shell */
+.shell{display:grid;grid-template-columns:232px minmax(0,1fr);min-height:calc(100% - 65px)}
+.rail{border-right:1px solid var(--hairline);background:var(--surface-card);padding:16px 12px;display:flex;flex-direction:column;gap:4px}
+.nav{display:flex;align-items:center;gap:12px;min-height:var(--tap);padding:0 12px;border-radius:var(--r-md);border:0;background:none;cursor:pointer;font-weight:700;color:var(--ink-muted);text-align:left;width:100%;transition:background .15s}
+.nav:hover{background:var(--brand-tint);color:var(--ink)}
+.nav[aria-current="page"]{background:var(--brand-tint);color:var(--brand)}
+.nav .badge{margin-left:auto}
+.badge{min-width:24px;height:24px;padding:0 8px;border-radius:var(--r-pill);background:var(--brand);color:var(--on-brand);font-size:14px;line-height:24px;font-weight:700;text-align:center}
+.badge.soft{background:var(--surface-sunken);color:var(--ink)}
+.main{min-width:0;padding-block:24px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:24px}
+.page-head{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.page-head > div{flex:1;min-width:240px}
+.page-head p{margin-top:4px}
+@media (max-width:860px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  .rail{flex-direction:row;overflow-x:auto;border-right:0;border-bottom:1px solid var(--hairline);padding:8px max(16px,env(safe-area-inset-left,0px));position:sticky;top:calc(env(safe-area-inset-top,0px) + 65px);z-index:15}
+  .nav{width:auto;flex:none}
+  h1{font-size:28px;line-height:36px}
+}
+
+/* Alert banner */
+.alert{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:var(--r-md);flex-wrap:wrap}
+.alert p{flex:1;min-width:200px}
+.alert.brand{background:var(--brand-tint);color:var(--ink)}
+.alert.brand .ic{color:var(--brand)}
+.alert.info{background:var(--info-tint)}
+.alert.warn{background:var(--warning-tint)}
+.alert.warn .ic{color:var(--warning)}
+.alert.ok{background:var(--success-tint)}
+.alert.ok .ic{color:var(--success)}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:var(--tap);padding:0 20px;border-radius:var(--r-md);border:1.5px solid transparent;font-weight:700;font-size:16px;line-height:24px;cursor:pointer;transition:background .15s,transform .08s;text-decoration:none;white-space:nowrap}
+.btn:active:not(:disabled){transform:translateY(1px) scale(.98)}
+.btn-primary{background:var(--brand);color:var(--on-brand)}
+.btn-primary:hover{background:var(--brand-hover)}
+.btn-primary:active{background:var(--brand-active)}
+.btn-secondary{background:var(--secondary);color:var(--on-secondary)}
+.btn-secondary:hover{background:var(--secondary-hover)}
+.btn-secondary:active{background:var(--secondary-active)}
+.btn-outline{background:var(--surface-card);border-color:var(--border-control);color:var(--ink)}
+.btn-outline:hover{background:var(--brand-tint)}
+.btn-ghost{background:none;color:var(--ink)}
+.btn-ghost:hover{background:var(--brand-tint)}
+.btn-danger{background:var(--error);color:var(--on-brand)}
+.btn:disabled{background:var(--disabled-bg);color:var(--disabled-ink);border-color:transparent;cursor:not-allowed}
+.btn.block{width:100%}
+.icon-btn{width:var(--tap);height:var(--tap);display:inline-grid;place-items:center;border-radius:var(--r-md);border:0;background:none;cursor:pointer;color:var(--ink)}
+.icon-btn:hover{background:var(--brand-tint)}
+.icon-btn.danger{color:var(--error)}
+@media (prefers-reduced-motion:reduce){.btn:active:not(:disabled){transform:none}*{animation:none!important;transition:none!important}}
+
+/* Cards, pills, chips */
+.card{background:var(--surface-card);border-radius:var(--r-lg);box-shadow:var(--shadow-card);padding:24px;min-width:0}
+.card-head{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.card-head h3{flex:1}
+.pill{display:inline-flex;align-items:center;gap:4px;padding:2px 10px 2px 8px;border-radius:var(--r-pill);font-size:14px;line-height:20px;font-weight:700;white-space:nowrap}
+.pill .ic{width:16px;height:16px}
+.p-neutral{background:var(--surface-sunken);color:var(--ink)}
+.p-info{background:var(--info-tint);color:var(--info)}
+.p-warn{background:var(--warning-tint);color:var(--warning)}
+.p-ok{background:var(--success-tint);color:var(--success)}
+.p-brand{background:var(--brand-tint);color:var(--brand)}
+.p-accent{background:var(--accent);color:var(--on-accent)}
+.p-error{background:var(--error-tint);color:var(--error)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{min-height:40px;padding:0 16px;border-radius:var(--r-pill);border:1.5px solid var(--border-control);background:var(--surface-card);font-weight:700;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.chip:hover{background:var(--brand-tint)}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--surface-card)}
+.tag{display:inline-block;padding:0 8px;border-radius:var(--r-sm);font-size:14px;line-height:22px;font-weight:700}
+.tag-new{background:var(--info-tint);color:var(--info)}
+.tag-must{background:var(--success-tint);color:var(--success)}
+.tag-best{background:var(--accent);color:var(--on-accent)}
+
+/* Dashboard */
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.tile{display:flex;flex-direction:column;gap:4px}
+.tile .val{font-size:32px;line-height:40px;font-weight:700}
+.tile .ic{color:var(--brand)}
+@media (max-width:1000px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.two{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:16px}
+@media (max-width:900px){.two{grid-template-columns:minmax(0,1fr)}}
+.bars{display:flex;flex-direction:column;gap:12px;list-style:none;margin:0;padding:0}
+.bar-row{display:grid;grid-template-columns:24px minmax(0,1fr) auto;gap:4px 12px;align-items:center}
+.bar-row .rank{font-weight:700;color:var(--ink-muted)}
+.bar-track{grid-column:2/4;height:10px;border-radius:var(--r-pill);background:var(--surface-sunken);overflow:hidden}
+.bar-fill{height:100%;border-radius:var(--r-pill);background:var(--brand)}
+.rows{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.rows li{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--hairline)}
+.rows li:first-child{border-top:0}
+.rows .grow{flex:1;min-width:0}
+.statgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.stat{background:var(--surface-sunken);border-radius:var(--r-md);padding:12px;display:flex;flex-direction:column;gap:4px}
+.stat b{font-size:24px;line-height:30px}
+@media (max-width:480px){.statgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Data table */
+.tbl-scroll{overflow-x:auto;border-radius:var(--r-lg);background:var(--surface-card);box-shadow:var(--shadow-card)}
+table.data{width:100%;border-collapse:collapse;min-width:720px}
+.data th{text-align:left;font-size:14px;line-height:20px;font-weight:700;color:var(--ink-muted);padding:12px 16px;border-bottom:1px solid var(--hairline);background:var(--surface-card);white-space:nowrap}
+.data td{padding:12px 16px;border-bottom:1px solid var(--hairline);vertical-align:middle}
+.data tr:last-child td{border-bottom:0}
+.data tbody tr.click{cursor:pointer}
+.data tbody tr.click:hover{background:var(--brand-tint)}
+.data .r{text-align:right}
+.link{background:none;border:0;padding:0;font-weight:700;color:var(--brand);cursor:pointer;text-decoration:underline;text-underline-offset:3px;min-height:32px}
+.toolbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.search{position:relative;flex:1;min-width:220px;max-width:360px}
+.search .ic{position:absolute;left:12px;top:12px;color:var(--ink-muted)}
+.search input{padding-left:44px}
+.empty{padding:48px 16px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--ink-muted)}
+
+/* Forms */
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field > span:first-child{font-size:14px;line-height:20px;font-weight:700}
+.input,select.input,textarea.input{min-height:var(--tap);padding:10px 12px;border:1.5px solid var(--border-control);border-radius:var(--r-sm);background:var(--surface-card);width:100%}
+textarea.input{min-height:96px;resize:vertical}
+.hint{font-size:14px;line-height:20px;color:var(--ink-muted)}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.form-grid .full{grid-column:1/-1}
+@media (max-width:560px){.form-grid{grid-template-columns:minmax(0,1fr)}}
+.check{display:flex;align-items:center;gap:12px;min-height:var(--tap);cursor:pointer}
+.check input{width:22px;height:22px;accent-color:var(--brand)}
+.checks{display:flex;flex-wrap:wrap;gap:0 20px}
+.radio-card{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1.5px solid var(--border-control);border-radius:var(--r-md);cursor:pointer;min-height:56px}
+.radio-card:has(input:checked){border-color:var(--brand);background:var(--brand-tint)}
+.radio-card input{width:20px;height:20px;accent-color:var(--brand)}
+.radio-card .grow{flex:1}
+
+/* Dialog */
+dialog{border:0;padding:0;border-radius:var(--r-lg);background:var(--surface-card);color:var(--ink);box-shadow:var(--shadow-lift);width:min(560px,calc(100% - 32px));max-height:calc(100% - 48px)}
+dialog::backdrop{background:rgba(22,19,15,.55)}
+.m-head{display:flex;align-items:center;gap:12px;padding:16px 16px 0 24px}
+.m-head h2{flex:1;font-size:22px;line-height:30px}
+.m-body{padding:16px 24px;display:flex;flex-direction:column;gap:16px}
+.m-foot{display:flex;justify-content:flex-end;gap:8px;padding:0 24px 24px;flex-wrap:wrap}
+.qr{width:220px;height:220px;display:block;margin:0 auto;border-radius:var(--r-md)}
+.qr-box{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;padding:16px;background:var(--surface-sunken);border-radius:var(--r-lg)}
+.sum{display:flex;flex-direction:column;gap:6px}
+.sum div{display:flex;justify-content:space-between;gap:12px}
+.sum .total{border-top:1px solid var(--hairline);padding-top:8px;font-weight:700;font-size:20px;line-height:28px}
+
+/* Toast */
+#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--surface-card);padding:12px 20px;border-radius:var(--r-md);font-weight:700;box-shadow:var(--shadow-lift);z-index:50;display:flex;gap:8px;align-items:center;max-width:calc(100% - 32px)}
+
+/* Kitchen kanban */
+.kanban{display:grid;grid-template-columns:repeat(5,minmax(240px,1fr));gap:16px;overflow-x:auto;padding-bottom:8px;align-items:start}
+.col{background:var(--surface-sunken);border-radius:var(--r-lg);padding:12px;display:flex;flex-direction:column;gap:12px;min-height:240px}
+.col-head{display:flex;align-items:center;gap:8px;padding:4px 4px 0}
+.col-head h3{font-size:18px;line-height:28px;flex:1}
+.kcard{background:var(--surface-card);border-radius:var(--r-md);box-shadow:var(--shadow-card);padding:16px;display:flex;flex-direction:column;gap:12px}
+.kcard-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.kcard ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.kcard li{display:flex;gap:8px}
+.kcard li b{min-width:28px}
+.late{color:var(--error)}
+.col-empty{color:var(--ink-muted);text-align:center;padding:24px 8px;font-size:14px}
+
+/* Foods */
+.food-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media (max-width:1023px){.food-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:639px){.food-grid{grid-template-columns:minmax(0,1fr)}}
+.fcard{background:var(--surface-card);border-radius:var(--r-lg);box-shadow:var(--shadow-card);overflow:hidden;display:flex;flex-direction:column;transition:box-shadow .2s}
+.fcard:hover{box-shadow:var(--shadow-lift)}
+.fimg{aspect-ratio:16/10;max-width:100%;position:relative}
+.fimg img{width:100%;height:100%;object-fit:cover;display:block}
+.ph{width:100%;height:100%;display:grid;place-items:center}
+.cat-0{background:var(--brand-tint);color:var(--brand)}
+.cat-1{background:var(--success-tint);color:var(--success)}
+.cat-2{background:var(--info-tint);color:var(--info)}
+.cat-3{background:var(--warning-tint);color:var(--warning)}
+.cat-4{background:var(--surface-sunken);color:var(--ink-muted)}
+.fimg .pill{position:absolute;top:12px;left:12px}
+.fbody{padding:16px;display:flex;flex-direction:column;gap:8px;flex:1}
+.fbody .row{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.price{font-size:20px;line-height:28px;font-weight:700}
+.factions{display:flex;gap:8px;padding:0 16px 16px;margin-top:auto}
+.factions .btn{flex:1}
+.thumb{width:56px;height:40px;border-radius:var(--r-sm);overflow:hidden;flex:none}
+.thumb img{width:100%;height:100%;object-fit:cover}
+.unavail{opacity:.72}
+
+/* Settings tabs */
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--hairline);overflow-x:auto}
+.tab{min-height:var(--tap);padding:0 16px;border:0;background:none;font-weight:700;color:var(--ink-muted);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected="true"]{color:var(--brand);border-bottom-color:var(--brand)}
+
+/* Guide */
+.guide-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media (max-width:1023px){.guide-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:639px){.guide-grid{grid-template-columns:minmax(0,1fr)}}
+.gcard{display:flex;flex-direction:column;gap:12px}
+.gcard .gi{width:48px;height:48px;border-radius:var(--r-md);display:grid;place-items:center;background:var(--brand-tint);color:var(--brand)}
+.gcard ol{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px}
+.gcard .btn{margin-top:auto;align-self:flex-start}
+.flow{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;list-style:none;margin:0;padding:0}
+.flow li{background:var(--surface-sunken);border-radius:var(--r-md);padding:12px;display:flex;flex-direction:column;gap:4px}
+.flow .n{width:28px;height:28px;border-radius:var(--r-pill);background:var(--brand);color:var(--on-brand);display:grid;place-items:center;font-weight:700;font-size:14px}
+@media (max-width:1000px){.flow{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Tables floor plan */
+.legend{display:flex;gap:8px;flex-wrap:wrap}
+.floor-scroll{overflow-x:auto;border-radius:var(--r-lg);background:var(--surface-card);box-shadow:var(--shadow-card);padding:16px}
+.floor{position:relative;min-width:900px;aspect-ratio:16/9.6;border-radius:var(--r-md);
+  background-color:var(--surface-sunken);
+  background-image:linear-gradient(var(--hairline) 1px,transparent 1px),linear-gradient(90deg,var(--hairline) 1px,transparent 1px);
+  background-size:40px 40px}
+.zone{position:absolute;display:grid;place-items:center;border:1.5px dashed var(--border-control);border-radius:var(--r-md);color:var(--ink-muted);font-size:14px;font-weight:700;background:var(--surface-card);text-align:center;padding:4px}
+.window{position:absolute;left:0;top:10%;bottom:10%;width:6px;background:var(--info);opacity:.5;border-radius:0 4px 4px 0}
+.window-l{position:absolute;left:12px;top:50%;transform:rotate(-90deg) translateX(50%);transform-origin:left top;font-size:14px;color:var(--ink-muted);font-weight:700}
+.door{position:absolute;bottom:0;left:38%;width:12%;height:8px;background:var(--surface-card);border:1.5px solid var(--border-control);border-bottom:0;border-radius:4px 4px 0 0}
+.door-l{position:absolute;bottom:12px;left:38%;width:12%;text-align:center;font-size:14px;color:var(--ink-muted);font-weight:700}
+.tw{position:absolute;transform:translate(-50%,-50%);display:grid;grid-template-columns:auto auto auto;grid-template-rows:auto auto auto;align-items:center;justify-items:center;gap:4px}
+.tw.open{z-index:5}
+.chairs{display:flex;gap:10px}
+.chair{width:22px;height:10px;border-radius:6px;background:var(--border-control);opacity:.55}
+.chair.v{width:10px;height:22px}
+.tbl{grid-column:2;grid-row:2;border:2px solid var(--border-control);background:var(--surface-card);border-radius:var(--r-md);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:6px 8px;box-shadow:var(--shadow-card);transition:box-shadow .2s}
+.tbl:hover{box-shadow:var(--shadow-lift)}
+.tbl.s2{width:84px;height:84px;border-radius:50%}
+.tbl.s4{width:104px;height:92px}
+.tbl.s6{width:164px;height:92px}
+.tbl b{font-size:18px;line-height:22px;display:flex;align-items:center;gap:4px}
+.tbl .st{font-size:14px;line-height:18px;font-weight:700;display:flex;align-items:center;gap:4px}
+.tbl .st .ic{width:16px;height:16px}
+.tbl.t-inactive{border-style:dashed;background:var(--surface-card);color:var(--ink-muted)}
+.tbl.t-active{border-color:var(--info);background:var(--info-tint)}
+.tbl.t-active .st{color:var(--info)}
+.tbl.t-ordering{border-color:var(--warning);background:var(--warning-tint)}
+.tbl.t-ordering .st{color:var(--warning)}
+.tbl.t-eating{border-color:var(--success);background:var(--success-tint)}
+.tbl.t-eating .st{color:var(--success)}
+.tbl.t-billout{border-color:var(--brand);background:var(--brand-tint);animation:ring 1.6s ease-out infinite}
+.tbl.t-billout .st{color:var(--brand)}
+.tbl.t-cleaning{border-color:var(--on-accent);background:var(--accent);color:var(--on-accent)}
+@keyframes ring{0%{box-shadow:0 0 0 0 var(--brand)}100%{box-shadow:0 0 0 14px transparent}}
+.pop{position:absolute;width:320px;background:var(--surface-card);border-radius:var(--r-lg);box-shadow:var(--shadow-lift);padding:16px;display:flex;flex-direction:column;gap:12px;z-index:6;text-align:left;cursor:default}
+.pop.dn{top:calc(100% + 8px)}
+.pop.up{bottom:calc(100% + 8px)}
+.pop.al{left:0}
+.pop.ar{right:0}
+.pop-head{display:flex;align-items:center;gap:8px}
+.pop-head h3{flex:1;font-size:20px;line-height:28px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:14px;line-height:20px}
+.kv dt{color:var(--ink-muted)}
+.kv dd{margin:0;font-weight:700}
+.items{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;font-size:15px}
+.items li{display:flex;gap:8px}
+.items li span:nth-child(2){flex:1}
+.pop-actions{display:flex;gap:8px;flex-wrap:wrap}
+.pop-actions .btn{flex:1}
+.tlist{display:none;flex-direction:column;gap:12px}
+.trow{background:var(--surface-card);border-radius:var(--r-lg);box-shadow:var(--shadow-card);overflow:hidden}
+.trow > button{width:100%;display:flex;align-items:center;gap:12px;min-height:64px;padding:12px 16px;border:0;background:none;cursor:pointer;text-align:left}
+.trow > button .grow{flex:1}
+.trow .chev{transition:transform .15s}
+.trow.open .chev{transform:rotate(180deg)}
+.trow .tbody{padding:0 16px 16px;display:flex;flex-direction:column;gap:12px}
+@media (min-width:1180px){.floor-scroll{overflow:visible}}
+@media (max-width:720px){.floor-scroll{display:none}.tlist{display:flex}}
+[hidden]{display:none!important}
+
+/* Guest preview */
+.guest-layout{display:grid;grid-template-columns:minmax(0,320px) auto;gap:32px;justify-content:center;align-items:start}
+@media (max-width:820px){.guest-layout{grid-template-columns:minmax(0,1fr)}}
+.phone{width:min(400px,100%);height:min(800px,calc(100dvh - 120px));min-height:600px;border:10px solid var(--ink);border-radius:40px;background:var(--surface-page);display:flex;flex-direction:column;overflow:hidden;box-shadow:var(--shadow-lift);margin:0 auto}
+@media (max-width:480px){.phone{border-width:6px;border-radius:28px}}
+.g-top{background:var(--surface-card);padding:16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--hairline)}
+.g-top .grow{flex:1;min-width:0}
+.g-scroll{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:16px}
+.g-tabs{display:grid;grid-template-columns:repeat(4,1fr);background:var(--surface-card);border-top:1px solid var(--hairline)}
+.g-tab{min-height:64px;border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:14px;font-weight:700;color:var(--ink-muted);cursor:pointer;position:relative}
+.g-tab[aria-current="page"]{color:var(--brand)}
+.g-tab .badge{position:absolute;top:6px;left:calc(50% + 6px);min-width:20px;height:20px;line-height:20px;padding:0 6px;font-size:12px}
+.g-cats{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;flex:none}
+.g-cats .chip{flex:none}
+.gfood{display:grid;grid-template-columns:88px minmax(0,1fr);gap:12px;background:var(--surface-card);border-radius:var(--r-lg);box-shadow:var(--shadow-card);padding:12px}
+.gfood .gimg{width:88px;height:88px;border-radius:var(--r-md);overflow:hidden}
+.gfood .gimg img{width:100%;height:100%;object-fit:cover}
+.gfood .info{display:flex;flex-direction:column;gap:4px;min-width:0}
+.gfood .foot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto}
+.gfood h4{font-size:18px;line-height:24px}
+.stepper{display:inline-flex;align-items:center;border:1.5px solid var(--border-control);border-radius:var(--r-pill)}
+.stepper button{width:44px;height:44px;border:0;background:none;border-radius:var(--r-pill);display:grid;place-items:center;cursor:pointer}
+.stepper button:hover{background:var(--brand-tint)}
+.stepper span{min-width:24px;text-align:center;font-weight:700}
+.pline{display:flex;gap:12px;align-items:center;padding:12px 0;border-top:1px solid var(--hairline)}
+.pline:first-child{border-top:0}
+.pline .grow{flex:1;min-width:0}
+.track{display:flex;flex-direction:column;gap:12px}
+.prog{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
+.prog i{height:6px;border-radius:var(--r-pill);background:var(--surface-sunken)}
+.prog i.on{background:var(--brand)}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.steps li{display:flex;gap:12px;align-items:center;min-height:36px;color:var(--ink-muted);position:relative}
+.steps .dot{width:24px;height:24px;border-radius:50%;border:2px solid var(--border-control);display:grid;place-items:center;flex:none;background:var(--surface-card)}
+.steps .dot .ic{width:14px;height:14px}
+.steps li.done{color:var(--ink)}
+.steps li.done .dot{background:var(--secondary);border-color:var(--secondary);color:var(--on-secondary)}
+.steps li.now{color:var(--ink);font-weight:700}
+.steps li.now .dot{border-color:var(--brand);background:var(--brand-tint)}
+.steps li.now .dot::after{content:"";width:8px;height:8px;border-radius:50%;background:var(--brand)}
+.big-ic{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;background:var(--brand-tint);color:var(--brand)}
+.center{display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;padding:32px 8px}
+.g-foot{padding:12px 16px;background:var(--surface-card);border-top:1px solid var(--hairline)}
+.side{display:flex;flex-direction:column;gap:16px}
+.gsel{display:flex;flex-wrap:wrap;gap:8px}
+</style>
+
+<div id="app"></div>
+<dialog id="modal" aria-labelledby="m-title"></dialog>
+<div id="toast" role="status" hidden></div>
+
+<script>
+// shortcut: all data lives in this page's memory and resets on reload; connect a backend to persist it.
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const peso = n => '₱' + Number(n).toLocaleString('en-PH', {minimumFractionDigits:2, maximumFractionDigits:2});
+const tm = d => new Date(d).toLocaleTimeString('en-PH', {hour:'numeric', minute:'2-digit'});
+const dt = d => new Date(d).toLocaleDateString('en-PH', {month:'short', day:'numeric'});
+const sameDay = (a, b) => new Date(a).toDateString() === new Date(b).toDateString();
+const mins = d => Math.max(0, Math.round((Date.now() - d) / 60000));
+const uid = () => Math.random().toString(36).slice(2, 8);
+const sum = a => a.reduce((x, y) => x + y, 0);
+const r2 = n => Math.round(n * 100) / 100;
+function rng(seed){ return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const hash = s => [...s].reduce((h, c) => Math.imul(h ^ c.charCodeAt(0), 16777619), 2166136261);
+
+const IC = {
+  dash:'<rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/>',
+  receipt:'<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6M9 16h3"/>',
+  pot:'<path d="M4 10h16v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M2 10h20M9 6c0-1 1-1 1-2M14 6c0-1 1-1 1-2"/>',
+  table:'<rect x="3" y="8" width="18" height="5" rx="1.5"/><path d="M6 13v7M18 13v7M8 4h8"/>',
+  utensils:'<path d="M7 3v8M4 3v5a3 3 0 0 0 6 0V3M7 11v10M17 3c-2 1-3 4-3 7h3v11"/>',
+  sliders:'<path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/>',
+  book:'<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M8 7h7"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>', minus:'<path d="M5 12h14"/>',
+  edit:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/>',
+  trash:'<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>',
+  search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',
+  qr:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v1M14 20h1M18 18h3v3"/>',
+  bell:'<path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 21h4"/>',
+  check:'<path d="M5 12l5 5L20 7"/>', x:'<path d="M6 6l12 12M18 6L6 18"/>',
+  grid:'<rect x="4" y="4" width="7" height="7" rx="1"/><rect x="13" y="4" width="7" height="7" rx="1"/><rect x="4" y="13" width="7" height="7" rx="1"/><rect x="13" y="13" width="7" height="7" rx="1"/>',
+  list:'<path d="M9 6h11M9 12h11M9 18h11M4 6h1M4 12h1M4 18h1"/>',
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  phone:'<rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/>',
+  user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+  wallet:'<rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10h18M16 15h2"/>',
+  sparkle:'<path d="M12 3l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/>',
+  moon:'<path d="M20 14A8 8 0 1 1 10 4a6 6 0 0 0 10 10z"/>',
+  plate:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/>',
+  chev:'<path d="M6 9l6 6 6-6"/>', arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>',
+  store:'<path d="M3 9l2-5h14l2 5M4 9v11h16V9M3 9h18"/><path d="M9 20v-6h6v6"/>',
+  cup:'<path d="M5 8h12v6a5 5 0 0 1-5 5h-2a5 5 0 0 1-5-5z"/><path d="M17 10h2a2 2 0 0 1 0 4h-2M8 3v2M12 3v2"/>',
+  bowl:'<path d="M3 11h18a9 9 0 0 1-18 0z"/><path d="M8 7c0-1 1-2 2-2M13 7c0-2 2-3 3-3"/>',
+  cake:'<path d="M4 20h16v-8H4z"/><path d="M4 15c2 1.5 4 1.5 6 0s4-1.5 6 0 3 1 4 0M12 12V8M12 5v0"/>',
+  cash:'<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/>',
+  image:'<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/>',
+};
+const icon = (n, s = 24) => `<svg class="ic" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[n] || IC.plate}</svg>`;
+
+/* ---------- Sample data ---------- */
+const NAV = [
+  {id:'dashboard', label:'Dashboard', ic:'dash'},
+  {id:'orders', label:'Orders', ic:'receipt'},
+  {id:'kitchen', label:'Kitchen', ic:'pot'},
+  {id:'foods', label:'Foods', ic:'utensils'},
+  {id:'tables', label:'Tables', ic:'table'},
+  {id:'settings', label:'Settings', ic:'sliders'},
+  {id:'guide', label:'Guide', ic:'book'},
+];
+const TSTAT = {
+  inactive:{l:'Inactive', c:'neutral', i:'moon'},
+  active:{l:'Active', c:'info', i:'qr'},
+  ordering:{l:'Ordering', c:'warn', i:'pot'},
+  eating:{l:'Eating', c:'ok', i:'utensils'},
+  billout:{l:'Bill out', c:'brand', i:'bell'},
+  cleaning:{l:'Cleaning', c:'accent', i:'sparkle'},
+};
+const KITCHEN = ['queued','preparation','cooking','plating','completed'];
+const OSTAT = {
+  queued:{l:'Queued', c:'neutral', g:'Order received', d:'Your order is in the kitchen queue.', next:'Start preparation'},
+  preparation:{l:'Preparation', c:'info', g:'Preparing your order', d:'The kitchen is getting your ingredients ready.', next:'Start cooking'},
+  cooking:{l:'Cooking', c:'warn', g:'Cooking your food', d:'Your food is on the stove.', next:'Start plating'},
+  plating:{l:'Plating', c:'accent', g:'Plating your food', d:'Almost there. The kitchen is putting it on the plate.', next:'Mark completed'},
+  completed:{l:'Completed', c:'ok', g:'Your food is ready', d:'A waiter is bringing it to your table.', next:'Mark as served'},
+  served:{l:'Served', c:'ok', g:'Served. Enjoy your meal!', d:'Tap Bill when you are ready to pay.'},
+  paid:{l:'Paid', c:'neutral', g:'Paid', d:'Thank you for dining with us.'},
+};
+const GSTEPS = ['queued','preparation','cooking','plating','completed','served'];
+const GSTEP_L = ['Order received','Preparation','Cooking','Plating your food','Ready','Served'];
+const TAGS = {new:'New', must:'Must try', best:'Best seller'};
+
+const S = {
+  mode:'staff', view:'dashboard', openTable:null,
+  orderRange:'today', orderQ:'', foodView:'card', foodCat:'all', setTab:'payments',
+  guestTable:'T3', guestName:'Guest 1', guestTab:'menu', guestCat:'all',
+  categories:[
+    {id:'appetizer', name:'Appetizer', desc:'Small plates to start'},
+    {id:'main', name:'Main', desc:'Rice meals and sharing plates'},
+    {id:'drinks', name:'Drinks', desc:'Juices, shakes and beer'},
+    {id:'dessert', name:'Dessert', desc:'Sweet endings'},
+    {id:'sidedish', name:'Side dish', desc:'Rice and vegetables'},
+  ],
+  foods:[
+    {id:'f1', cat:'appetizer', name:'Lumpiang Shanghai', price:180, desc:'Pork and shrimp spring rolls, sweet chili dip.', status:'available', tags:['best'], img:''},
+    {id:'f2', cat:'appetizer', name:'Calamares', price:220, desc:'Fried squid rings, garlic aioli, calamansi.', status:'available', tags:[], img:''},
+    {id:'f3', cat:'appetizer', name:'Chicharon Bulaklak', price:240, desc:'Crispy pork ruffle fat, spiced vinegar.', status:'unavailable', tags:[], img:''},
+    {id:'f4', cat:'main', name:'Crispy Pata', price:695, desc:'Deep-fried pork knuckle, soy-vinegar dip. Good for 3.', status:'available', tags:['best','must'], img:''},
+    {id:'f5', cat:'main', name:'Kare-Kare', price:560, desc:'Oxtail and tripe in peanut sauce, bagoong.', status:'available', tags:['must'], img:''},
+    {id:'f6', cat:'main', name:'Chicken Inasal', price:245, desc:'Lemongrass-annatto grilled chicken leg, chicken oil.', status:'available', tags:['best'], img:''},
+    {id:'f7', cat:'main', name:'Sinigang na Hipon', price:420, desc:'Shrimp in tamarind broth, kangkong, radish.', status:'available', tags:[], img:''},
+    {id:'f8', cat:'main', name:'Beef Tapa Bowl', price:265, desc:'Cured beef, garlic rice, fried egg, atchara.', status:'available', tags:['new'], img:''},
+    {id:'f9', cat:'sidedish', name:'Garlic Rice', price:65, desc:'Rice fried with toasted garlic.', status:'available', tags:[], img:''},
+    {id:'f10', cat:'sidedish', name:'Ensaladang Talong', price:95, desc:'Grilled eggplant, tomato, onion, salted egg.', status:'available', tags:[], img:''},
+    {id:'f11', cat:'sidedish', name:'Java Rice', price:75, desc:'Annatto butter rice.', status:'available', tags:['new'], img:''},
+    {id:'f12', cat:'drinks', name:'Calamansi Juice', price:85, desc:'Fresh calamansi, honey, ice.', status:'available', tags:[], img:''},
+    {id:'f13', cat:'drinks', name:'Iced Tea Pitcher', price:180, desc:'House-brewed black tea with lemon. Serves 4.', status:'available', tags:[], img:''},
+    {id:'f14', cat:'drinks', name:'Buko Shake', price:120, desc:'Young coconut, milk, crushed ice.', status:'available', tags:['new'], img:''},
+    {id:'f15', cat:'dessert', name:'Halo-Halo', price:165, desc:'Shaved ice, ube, leche flan, sweet beans, milk.', status:'available', tags:['best'], img:''},
+    {id:'f16', cat:'dessert', name:'Leche Flan', price:120, desc:'Egg custard, burnt caramel.', status:'available', tags:['must'], img:''},
+    {id:'f17', cat:'dessert', name:'Turon à la Mode', price:140, desc:'Banana and jackfruit roll, vanilla ice cream.', status:'unavailable', tags:['new'], img:''},
+  ],
+  payments:[
+    {id:'cash', name:'Cash', details:'Pay the waiter at the table', active:true},
+    {id:'gcash', name:'GCash', details:'0917 555 0142 · FBS Serve', active:true},
+    {id:'card', name:'Credit or debit card', details:'Visa and Mastercard via terminal', active:true},
+    {id:'maya', name:'Maya', details:'Maya QR at the counter', active:false},
+  ],
+  discounts:[
+    {id:'senior', name:'Senior citizen', pct:20, note:'Valid senior citizen ID', active:true},
+    {id:'pwd', name:'PWD', pct:20, note:'Valid PWD ID', active:true},
+    {id:'bday', name:'Birthday promo', pct:10, note:'Valid ID on birth month', active:true},
+  ],
+  roles:[
+    {id:'admin', name:'Admin', modules:NAV.map(n => n.id)},
+    {id:'manager', name:'Manager', modules:['dashboard','orders','foods','tables','guide']},
+    {id:'waiter', name:'Waiter', modules:['orders','kitchen','tables','guide']},
+    {id:'kitchen', name:'Kitchen staff', modules:['kitchen','guide']},
+    {id:'cashier', name:'Cashier', modules:['dashboard','orders','tables','guide']},
+  ],
+  users:[
+    {id:'u1', name:'Maria Santos', username:'maria', role:'admin', active:true},
+    {id:'u2', name:'Jun Reyes', username:'jun', role:'waiter', active:true},
+    {id:'u3', name:'Carla dela Cruz', username:'carla', role:'waiter', active:true},
+    {id:'u4', name:'Ben Ramos', username:'ben', role:'kitchen', active:true},
+    {id:'u5', name:'Liza Mendoza', username:'liza', role:'cashier', active:false},
+  ],
+  tables:[
+    {id:'T1', seats:2, x:11, y:26}, {id:'T2', seats:2, x:11, y:52}, {id:'T3', seats:2, x:11, y:78},
+    {id:'T4', seats:4, x:31, y:32}, {id:'T5', seats:4, x:31, y:70}, {id:'T6', seats:4, x:51, y:32}, {id:'T7', seats:4, x:51, y:70},
+    {id:'T8', seats:6, x:74, y:44}, {id:'T9', seats:6, x:74, y:76},
+    {id:'T10', seats:2, x:93, y:36}, {id:'T11', seats:2, x:93, y:58}, {id:'T12', seats:2, x:93, y:80},
+  ].map(t => ({...t, name:'Table ' + t.id.slice(1), status:'inactive', token:null, openedAt:null, bill:null})),
+  orders:[], plates:{}, seq:1000,
+};
+
+const food = id => S.foods.find(f => f.id === id);
+const tableOf = id => S.tables.find(t => t.id === id);
+const payName = id => S.payments.find(p => p.id === id)?.name || id;
+const catName = id => S.categories.find(c => c.id === id)?.name || 'Uncategorized';
+const catIdx = id => Math.max(0, S.categories.findIndex(c => c.id === id)) % 5;
+const CAT_IC = {appetizer:'bowl', main:'utensils', drinks:'cup', dessert:'cake', sidedish:'plate'};
+const subtotal = o => sum(o.items.map(i => i.price * i.qty));
+const total = o => r2(subtotal(o) * (1 - (o.discount?.pct || 0) / 100));
+const sessionOrders = t => t.token ? S.orders.filter(o => o.table === t.id && o.session === t.token) : [];
+const nextId = () => 'ORD-' + (++S.seq);
+
+console.assert(total({items:[{price:100, qty:2}, {price:65, qty:1}], discount:{pct:20}}) === 212, 'discount math');
+
+function seed(){
+  const r = rng(11), pick = a => a[Math.floor(r() * a.length)];
+  const mk = (when, status, table, extra = {}) => {
+    const items = [], n = 1 + Math.floor(r() * 4);
+    while (items.length < n){
+      const f = pick(S.foods);
+      if (!items.some(i => i.foodId === f.id)) items.push({foodId:f.id, name:f.name, price:f.price, qty:1 + Math.floor(r() * 2)});
+    }
+    S.orders.push({id:nextId(), table, session:'old', items, status, createdAt:+when, by:'Guest 1', ...extra});
+  };
+  for (let d = 34; d >= 1; d--){
+    const n = 8 + Math.floor(r() * 9);
+    for (let i = 0; i < n; i++){
+      const w = new Date(); w.setDate(w.getDate() - d); w.setHours(11 + Math.floor(r() * 10), Math.floor(r() * 60), 0, 0);
+      mk(w, 'paid', 'T' + (1 + Math.floor(r() * 12)), {payment:pick(['cash','gcash','card']), discount:r() < .12 ? {name:'Senior citizen', pct:20} : null, paidAt:+w + 3e6});
+    }
+  }
+  for (let i = 9; i >= 1; i--){
+    mk(Date.now() - (60 + i * 22) * 60000, 'paid', 'T' + (1 + Math.floor(r() * 12)), {payment:pick(['cash','gcash','card']), discount:null, paidAt:Date.now() - i * 20 * 60000});
+  }
+  // Live floor
+  const open = (id, status, minsAgo, orders = [], bill = null) => {
+    const t = tableOf(id); t.status = status; t.token = uid(); t.openedAt = Date.now() - minsAgo * 60000; t.bill = bill;
+    orders.forEach(([st, ago, by]) => { mk(Date.now() - ago * 60000, st, id, {by}); const o = S.orders.at(-1); o.session = t.token; if (st === 'served') o.servedAt = Date.now() - (ago - 18) * 60000; });
+  };
+  open('T1', 'ordering', 30, [['completed', 22, 'Guest 1']]);
+  open('T2', 'ordering', 24, [['plating', 16, 'Guest 2']]);
+  open('T3', 'active', 4);
+  open('T4', 'ordering', 9, [['queued', 2, 'Guest 1']]);
+  open('T5', 'eating', 55, [['served', 41, 'Guest 1'], ['served', 20, 'Guest 3']]);
+  open('T6', 'ordering', 14, [['preparation', 6, 'Guest 2']]);
+  open('T7', 'billout', 75, [['served', 62, 'Guest 1']], {method:'gcash', at:Date.now() - 2 * 60000});
+  open('T8', 'cleaning', 90, [['paid', 80, 'Guest 1']]);
+  open('T9', 'ordering', 20, [['cooking', 11, 'Guest 4']]);
+  S.orders.filter(o => o.table === 'T8' && o.status === 'paid' && o.session !== 'old').forEach(o => { o.payment = 'cash'; o.discount = null; o.paidAt = Date.now() - 6 * 60000; });
+  S.plates.T3 = [
+    {id:uid(), foodId:'f6', qty:2, by:'Guest 1'},
+    {id:uid(), foodId:'f9', qty:2, by:'Guest 1'},
+    {id:uid(), foodId:'f14', qty:1, by:'Guest 2'},
+  ];
+}
+seed();
+
+/* ---------- Status rules ---------- */
+function syncTable(t){
+  if (['inactive','billout','cleaning'].includes(t.status)) return;
+  const os = sessionOrders(t);
+  t.status = !os.length ? 'active' : os.some(o => KITCHEN.includes(o.status)) ? 'ordering' : 'eating';
+}
+
+/* ---------- Shared pieces ---------- */
+const pill = (meta, withIcon = true) => `<span class="pill p-${meta.c}">${withIcon && meta.i ? icon(meta.i, 16) : ''}${esc(meta.l)}</span>`;
+const tPill = t => pill(TSTAT[t.status]);
+const oPill = o => pill(OSTAT[o.status], false);
+const tagHtml = tags => tags.map(t => `<span class="tag tag-${t}">${TAGS[t]}</span>`).join(' ');
+const foodImg = (f, size = 40) => f.img ? `<img src="${f.img}" alt="${esc(f.name)}">` : `<div class="ph cat-${catIdx(f.cat)}" role="img" aria-label="${esc(f.name)}, no photo yet">${icon(CAT_IC[f.cat] || 'plate', size)}</div>`;
+function aggregate(orders){
+  const m = new Map();
+  orders.forEach(o => o.items.forEach(i => { const e = m.get(i.name) || {name:i.name, qty:0, price:i.price}; e.qty += i.qty; m.set(i.name, e); }));
+  return [...m.values()];
+}
+
+function qrSvg(seedStr){
+  const N = 25, r = rng(hash(seedStr)); let cells = '';
+  const inFinder = (x, y) => (x < 8 && y < 8) || (x > N - 9 && y < 8) || (x < 8 && y > N - 9);
+  for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) if (!inFinder(x, y) && r() < .48) cells += `<rect x="${x}" y="${y}" width="1" height="1"/>`;
+  const f = (x, y) => `<rect x="${x}" y="${y}" width="7" height="7"/><rect x="${x + 1}" y="${y + 1}" width="5" height="5" fill="#fff"/><rect x="${x + 2}" y="${y + 2}" width="3" height="3"/>`;
+  return `<svg class="qr" viewBox="-2 -2 ${N + 4} ${N + 4}" role="img" aria-label="QR code"><rect x="-2" y="-2" width="${N + 4}" height="${N + 4}" fill="#fff"/><g fill="#1B1B18">${cells}${f(0, 0)}${f(N - 7, 0)}${f(0, N - 7)}</g></svg>`;
+}
+
+/* ---------- Staff views ---------- */
+function vDashboard(){
+  const today = S.orders.filter(o => sameDay(o.createdAt, Date.now()));
+  const paid = today.filter(o => o.status === 'paid');
+  const pending = sum(S.tables.flatMap(sessionOrders).filter(o => o.status !== 'paid').map(total));
+  const inUse = S.tables.filter(t => t.status !== 'inactive').length;
+  const top = aggregate(today).sort((a, b) => b.qty - a.qty).slice(0, 5);
+  const max = top[0]?.qty || 1;
+  const kq = S.orders.filter(o => KITCHEN.includes(o.status)).sort((a, b) => a.createdAt - b.createdAt);
+  const counts = Object.keys(TSTAT).map(k => [k, S.tables.filter(t => t.status === k).length]);
+  return `<div class="page-head"><div><h1>Dashboard</h1><p class="muted">${new Date().toLocaleDateString('en-PH', {weekday:'long', month:'long', day:'numeric'})}</p></div></div>
+  <div class="tiles">
+    <div class="card tile">${icon('cash')}<span class="label muted">Income today</span><span class="val num">${peso(sum(paid.map(total)))}</span><span class="caption muted num">${peso(pending)} still to collect</span></div>
+    <div class="card tile">${icon('receipt')}<span class="label muted">Orders today</span><span class="val num">${today.length}</span><span class="caption muted">${paid.length} paid · ${today.length - paid.length} open</span></div>
+    <div class="card tile">${icon('table')}<span class="label muted">Active tables</span><span class="val num">${inUse}</span><span class="caption muted">of ${S.tables.length} tables</span></div>
+    <div class="card tile">${icon('moon')}<span class="label muted">Inactive tables</span><span class="val num">${S.tables.length - inUse}</span><span class="caption muted">Ready for new guests</span></div>
+  </div>
+  <div class="two">
+    <section class="card"><div class="card-head"><h3>Top ordered today</h3><span class="caption muted">by quantity</span></div>
+      ${top.length ? `<ol class="bars">${top.map((f, i) => `<li class="bar-row"><span class="rank num">${i + 1}</span><span>${esc(f.name)}</span><span class="num label">${f.qty} sold</span><div class="bar-track"><div class="bar-fill" style="width:${f.qty / max * 100}%"></div></div></li>`).join('')}</ol>` : `<div class="empty">No orders yet today.</div>`}
+    </section>
+    <section class="card"><div class="card-head"><h3>In the kitchen now</h3><button class="btn btn-outline" data-act="nav" data-v="kitchen">Open kitchen</button></div>
+      ${kq.length ? `<ul class="rows">${kq.slice(0, 6).map(o => `<li><div class="grow"><b class="num">${o.id}</b> <span class="muted">· ${esc(tableOf(o.table).name)}</span><div class="caption muted num">${mins(o.createdAt)} min ago</div></div>${oPill(o)}</li>`).join('')}</ul>` : `<div class="empty">The kitchen is clear.</div>`}
+    </section>
+  </div>
+  <section class="card"><div class="card-head"><h3>Tables at a glance</h3><button class="btn btn-outline" data-act="nav" data-v="tables">Open floor plan</button></div>
+    <div class="statgrid">${counts.map(([k, n]) => `<div class="stat">${pill(TSTAT[k])}<b class="num">${n}</b></div>`).join('')}</div>
+  </section>`;
+}
+
+function inRange(d, r){
+  const t = new Date(d), n = new Date();
+  if (r === 'today') return sameDay(t, n);
+  if (r === 'week'){ const s = new Date(n); s.setHours(0, 0, 0, 0); s.setDate(s.getDate() - ((s.getDay() + 6) % 7)); return t >= s; }
+  return t.getFullYear() === n.getFullYear() && t.getMonth() === n.getMonth();
+}
+function vOrders(){
+  const q = S.orderQ.trim().toUpperCase();
+  const list = S.orders.filter(o => q ? o.id.includes(q) : inRange(o.createdAt, S.orderRange)).sort((a, b) => b.createdAt - a.createdAt);
+  const ranges = [['today','Today'], ['week','This week'], ['month','This month']];
+  return `<div class="page-head"><div><h1>Orders</h1><p class="muted">Every order from every table, in any status.</p></div></div>
+  <div class="toolbar">
+    <div class="chips" role="group" aria-label="Date range">${ranges.map(([k, l]) => `<button class="chip" data-act="range" data-v="${k}" aria-pressed="${S.orderRange === k && !q}">${l}</button>`).join('')}</div>
+    <div class="spacer"></div>
+    <label class="search"><span class="sr" hidden>Search order ID</span>${icon('search')}<input id="order-q" class="input" data-input="orderQ" placeholder="Search order ID, e.g. 1042" value="${esc(S.orderQ)}" aria-label="Search order ID"></label>
+  </div>
+  ${q ? `<p class="caption muted">Searching all dates for “${esc(S.orderQ)}”. Clear the search to use the date filter.</p>` : ''}
+  <div class="tbl-scroll"><table class="data"><thead><tr><th>Order ID</th><th>Table</th><th>Date and time</th><th>Items</th><th>Payment</th><th class="r">Total</th><th>Status</th></tr></thead><tbody>
+  ${list.slice(0, 200).map(o => `<tr class="click" data-act="order" data-id="${o.id}"><td><button class="link num" data-act="order" data-id="${o.id}">${o.id}</button></td><td>${esc(tableOf(o.table).name)}</td><td class="num">${dt(o.createdAt)}, ${tm(o.createdAt)}</td><td class="num">${sum(o.items.map(i => i.qty))} items</td><td>${o.payment ? esc(payName(o.payment)) : '<span class="muted">Not yet</span>'}</td><td class="r num"><b>${peso(total(o))}</b></td><td>${oPill(o)}</td></tr>`).join('') || `<tr><td colspan="7"><div class="empty">${icon('search', 32)}No orders match. Check the order ID or pick another date range.</div></td></tr>`}
+  </tbody></table></div>
+  <p class="caption muted num">${list.length} orders · ${peso(sum(list.map(total)))}${list.length > 200 ? ' · showing the latest 200' : ''}</p>`;
+}
+
+function vKitchen(){
+  return `<div class="page-head"><div><h1>Kitchen</h1><p class="muted">Oldest order first. Move each order forward as you work on it.</p></div></div>
+  <div class="kanban" data-keep="kanban">${KITCHEN.map(st => {
+    const list = S.orders.filter(o => o.status === st).sort((a, b) => a.createdAt - b.createdAt);
+    return `<section class="col" aria-label="${OSTAT[st].l}"><div class="col-head"><h3>${OSTAT[st].l}</h3><span class="badge soft num">${list.length}</span></div>
+    ${list.map(o => { const m = mins(o.createdAt); return `<article class="kcard">
+      <div class="kcard-top"><div><b class="num">${o.id}</b><div class="caption muted">${esc(tableOf(o.table).name)} · ${esc(o.by)}</div></div><span class="caption num ${m > 20 ? 'late label' : 'muted'}">${icon('clock', 16)} ${m} min</span></div>
+      <ul>${o.items.map(i => `<li><b class="num">${i.qty}×</b><span>${esc(i.name)}</span></li>`).join('')}</ul>
+      <button class="btn ${st === 'completed' ? 'btn-secondary' : 'btn-outline'} block" data-act="${st === 'completed' ? 'serve' : 'knext'}" data-id="${o.id}">${OSTAT[st].next}${st === 'completed' ? '' : icon('arrow', 20)}</button>
+    </article>`; }).join('') || `<p class="col-empty">No orders here.</p>`}</section>`;
+  }).join('')}</div>`;
+}
+
+function vFoods(){
+  const list = S.foods.filter(f => S.foodCat === 'all' || f.cat === S.foodCat);
+  return `<div class="page-head"><div><h1>Foods</h1><p class="muted">The menu guests see when they scan a table QR.</p></div><button class="btn btn-primary" data-act="food-add">${icon('plus', 20)}Add food</button></div>
+  <div class="toolbar">
+    <div class="chips" role="group" aria-label="Category">${[['all','All']].concat(S.categories.map(c => [c.id, c.name])).map(([k, l]) => `<button class="chip" data-act="food-cat" data-v="${k}" aria-pressed="${S.foodCat === k}">${esc(l)}</button>`).join('')}</div>
+    <div class="spacer"></div>
+    <div class="seg" role="group" aria-label="View"><button data-act="food-view" data-v="card" aria-pressed="${S.foodView === 'card'}">${icon('grid', 20)}Cards</button><button data-act="food-view" data-v="table" aria-pressed="${S.foodView === 'table'}">${icon('list', 20)}Table</button></div>
+  </div>
+  ${!list.length ? `<div class="card empty">${icon('utensils', 32)}No foods in this category yet.<button class="btn btn-primary" data-act="food-add">Add food</button></div>`
+  : S.foodView === 'card' ? `<div class="food-grid">${list.map(f => `<article class="fcard ${f.status !== 'available' ? 'unavail' : ''}">
+      <div class="fimg">${foodImg(f, 48)}<span class="pill ${f.status === 'available' ? 'p-ok' : 'p-error'}">${icon(f.status === 'available' ? 'check' : 'x', 16)}${f.status === 'available' ? 'Available' : 'Not available'}</span></div>
+      <div class="fbody"><span class="label muted">${esc(catName(f.cat))}</span><div class="row"><h3>${esc(f.name)}</h3><span class="price num">${peso(f.price)}</span></div><p class="muted">${esc(f.desc)}</p><div>${tagHtml(f.tags)}</div></div>
+      <div class="factions"><button class="btn btn-outline" data-act="food-edit" data-id="${f.id}">${icon('edit', 20)}Edit</button><button class="icon-btn danger" data-act="food-del" data-id="${f.id}" aria-label="Delete ${esc(f.name)}">${icon('trash')}</button></div>
+    </article>`).join('')}</div>`
+  : `<div class="tbl-scroll"><table class="data"><thead><tr><th>Food</th><th>Category</th><th>Description</th><th>Tags</th><th>Status</th><th class="r">Price</th><th class="r">Actions</th></tr></thead><tbody>
+    ${list.map(f => `<tr><td><div style="display:flex;gap:12px;align-items:center"><div class="thumb">${foodImg(f, 20)}</div><b>${esc(f.name)}</b></div></td><td>${esc(catName(f.cat))}</td><td class="muted" style="min-width:220px">${esc(f.desc)}</td><td>${tagHtml(f.tags) || '<span class="muted">None</span>'}</td><td><span class="pill ${f.status === 'available' ? 'p-ok' : 'p-error'}">${f.status === 'available' ? 'Available' : 'Not available'}</span></td><td class="r num"><b>${peso(f.price)}</b></td><td class="r" style="white-space:nowrap"><button class="icon-btn" data-act="food-edit" data-id="${f.id}" aria-label="Edit ${esc(f.name)}">${icon('edit')}</button><button class="icon-btn danger" data-act="food-del" data-id="${f.id}" aria-label="Delete ${esc(f.name)}">${icon('trash')}</button></td></tr>`).join('')}
+  </tbody></table></div>`}`;
+}
+
+function tableBody(t){
+  const os = sessionOrders(t), items = aggregate(os.filter(o => o.status !== 'paid' || t.status === 'cleaning'));
+  const ready = os.filter(o => o.status === 'completed');
+  const a = [];
+  if (t.status === 'inactive') a.push(`<button class="btn btn-primary" data-act="gen-qr" data-id="${t.id}">${icon('qr', 20)}Generate QR</button>`);
+  if (['active','ordering','eating'].includes(t.status)) a.push(`<button class="btn btn-outline" data-act="show-qr" data-id="${t.id}">${icon('qr', 20)}Show QR</button>`);
+  ready.forEach(o => a.push(`<button class="btn btn-secondary" data-act="serve" data-id="${o.id}">${icon('check', 20)}Serve ${o.id}</button>`));
+  if (t.status === 'billout') a.push(`<button class="btn btn-primary" data-act="receive" data-id="${t.id}">${icon('wallet', 20)}Receive payment</button>`);
+  if (t.status === 'cleaning') a.push(`<button class="btn btn-primary" data-act="clean" data-id="${t.id}">${icon('sparkle', 20)}Mark as clean</button>`);
+  if (t.token && t.status !== 'cleaning') a.push(`<button class="btn btn-ghost" data-act="open-guest" data-id="${t.id}">${icon('phone', 20)}Guest view</button>`);
+  return `<dl class="kv"><dt>Status</dt><dd>${tPill(t)}</dd><dt>Seats</dt><dd>${t.seats}</dd>
+    ${t.openedAt ? `<dt>Seated</dt><dd class="num">${tm(t.openedAt)} (${mins(t.openedAt)} min)</dd>` : ''}
+    ${os.length ? `<dt>Orders</dt><dd class="num">${os.map(o => `${o.id} at ${tm(o.createdAt)} · ${OSTAT[o.status].l}`).join('<br>')}</dd>` : ''}
+    ${t.bill ? `<dt>Pays with</dt><dd>${esc(payName(t.bill.method))}</dd>` : ''}</dl>
+  ${items.length ? `<ul class="items">${items.map(i => `<li><b class="num">${i.qty}×</b><span>${esc(i.name)}</span><span class="num">${peso(i.qty * i.price)}</span></li>`).join('')}</ul><div class="sum"><div class="total"><span>Total</span><span class="num">${peso(sum(os.map(total)))}</span></div></div>`
+    : `<p class="caption muted">${t.status === 'inactive' ? 'No guests. Generate a QR when guests sit down.' : 'No orders yet.'}</p>`}
+  ${a.length ? `<div class="pop-actions">${a.join('')}</div>` : ''}`;
+}
+
+function vTables(){
+  const chair = (n, v) => Array.from({length:n}, () => `<span class="chair${v ? ' v' : ''}"></span>`).join('');
+  const layout = t => t.seats === 2 ? [1, 0, 1] : t.seats === 4 ? [1, 1, 1] : [3, 0, 3];
+  return `<div class="page-head"><div><h1>Tables</h1><p class="muted">Floor plan of the dining room. Select a table to see its orders.</p></div></div>
+  <div class="legend">${Object.entries(TSTAT).map(([k, m]) => `${pill(m)}`).join('')}</div>
+  <div class="floor-scroll" data-keep="floor"><div class="floor">
+    <div class="zone" style="left:1%;top:2%;width:22%;height:11%">Counter and cashier</div>
+    <div class="zone" style="left:64%;top:2%;width:35%;height:16%">${icon('pot', 20)} Kitchen pass</div>
+    <div class="window"></div><span class="window-l">Windows</span>
+    <div class="door"></div><span class="door-l">Entrance</span>
+    ${S.tables.map(t => { const [tp, sd, bt] = layout(t), open = S.openTable === t.id;
+      return `<div class="tw ${open ? 'open' : ''}" style="left:${t.x}%;top:${t.y}%">
+        <div class="chairs" style="grid-column:2;grid-row:1">${chair(tp)}</div>
+        ${sd ? `<div style="grid-column:1;grid-row:2">${chair(1, 1)}</div><div style="grid-column:3;grid-row:2">${chair(1, 1)}</div>` : ''}
+        <button class="tbl s${t.seats} t-${t.status}" data-act="tbl" data-id="${t.id}" aria-expanded="${open}" aria-label="${t.name}, ${TSTAT[t.status].l}">
+          <b>${t.id.slice(1)} ${icon('chev', 16)}</b><span class="st">${icon(TSTAT[t.status].i, 16)}${TSTAT[t.status].l}</span></button>
+        <div class="chairs" style="grid-column:2;grid-row:3">${chair(bt)}</div>
+        ${open ? `<div class="pop ${t.y > 55 ? 'up' : 'dn'} ${t.x > 60 ? 'ar' : 'al'}" role="region" aria-label="${t.name} details"><div class="pop-head"><h3>${t.name}</h3><button class="icon-btn" data-act="tbl" data-id="${t.id}" aria-label="Close">${icon('x')}</button></div>${tableBody(t)}</div>` : ''}
+      </div>`; }).join('')}
+  </div></div>
+  <div class="tlist">${S.tables.map(t => { const open = S.openTable === t.id; return `<div class="trow ${open ? 'open' : ''}">
+    <button data-act="tbl" data-id="${t.id}" aria-expanded="${open}"><span class="grow"><b>${t.name}</b><span class="caption muted"> · ${t.seats} seats</span></span>${tPill(t)}<span class="chev">${icon('chev')}</span></button>
+    ${open ? `<div class="tbody">${tableBody(t)}</div>` : ''}</div>`; }).join('')}</div>`;
+}
+
+const SET = {
+  payments:{title:'Payment methods', one:'payment method', fields:[{k:'name', l:'Name', req:1}, {k:'details', l:'Details', hint:'Account name or number the waiter needs.'}, {k:'active', l:'Guests can choose this', t:'check'}]},
+  discounts:{title:'Discounts', one:'discount', fields:[{k:'name', l:'Name', req:1}, {k:'pct', l:'Percent off', t:'number', req:1}, {k:'note', l:'Requirement', hint:'For example: Valid senior citizen ID'}, {k:'active', l:'Active', t:'check'}]},
+  users:{title:'Users', one:'user', fields:[{k:'name', l:'Full name', req:1}, {k:'username', l:'Username', req:1}, {k:'role', l:'Role', t:'select', opts:() => S.roles.map(r => [r.id, r.name])}, {k:'active', l:'Can sign in', t:'check'}]},
+  roles:{title:'User roles', one:'role', fields:[{k:'name', l:'Role name', req:1}, {k:'modules', l:'Modules this role can open', t:'multi', opts:() => NAV.map(n => [n.id, n.label])}]},
+  categories:{title:'Food categories', one:'category', fields:[{k:'name', l:'Name', req:1}, {k:'desc', l:'Description'}]},
+};
+function cell(f, v){
+  if (f.t === 'check') return v ? '<span class="pill p-ok">Yes</span>' : '<span class="pill p-neutral">No</span>';
+  if (f.t === 'select') return esc(f.opts().find(o => o[0] === v)?.[1] || '—');
+  if (f.t === 'multi') return esc((v || []).map(id => f.opts().find(o => o[0] === id)?.[1]).filter(Boolean).join(', ')) || '<span class="muted">None</span>';
+  if (f.k === 'pct') return `<span class="num">${v}%</span>`;
+  return esc(v) || '<span class="muted">—</span>';
+}
+function vSettings(){
+  const cfg = SET[S.setTab], rows = S[S.setTab];
+  return `<div class="page-head"><div><h1>Settings</h1><p class="muted">Payment methods, discounts, users, roles and food categories.</p></div></div>
+  <div class="tabs" role="tablist">${Object.entries(SET).map(([k, c]) => `<button class="tab" role="tab" data-act="set-tab" data-v="${k}" aria-selected="${S.setTab === k}">${c.title}</button>`).join('')}</div>
+  <div class="toolbar"><h2 style="flex:1">${cfg.title}</h2><button class="btn btn-primary" data-act="set-add">${icon('plus', 20)}Add ${cfg.one}</button></div>
+  <div class="tbl-scroll"><table class="data"><thead><tr>${cfg.fields.map(f => `<th>${f.l}</th>`).join('')}${S.setTab === 'categories' ? '<th>Foods</th>' : ''}<th class="r">Actions</th></tr></thead><tbody>
+  ${rows.map(r => `<tr>${cfg.fields.map((f, i) => `<td>${i === 0 ? `<b>${cell(f, r[f.k])}</b>` : cell(f, r[f.k])}</td>`).join('')}${S.setTab === 'categories' ? `<td class="num">${S.foods.filter(f => f.cat === r.id).length}</td>` : ''}
+    <td class="r" style="white-space:nowrap"><button class="icon-btn" data-act="set-edit" data-id="${r.id}" aria-label="Edit ${esc(r.name)}">${icon('edit')}</button><button class="icon-btn danger" data-act="set-del" data-id="${r.id}" aria-label="Delete ${esc(r.name)}">${icon('trash')}</button></td></tr>`).join('') || `<tr><td colspan="9"><div class="empty">Nothing here yet. Add the first ${cfg.one}.</div></td></tr>`}
+  </tbody></table></div>`;
+}
+
+const GUIDE = [
+  {v:'dashboard', ic:'dash', t:'Dashboard', d:'See how the day is going at a glance.', s:['Check income today and the amount still to collect.', 'Count today’s orders, paid and open.', 'See the top 5 foods ordered today.', 'Check how many tables are active and inactive.']},
+  {v:'tables', ic:'table', t:'Tables', d:'Seat guests, collect payment and reset tables.', s:['Select an inactive table and tap Generate QR.', 'Show the QR to the guests. Every guest at the table scans the same code.', 'When a table shows Bill out, go to it and tap Receive payment.', 'After cleaning, tap Mark as clean. The old QR stops working.']},
+  {v:'kitchen', ic:'pot', t:'Kitchen', d:'Cook orders in the order they arrived.', s:['New orders appear in Queued, oldest at the top.', 'Tap the button on a card to move it: Preparation, Cooking, Plating, Completed.', 'Guests see every change on their phone right away.', 'Waiters tap Mark as served after bringing the food to the table.']},
+  {v:'orders', ic:'receipt', t:'Orders', d:'Find any order, in any status.', s:['Pick Today, This week or This month.', 'Type an order ID in the search box to find it on any date.', 'Select a row to see its items, payment and discount.']},
+  {v:'foods', ic:'utensils', t:'Foods', d:'Keep the menu up to date.', s:['Tap Add food and fill in the name, category, price and description.', 'Add a photo and tags: New, Must try or Best seller.', 'Set a food to Not available when it runs out. Guests cannot order it.', 'Switch between Cards and Table view.']},
+  {v:'settings', ic:'sliders', t:'Settings', d:'Set up how the restaurant runs.', s:['Payment methods: choose what guests can pick when they ask for the bill.', 'Discounts: set the percent off and what the guest must show.', 'Users and roles: decide who can open each module.', 'Categories: group foods on the menu.']},
+];
+function vGuide(){
+  return `<div class="page-head"><div><h1>Guide</h1><p class="muted">How each part of FBS Serve works.</p></div></div>
+  <section class="card"><div class="card-head"><h3>From QR to clean table</h3></div>
+    <ol class="flow">${[['Waiter','Generates the table QR. The table becomes Active.'], ['Guests','Add food to one shared plate. One guest sends it to the kitchen.'], ['Kitchen','Moves the order: Preparation, Cooking, Plating, Completed.'], ['Waiter','Brings the food. The table becomes Eating.'], ['Guest','Taps Bill out and picks a payment method. The waiter is called.'], ['Waiter','Collects payment, cleans, and marks the table clean.']].map(([w, d], i) => `<li><span class="n">${i + 1}</span><b>${w}</b><span class="caption muted">${d}</span></li>`).join('')}</ol>
+  </section>
+  <div class="guide-grid">${GUIDE.map(g => `<article class="card gcard"><div class="gi">${icon(g.ic)}</div><h3>${g.t}</h3><p class="muted">${g.d}</p><ol>${g.s.map(x => `<li>${x}</li>`).join('')}</ol><button class="btn btn-outline" data-act="nav" data-v="${g.v}">Open ${g.t}</button></article>`).join('')}
+    <article class="card gcard"><div class="gi">${icon('phone')}</div><h3>Guest phone</h3><p class="muted">What guests see after scanning the QR.</p><ol><li>Browse the menu and tap Add to plate.</li><li>Check Your plate. Everyone at the table shares it.</li><li>One guest taps Send to kitchen.</li><li>Follow the order live, then tap Bill out to pay.</li></ol><button class="btn btn-outline" data-act="mode" data-v="guest">Preview guest view</button></article>
+  </div>`;
+}
+
+function staffShell(){
+  const bills = S.tables.filter(t => t.status === 'billout');
+  const kq = S.orders.filter(o => KITCHEN.includes(o.status)).length;
+  const badge = {kitchen:kq, tables:bills.length};
+  const views = {dashboard:vDashboard, orders:vOrders, kitchen:vKitchen, foods:vFoods, tables:vTables, settings:vSettings, guide:vGuide};
+  return `<div class="shell"><nav class="rail" aria-label="Modules" data-keep="rail">${NAV.map(n => `<button class="nav" data-act="nav" data-v="${n.id}" ${S.view === n.id ? 'aria-current="page"' : ''}>${icon(n.ic)}${n.label}${badge[n.id] ? `<span class="badge num" aria-label="${badge[n.id]} waiting">${badge[n.id]}</span>` : ''}</button>`).join('')}</nav>
+  <main class="main"><div class="wrap">
+    ${bills.map(t => `<div class="alert brand" role="alert">${icon('bell')}<p><b>${t.name} is asking for the bill.</b> Pays with ${esc(payName(t.bill.method))} · ${mins(t.bill.at)} min ago</p><button class="btn btn-primary" data-act="receive" data-id="${t.id}">Receive payment</button></div>`).join('')}
+    ${views[S.view]()}
+  </div></main></div>`;
+}
+
+/* ---------- Guest view ---------- */
+function guestShell(){
+  const t = tableOf(S.guestTable);
+  const plate = (S.plates[t.id] || []);
+  const n = sum(plate.map(l => l.qty));
+  const live = t.token && !['inactive','cleaning'].includes(t.status);
+  return `<main class="main"><div class="wrap"><div class="guest-layout">
+    <aside class="side card">
+      <h2>Guest view</h2>
+      <p class="muted">This is what guests see on their phone after scanning the table QR.</p>
+      <label class="field"><span>Table QR</span><select id="g-table" class="input" data-change="gTable">${S.tables.map(x => `<option value="${x.id}" ${x.id === t.id ? 'selected' : ''}>${x.name} · ${TSTAT[x.status].l}</option>`).join('')}</select></label>
+      <div class="field"><span>You are</span><div class="gsel" role="group" aria-label="Guest">${['Guest 1','Guest 2','Guest 3'].map(g => `<button class="chip" data-act="g-who" data-v="${g}" aria-pressed="${S.guestName === g}">${icon('user', 16)}${g}</button>`).join('')}</div>
+      <span class="hint">Many guests share one QR. Switch guests to see the shared plate.</span></div>
+      <button class="btn btn-outline" data-act="mode" data-v="staff">Back to staff view</button>
+    </aside>
+    <div class="phone" aria-label="Guest phone preview">
+      <div class="g-top"><span class="brand">${icon('store')}</span><div class="grow"><b>FBS Serve</b><div class="caption muted">${t.name} · ${esc(S.guestName)}</div></div>${live ? tPill(t) : ''}</div>
+      ${!live ? `<div class="g-scroll">${gClosed(t)}</div>` : `<div class="g-scroll" data-keep="gscroll">${({menu:gMenu, plate:gPlate, orders:gOrders, bill:gBill})[S.guestTab](t)}</div>
+      ${S.guestTab === 'plate' && n ? `<div class="g-foot"><button class="btn btn-primary block" data-act="g-send">Send to kitchen · ${peso(sum(plate.map(l => food(l.foodId).price * l.qty)))}</button></div>` : ''}
+      <nav class="g-tabs" aria-label="Guest menu">${[['menu','Menu','utensils'], ['plate','Plate','plate'], ['orders','Orders','clock'], ['bill','Bill','wallet']].map(([k, l, ic]) => `<button class="g-tab" data-act="g-tab" data-v="${k}" ${S.guestTab === k ? 'aria-current="page"' : ''}>${icon(ic)}${l}${k === 'plate' && n ? `<span class="badge num">${n}</span>` : ''}</button>`).join('')}</nav>`}
+    </div>
+  </div></div></main>`;
+}
+function gClosed(t){
+  if (t.status === 'cleaning') return `<div class="center"><div class="big-ic">${icon('check', 32)}</div><h3>Payment received</h3><p class="muted">Thank you for dining at FBS Serve. This table QR is now closed.</p></div>`;
+  return `<div class="center"><div class="big-ic">${icon('qr', 32)}</div><h3>This QR code has expired</h3><p class="muted">Ask your waiter for a new QR code for ${t.name}.</p></div>`;
+}
+function gMenu(){
+  const cats = [['all','All']].concat(S.categories.map(c => [c.id, c.name]));
+  const list = S.foods.filter(f => S.guestCat === 'all' || f.cat === S.guestCat);
+  return `<div class="g-cats" data-keep="gcats">${cats.map(([k, l]) => `<button class="chip" data-act="g-cat" data-v="${k}" aria-pressed="${S.guestCat === k}">${esc(l)}</button>`).join('')}</div>
+  ${list.map(f => { const ok = f.status === 'available'; return `<article class="gfood ${ok ? '' : 'unavail'}"><div class="gimg">${foodImg(f, 32)}</div><div class="info">
+    <div>${tagHtml(f.tags)}</div><h4>${esc(f.name)}</h4><p class="caption muted">${esc(f.desc)}</p>
+    <div class="foot"><span class="price num">${peso(f.price)}</span>${ok ? `<button class="btn btn-primary" style="min-height:44px;padding:0 14px" data-act="g-add" data-id="${f.id}">${icon('plus', 20)}Add to plate</button>` : `<span class="pill p-error">Not available</span>`}</div>
+  </div></article>`; }).join('')}`;
+}
+function gPlate(t){
+  const plate = S.plates[t.id] || [];
+  if (!plate.length) return `<div class="center"><div class="big-ic">${icon('plate', 32)}</div><h3>Your plate is empty</h3><p class="muted">Everyone at ${t.name} adds to the same plate. Pick food from the menu.</p><button class="btn btn-primary" data-act="g-tab" data-v="menu">Browse menu</button></div>`;
+  return `<div><h3>Your plate</h3><p class="caption muted">Shared by everyone at ${t.name}. Only one guest sends it to the kitchen.</p></div>
+  <div class="card" style="padding:4px 16px">${plate.map(l => { const f = food(l.foodId); return `<div class="pline"><div class="grow"><b>${esc(f.name)}</b><div class="caption muted">${esc(l.by)}${l.by === S.guestName ? ' (you)' : ''} · <span class="num">${peso(f.price * l.qty)}</span></div></div>
+    <div class="stepper"><button data-act="g-qty" data-id="${l.id}" data-v="-1" aria-label="Remove one ${esc(f.name)}">${icon(l.qty > 1 ? 'minus' : 'trash', 20)}</button><span class="num">${l.qty}</span><button data-act="g-qty" data-id="${l.id}" data-v="1" aria-label="Add one ${esc(f.name)}">${icon('plus', 20)}</button></div></div>`; }).join('')}</div>`;
+}
+function gOrders(t){
+  const os = sessionOrders(t).sort((a, b) => b.createdAt - a.createdAt);
+  if (!os.length) return `<div class="center"><div class="big-ic">${icon('clock', 32)}</div><h3>No orders yet</h3><p class="muted">Send your plate to the kitchen to start an order.</p></div>`;
+  return os.map(o => { const k = GSTEPS.indexOf(o.status), m = OSTAT[o.status]; return `<section class="card track" style="padding:16px">
+    <span class="caption muted num">${o.id} · ${tm(o.createdAt)} · sent by ${esc(o.by)}</span>
+    <h3>${m.g}</h3><p class="caption muted">${m.d}</p>
+    <div class="prog" aria-hidden="true">${GSTEPS.map((_, i) => `<i class="${i <= k ? 'on' : ''}"></i>`).join('')}</div>
+    <ol class="steps">${GSTEP_L.map((l, i) => `<li class="${i < k || o.status === 'served' ? 'done' : i === k ? 'now' : ''}"><span class="dot">${i < k || o.status === 'served' ? icon('check') : ''}</span>${l}</li>`).join('')}</ol>
+    <ul class="items">${o.items.map(i => `<li><b class="num">${i.qty}×</b><span>${esc(i.name)}</span><span class="num">${peso(i.qty * i.price)}</span></li>`).join('')}</ul>
+  </section>`; }).join('');
+}
+function gBill(t){
+  const os = sessionOrders(t), tot = sum(os.map(total));
+  if (t.status === 'billout') return `<div class="center"><div class="big-ic">${icon('bell', 32)}</div><h3>Your waiter is on the way</h3><p class="muted">You chose ${esc(payName(t.bill.method))}. Total <b class="num">${peso(tot)}</b>.</p><p class="caption muted">Discounts like senior citizen or PWD are applied by the waiter. Have your ID ready.</p></div>`;
+  if (!os.length) return `<div class="center"><div class="big-ic">${icon('wallet', 32)}</div><h3>Nothing to pay yet</h3><p class="muted">Your bill appears here after you order.</p></div>`;
+  const waiting = os.some(o => KITCHEN.includes(o.status));
+  return `<h3>Your bill</h3>
+  <div class="card" style="padding:16px"><ul class="items">${aggregate(os).map(i => `<li><b class="num">${i.qty}×</b><span>${esc(i.name)}</span><span class="num">${peso(i.qty * i.price)}</span></li>`).join('')}</ul>
+  <div class="sum" style="margin-top:12px"><div class="total"><span>Total</span><span class="num">${peso(tot)}</span></div></div></div>
+  ${waiting ? `<div class="alert warn">${icon('alert')}<p class="caption">You can ask for the bill once all your food is served.</p></div>` : ''}
+  <button class="btn btn-primary block" data-act="g-billout" ${waiting ? 'disabled' : ''}>${icon('bell', 20)}Bill out</button>`;
+}
+
+/* ---------- Modals ---------- */
+const dlg = $('#modal');
+const modal = (title, body, foot = '') => { dlg.innerHTML = `<div class="m-head"><h2 id="m-title">${title}</h2><button class="icon-btn" data-act="close" aria-label="Close">${icon('x')}</button></div>${body}${foot}`; if (!dlg.open) dlg.showModal(); };
+dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+
+function qrModal(t){
+  modal(`${t.name} QR code`, `<div class="m-body"><div class="qr-box">${qrSvg(t.id + t.token)}<b>Scan to order</b><span class="caption muted num">fbsserve.app/t/${t.id}?k=${t.token}</span></div>
+    <p class="caption muted">Every guest at ${t.name} scans this same code. It stops working once the table is marked clean.</p></div>`,
+    `<div class="m-foot"><button class="btn btn-outline" data-act="close">Done</button><button class="btn btn-primary" data-act="open-guest" data-id="${t.id}">${icon('phone', 20)}Open guest view</button></div>`);
+}
+function orderModal(o){
+  const t = tableOf(o.table);
+  modal(o.id, `<div class="m-body"><dl class="kv"><dt>Status</dt><dd>${oPill(o)}</dd><dt>Table</dt><dd>${t.name}</dd><dt>Ordered</dt><dd class="num">${dt(o.createdAt)}, ${tm(o.createdAt)}</dd><dt>Sent by</dt><dd>${esc(o.by)}</dd>
+    ${o.payment ? `<dt>Payment</dt><dd>${esc(payName(o.payment))}</dd>` : ''}${o.discount ? `<dt>Discount</dt><dd>${esc(o.discount.name)} (${o.discount.pct}%)</dd>` : ''}</dl>
+    <ul class="items">${o.items.map(i => `<li><b class="num">${i.qty}×</b><span>${esc(i.name)}</span><span class="num">${peso(i.qty * i.price)}</span></li>`).join('')}</ul>
+    <div class="sum"><div><span class="muted">Subtotal</span><span class="num">${peso(subtotal(o))}</span></div>${o.discount ? `<div><span class="muted">Discount</span><span class="num">−${peso(subtotal(o) - total(o))}</span></div>` : ''}<div class="total"><span>Total</span><span class="num">${peso(total(o))}</span></div></div></div>`,
+    `<div class="m-foot"><button class="btn btn-outline" data-act="close">Close</button></div>`);
+}
+function payModal(t){
+  const os = sessionOrders(t).filter(o => o.status !== 'paid');
+  modal(`Receive payment · ${t.name}`, `<form id="pay-form" data-form="pay" data-id="${t.id}"><div class="m-body">
+    <ul class="items">${aggregate(os).map(i => `<li><b class="num">${i.qty}×</b><span>${esc(i.name)}</span><span class="num">${peso(i.qty * i.price)}</span></li>`).join('')}</ul>
+    <div class="form-grid">
+      <label class="field"><span>Payment method</span><select id="pay-method" name="method" class="input">${S.payments.map(p => `<option value="${p.id}" ${t.bill?.method === p.id ? 'selected' : ''}>${esc(p.name)}</option>`).join('')}</select><span class="hint">Guest chose ${esc(payName(t.bill?.method))}.</span></label>
+      <label class="field"><span>Discount</span><select id="pay-disc" name="disc" class="input" data-change="payCalc"><option value="">No discount</option>${S.discounts.filter(d => d.active).map(d => `<option value="${d.id}">${esc(d.name)} (${d.pct}%)</option>`).join('')}</select><span class="hint" id="pay-note">Check the guest’s ID before applying a discount.</span></label>
+    </div>
+    <div class="sum" id="pay-sum"></div></div>
+    <div class="m-foot"><button type="button" class="btn btn-outline" data-act="close">Cancel</button><button class="btn btn-primary">${icon('check', 20)}Payment received</button></div></form>`);
+  CHANGE.payCalc();
+}
+function confirmModal(title, text, act, id, label){
+  modal(title, `<div class="m-body"><p>${text}</p></div>`, `<div class="m-foot"><button class="btn btn-outline" data-act="close">Cancel</button><button class="btn btn-danger" data-act="${act}" data-id="${id}">${icon('trash', 20)}${label}</button></div>`);
+}
+function foodModal(f){
+  const n = !f; f = f || {name:'', cat:S.categories[0]?.id, price:'', desc:'', status:'available', tags:[], img:''};
+  dlg.dataset.img = f.img;
+  modal(n ? 'Add food' : `Edit ${esc(f.name)}`, `<form id="food-form" data-form="food" data-id="${n ? '' : f.id}"><div class="m-body"><div class="form-grid">
+    <label class="field full"><span>Name</span><input id="ff-name" name="name" class="input" required value="${esc(f.name)}" placeholder="Chicken Inasal"></label>
+    <label class="field"><span>Category</span><select id="ff-cat" name="cat" class="input">${S.categories.map(c => `<option value="${c.id}" ${c.id === f.cat ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</select></label>
+    <label class="field"><span>Price (₱)</span><input id="ff-price" name="price" class="input num" type="number" min="1" step="0.01" required value="${f.price}" placeholder="245.00"></label>
+    <label class="field full"><span>Description</span><textarea id="ff-desc" name="desc" class="input" placeholder="Ingredients in one line">${esc(f.desc)}</textarea></label>
+    <div class="field full"><span>Photo</span><div style="display:flex;gap:12px;align-items:center"><div class="thumb" id="ff-prev" style="width:96px;height:64px">${f.img ? `<img src="${f.img}" alt="">` : `<div class="ph cat-4">${icon('image', 24)}</div>`}</div><input id="ff-img" type="file" accept="image/*" data-change="foodImg" class="input" style="padding:8px"></div></div>
+    <fieldset class="field full" style="border:0;padding:0;margin:0"><span class="label">Status</span><div class="checks">${[['available','Available'], ['unavailable','Not available']].map(([v, l]) => `<label class="check"><input type="radio" name="status" value="${v}" ${f.status === v ? 'checked' : ''}>${l}</label>`).join('')}</div></fieldset>
+    <fieldset class="field full" style="border:0;padding:0;margin:0"><span class="label">Menu tags</span><div class="checks">${Object.entries(TAGS).map(([k, l]) => `<label class="check"><input type="checkbox" name="tags" value="${k}" ${f.tags.includes(k) ? 'checked' : ''}>${l}</label>`).join('')}</div></fieldset>
+  </div></div><div class="m-foot"><button type="button" class="btn btn-outline" data-act="close">Cancel</button><button class="btn btn-primary">${n ? 'Add food' : 'Save changes'}</button></div></form>`);
+}
+function setModal(row){
+  const cfg = SET[S.setTab], n = !row;
+  row = row || {active:true, modules:[]};
+  modal(n ? `Add ${cfg.one}` : `Edit ${esc(row.name)}`, `<form id="set-form" data-form="set" data-id="${n ? '' : row.id}"><div class="m-body">
+    ${cfg.fields.map(f => {
+      const id = 'sf-' + f.k, v = row[f.k];
+      if (f.t === 'check') return `<label class="check"><input id="${id}" type="checkbox" name="${f.k}" ${v ? 'checked' : ''}>${f.l}</label>`;
+      if (f.t === 'select') return `<label class="field"><span>${f.l}</span><select id="${id}" name="${f.k}" class="input">${f.opts().map(([k, l]) => `<option value="${k}" ${k === v ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select></label>`;
+      if (f.t === 'multi') return `<fieldset class="field" style="border:0;padding:0;margin:0"><span class="label">${f.l}</span><div class="checks">${f.opts().map(([k, l]) => `<label class="check"><input type="checkbox" name="${f.k}" value="${k}" ${(v || []).includes(k) ? 'checked' : ''}>${l}</label>`).join('')}</div></fieldset>`;
+      return `<label class="field"><span>${f.l}</span><input id="${id}" name="${f.k}" class="input" ${f.t === 'number' ? 'type="number" min="1" max="100"' : ''} ${f.req ? 'required' : ''} value="${esc(v ?? '')}">${f.hint ? `<span class="hint">${f.hint}</span>` : ''}</label>`;
+    }).join('')}
+  </div><div class="m-foot"><button type="button" class="btn btn-outline" data-act="close">Cancel</button><button class="btn btn-primary">${n ? `Add ${cfg.one}` : 'Save changes'}</button></div></form>`);
+}
+
+/* ---------- Toast ---------- */
+let toastT;
+function toast(msg){ const el = $('#toast'); el.innerHTML = icon('check', 20) + esc(msg); el.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => el.hidden = true, 2600); }
+
+/* ---------- Actions ---------- */
+const ACT = {
+  close:() => dlg.close(),
+  nav:d => { S.view = d.v; S.mode = 'staff'; S.openTable = null; dlg.close(); scrollTo(0, 0); },
+  mode:d => { S.mode = d.v; dlg.close(); scrollTo(0, 0); },
+  tbl:d => { S.openTable = S.openTable === d.id ? null : d.id; },
+  'gen-qr':d => { const t = tableOf(d.id); Object.assign(t, {status:'active', token:uid(), openedAt:Date.now(), bill:null}); S.plates[t.id] = []; qrModal(t); toast(`${t.name} is now active`); },
+  'show-qr':d => qrModal(tableOf(d.id)),
+  'open-guest':d => { S.mode = 'guest'; S.guestTable = d.id; S.guestTab = 'menu'; dlg.close(); scrollTo(0, 0); },
+  knext:d => { const o = S.orders.find(x => x.id === d.id); o.status = KITCHEN[KITCHEN.indexOf(o.status) + 1]; toast(`${o.id} moved to ${OSTAT[o.status].l}`); },
+  serve:d => { const o = S.orders.find(x => x.id === d.id); o.status = 'served'; o.servedAt = Date.now(); syncTable(tableOf(o.table)); toast(`${o.id} served to ${tableOf(o.table).name}`); },
+  receive:d => payModal(tableOf(d.id)),
+  clean:d => { const t = tableOf(d.id); Object.assign(t, {status:'inactive', token:null, openedAt:null, bill:null}); S.plates[t.id] = []; toast(`${t.name} is ready for new guests. The old QR no longer works.`); },
+  order:d => orderModal(S.orders.find(o => o.id === d.id)),
+  range:d => { S.orderRange = d.v; S.orderQ = ''; },
+  'food-view':d => { S.foodView = d.v; },
+  'food-cat':d => { S.foodCat = d.v; },
+  'food-add':() => foodModal(null),
+  'food-edit':d => foodModal(food(d.id)),
+  'food-del':d => confirmModal('Delete food?', `<b>${esc(food(d.id).name)}</b> will be removed from the menu. Past orders keep their record.`, 'food-del-ok', d.id, 'Delete food'),
+  'food-del-ok':d => { const f = food(d.id); S.foods = S.foods.filter(x => x.id !== d.id); dlg.close(); toast(`${f.name} deleted`); },
+  'set-tab':d => { S.setTab = d.v; },
+  'set-add':() => setModal(null),
+  'set-edit':d => setModal(S[S.setTab].find(r => r.id === d.id)),
+  'set-del':d => {
+    const row = S[S.setTab].find(r => r.id === d.id);
+    const used = S.setTab === 'categories' ? S.foods.filter(f => f.cat === d.id).length : S.setTab === 'roles' ? S.users.filter(u => u.role === d.id).length : 0;
+    if (used) return modal(`Can’t delete ${esc(row.name)}`, `<div class="m-body"><div class="alert warn">${icon('alert')}<p>${used} ${S.setTab === 'categories' ? 'foods use this category. Move them to another category first.' : 'users have this role. Give them another role first.'}</p></div></div>`, `<div class="m-foot"><button class="btn btn-outline" data-act="close">OK</button></div>`);
+    confirmModal(`Delete ${SET[S.setTab].one}?`, `<b>${esc(row.name)}</b> will be deleted.`, 'set-del-ok', d.id, 'Delete');
+  },
+  'set-del-ok':d => { S[S.setTab] = S[S.setTab].filter(r => r.id !== d.id); dlg.close(); toast('Deleted'); },
+  // guest
+  'g-who':d => { S.guestName = d.v; },
+  'g-tab':d => { S.guestTab = d.v; },
+  'g-cat':d => { S.guestCat = d.v; },
+  'g-add':d => {
+    const p = S.plates[S.guestTable] = S.plates[S.guestTable] || [];
+    const l = p.find(x => x.foodId === d.id && x.by === S.guestName);
+    l ? l.qty++ : p.push({id:uid(), foodId:d.id, qty:1, by:S.guestName});
+    toast(`${food(d.id).name} added to plate`);
+  },
+  'g-qty':d => { const p = S.plates[S.guestTable], l = p.find(x => x.id === d.id); l.qty += +d.v; if (l.qty < 1) S.plates[S.guestTable] = p.filter(x => x !== l); },
+  'g-send':() => {
+    const t = tableOf(S.guestTable), p = S.plates[t.id];
+    modal('Send plate to kitchen?', `<div class="m-body"><p>You are sending the plate for everyone at ${t.name}. Only one guest sends it, so check with your table first.</p>
+      <ul class="items">${p.map(l => `<li><b class="num">${l.qty}×</b><span>${esc(food(l.foodId).name)}</span><span class="caption muted">${esc(l.by)}</span></li>`).join('')}</ul></div>`,
+      `<div class="m-foot"><button class="btn btn-outline" data-act="close">Not yet</button><button class="btn btn-primary" data-act="g-send-ok">Send to kitchen</button></div>`);
+  },
+  'g-send-ok':() => {
+    const t = tableOf(S.guestTable), p = S.plates[t.id];
+    const items = []; p.forEach(l => { const f = food(l.foodId), e = items.find(i => i.foodId === f.id); e ? e.qty += l.qty : items.push({foodId:f.id, name:f.name, price:f.price, qty:l.qty}); });
+    const o = {id:nextId(), table:t.id, session:t.token, items, status:'queued', createdAt:Date.now(), by:S.guestName};
+    S.orders.push(o); S.plates[t.id] = []; syncTable(t); S.guestTab = 'orders'; dlg.close(); toast(`${o.id} sent to the kitchen`);
+  },
+  'g-billout':() => {
+    const t = tableOf(S.guestTable);
+    modal('Bill out', `<form id="bill-form" data-form="bill"><div class="m-body"><p>How would you like to pay? Your waiter will come to your table.</p>
+      ${S.payments.filter(p => p.active).map((p, i) => `<label class="radio-card"><input type="radio" name="method" value="${p.id}" ${i ? '' : 'checked'}><span class="grow"><b>${esc(p.name)}</b><br><span class="caption muted">${esc(p.details)}</span></span></label>`).join('')}
+      <div class="sum"><div class="total"><span>Total</span><span class="num">${peso(sum(sessionOrders(t).map(total)))}</span></div></div></div>
+      <div class="m-foot"><button type="button" class="btn btn-outline" data-act="close">Cancel</button><button class="btn btn-primary">${icon('bell', 20)}Call my waiter</button></div></form>`);
+  },
+};
+const FORMS = {
+  pay:(fd, f) => {
+    const t = tableOf(f.dataset.id), disc = S.discounts.find(d => d.id === fd.get('disc'));
+    sessionOrders(t).filter(o => o.status !== 'paid').forEach(o => Object.assign(o, {status:'paid', payment:fd.get('method'), discount:disc ? {name:disc.name, pct:disc.pct} : null, paidAt:Date.now()}));
+    Object.assign(t, {status:'cleaning', bill:null}); S.openTable = t.id; dlg.close(); toast(`${t.name} paid. Clean the table, then mark it clean.`);
+  },
+  bill:fd => { const t = tableOf(S.guestTable); t.status = 'billout'; t.bill = {method:fd.get('method'), at:Date.now()}; dlg.close(); toast('Your waiter has been called'); },
+  food:(fd, f) => {
+    const v = {name:fd.get('name').trim(), cat:fd.get('cat'), price:r2(+fd.get('price')), desc:fd.get('desc').trim(), status:fd.get('status'), tags:fd.getAll('tags'), img:dlg.dataset.img || ''};
+    if (!v.name) return;
+    if (f.dataset.id) Object.assign(food(f.dataset.id), v); else S.foods.push({id:'f' + uid(), ...v});
+    dlg.close(); toast(f.dataset.id ? `${v.name} saved` : `${v.name} added to the menu`);
+  },
+  set:(fd, f) => {
+    const cfg = SET[S.setTab], v = {};
+    cfg.fields.forEach(x => v[x.k] = x.t === 'check' ? fd.has(x.k) : x.t === 'multi' ? fd.getAll(x.k) : x.t === 'number' ? +fd.get(x.k) : String(fd.get(x.k)).trim());
+    if (f.dataset.id) Object.assign(S[S.setTab].find(r => r.id === f.dataset.id), v); else S[S.setTab].push({id:uid(), ...v});
+    dlg.close(); toast(`${v.name} saved`);
+  },
+};
+const CHANGE = {
+  gTable:el => { S.guestTable = el.value; S.guestTab = 'menu'; },
+  payCalc:() => {
+    const f = $('#pay-form'); if (!f) return;
+    const t = tableOf(f.dataset.id), os = sessionOrders(t).filter(o => o.status !== 'paid');
+    const sub = sum(os.map(subtotal)), d = S.discounts.find(x => x.id === $('#pay-disc').value);
+    const off = d ? r2(sub * d.pct / 100) : 0;
+    $('#pay-sum').innerHTML = `<div><span class="muted">Subtotal</span><span class="num">${peso(sub)}</span></div>${d ? `<div><span class="muted">${esc(d.name)} (${d.pct}%)</span><span class="num">−${peso(off)}</span></div>` : ''}<div class="total"><span>Amount to collect</span><span class="num">${peso(sub - off)}</span></div>`;
+    $('#pay-note').textContent = d ? `Requirement: ${d.note || 'none'}.` : 'Check the guest’s ID before applying a discount.';
+    return true;
+  },
+  foodImg:el => {
+    const file = el.files[0]; if (!file) return true;
+    const rd = new FileReader();
+    rd.onload = () => { dlg.dataset.img = rd.result; $('#ff-prev').innerHTML = `<img src="${rd.result}" alt="">`; };
+    rd.readAsDataURL(file); return true;
+  },
+};
+
+/* ---------- Render loop ---------- */
+function render(){
+  const a = document.activeElement, id = a?.id, sel = a?.selectionStart;
+  const keep = {}; document.querySelectorAll('[data-keep]').forEach(el => keep[el.dataset.keep] = [el.scrollLeft, el.scrollTop]);
+  $('#app').innerHTML = `<header class="top"><div class="top-in"><span class="brand">${icon('store')}FBS Serve <small>Restaurant manager</small></span><span class="spacer"></span>
+    <div class="seg" role="group" aria-label="View as"><button data-act="mode" data-v="staff" aria-pressed="${S.mode === 'staff'}">${icon('user', 20)}Staff</button><button data-act="mode" data-v="guest" aria-pressed="${S.mode === 'guest'}">${icon('phone', 20)}Guest phone</button></div></div></header>
+    ${S.mode === 'guest' ? guestShell() : staffShell()}`;
+  document.querySelectorAll('[data-keep]').forEach(el => { const k = keep[el.dataset.keep]; if (k) [el.scrollLeft, el.scrollTop] = k; });
+  if (id && !dlg.contains(a)){ const n = document.getElementById(id); if (n){ n.focus(); if (sel != null) try { n.setSelectionRange(sel, sel); } catch {} } }
+}
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-act]'); if (!el || el.disabled) return;
+  e.stopPropagation();
+  ACT[el.dataset.act]?.(el.dataset, el);
+  render();
+});
+document.addEventListener('input', e => { const k = e.target.dataset.input; if (k){ S[k] = e.target.value; render(); } });
+document.addEventListener('change', e => { const k = e.target.dataset.change; if (k && !CHANGE[k](e.target)) render(); });
+document.addEventListener('submit', e => { const f = e.target; if (!f.dataset.form) return; e.preventDefault(); FORMS[f.dataset.form](new FormData(f), f); render(); });
+dlg.addEventListener('close', () => { dlg.innerHTML = ''; });
+setInterval(() => { if (!dlg.open && document.activeElement?.tagName !== 'INPUT') render(); }, 30000);
+render();
+</script>
+
+</body>
+</html>
