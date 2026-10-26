@@ -302,10 +302,15 @@ dialog::backdrop{background:rgba(22,19,15,.55)}
 .chair.v{width:10px;height:22px}
 .tbl{grid-column:2;grid-row:2;border:2px solid var(--border-control);background:var(--surface-card);border-radius:var(--r-md);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:6px 8px;box-shadow:var(--shadow-card);transition:box-shadow .2s}
 .tbl:hover{box-shadow:var(--shadow-lift)}
-.tbl.s2{width:84px;height:84px;border-radius:50%}
-.tbl.s4{width:104px;height:92px}
-.tbl.s6{width:164px;height:92px}
-.tbl b{font-size:18px;line-height:22px;display:flex;align-items:center;gap:4px}
+.tbl.round{border-radius:50%}
+.tbl b{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.floor.editing{outline:2px dashed var(--brand);outline-offset:4px}
+.floor.editing .tbl{cursor:grab;touch-action:none}
+.floor.editing .tbl:active{cursor:grabbing}
+.tw.dragging{z-index:7;opacity:.85}
+.floor-bar{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+@media (max-width:720px){.desk-only{display:none!important}}
+.tbl b{font-size:15px;line-height:20px}
 .tbl .st{font-size:14px;line-height:18px;font-weight:700;display:flex;align-items:center;gap:4px}
 .tbl .st .ic{width:16px;height:16px}
 .tbl.t-inactive{border-style:dashed;background:var(--surface-card);color:var(--ink-muted)}
@@ -480,7 +485,7 @@ const GSTEP_L = ['Order received','Preparation','Cooking','Plating your food','R
 const TAGS = {new:'New', must:'Must try', best:'Best seller'};
 
 const S = {
-  mode:'staff', view:'dashboard', openTable:null,
+  mode:'staff', view:'dashboard', openTable:null, floor:'f1', layoutEdit:false,
   orderRange:'today', orderQ:'', foodView:'card', foodCat:'all', setTab:'payments',
   guestTable:'T3', guestName:'Guest 1', guestTab:'menu', guestCat:'all',
   categories:[
@@ -539,12 +544,16 @@ const S = {
     {id:'T4', seats:4, x:31, y:32}, {id:'T5', seats:4, x:31, y:70}, {id:'T6', seats:4, x:51, y:32}, {id:'T7', seats:4, x:51, y:70},
     {id:'T8', seats:6, x:74, y:44}, {id:'T9', seats:6, x:74, y:76},
     {id:'T10', seats:2, x:93, y:36}, {id:'T11', seats:2, x:93, y:58}, {id:'T12', seats:2, x:93, y:80},
-  ].map(t => ({...t, name:'Table ' + t.id.slice(1), status:'inactive', token:null, openedAt:null, bill:null})),
+      {id:'T13', seats:12, x:38, y:36, name:'Function room', floor:'f2'}, {id:'T14', seats:8, x:38, y:76, floor:'f2'},
+    {id:'T15', seats:4, x:72, y:36, floor:'f2'}, {id:'T16', seats:4, x:72, y:74, floor:'f2'}, {id:'T17', seats:2, x:12, y:40, floor:'f2'},
+  ].map(t => ({floor:'f1', name:'Table ' + t.id.slice(1), ...t, status:'inactive', token:null, openedAt:null, bill:null})),
+  floors:[{id:'f1', name:'Ground floor'}, {id:'f2', name:'2nd floor'}],
   orders:[], plates:{}, seq:1000,
 };
 
 const food = id => S.foods.find(f => f.id === id);
 const tableOf = id => S.tables.find(t => t.id === id);
+const tName = id => tableOf(id)?.name || 'Deleted table';
 const payName = id => S.payments.find(p => p.id === id)?.name || id;
 const catName = id => S.categories.find(c => c.id === id)?.name || 'Uncategorized';
 const catIdx = id => Math.max(0, S.categories.findIndex(c => c.id === id)) % 5;
@@ -648,7 +657,7 @@ function vDashboard(){
       ${top.length ? `<ol class="bars">${top.map((f, i) => `<li class="bar-row"><span class="rank num">${i + 1}</span><span>${esc(f.name)}</span><span class="num label">${f.qty} sold</span><div class="bar-track"><div class="bar-fill" style="width:${f.qty / max * 100}%"></div></div></li>`).join('')}</ol>` : `<div class="empty">No orders yet today.</div>`}
     </section>
     <section class="card"><div class="card-head"><h3>In the kitchen now</h3><button class="btn btn-outline" data-act="nav" data-v="kitchen">Open kitchen</button></div>
-      ${kq.length ? `<ul class="rows">${kq.slice(0, 6).map(o => `<li><div class="grow"><b class="num">${o.id}</b> <span class="muted">· ${esc(tableOf(o.table).name)}</span><div class="caption muted num">${mins(o.createdAt)} min ago</div></div>${oPill(o)}</li>`).join('')}</ul>` : `<div class="empty">The kitchen is clear.</div>`}
+      ${kq.length ? `<ul class="rows">${kq.slice(0, 6).map(o => `<li><div class="grow"><b class="num">${o.id}</b> <span class="muted">· ${esc(tName(o.table))}</span><div class="caption muted num">${mins(o.createdAt)} min ago</div></div>${oPill(o)}</li>`).join('')}</ul>` : `<div class="empty">The kitchen is clear.</div>`}
     </section>
   </div>
   <section class="card"><div class="card-head"><h3>Tables at a glance</h3><button class="btn btn-outline" data-act="nav" data-v="tables">Open floor plan</button></div>
@@ -674,7 +683,7 @@ function vOrders(){
   </div>
   ${q ? `<p class="caption muted">Searching all dates for “${esc(S.orderQ)}”. Clear the search to use the date filter.</p>` : ''}
   <div class="tbl-scroll"><table class="data"><thead><tr><th>Order ID</th><th>Table</th><th>Date and time</th><th>Items</th><th>Payment</th><th class="r">Total</th><th>Status</th></tr></thead><tbody>
-  ${list.slice(0, 200).map(o => `<tr class="click" data-act="order" data-id="${o.id}"><td><button class="link num" data-act="order" data-id="${o.id}">${o.id}</button></td><td>${esc(tableOf(o.table).name)}</td><td class="num">${dt(o.createdAt)}, ${tm(o.createdAt)}</td><td class="num">${sum(o.items.map(i => i.qty))} items</td><td>${o.payment ? esc(payName(o.payment)) : '<span class="muted">Not yet</span>'}</td><td class="r num"><b>${peso(total(o))}</b></td><td>${oPill(o)}</td></tr>`).join('') || `<tr><td colspan="7"><div class="empty">${icon('search', 32)}No orders match. Check the order ID or pick another date range.</div></td></tr>`}
+  ${list.slice(0, 200).map(o => `<tr class="click" data-act="order" data-id="${o.id}"><td><button class="link num" data-act="order" data-id="${o.id}">${o.id}</button></td><td>${esc(tName(o.table))}</td><td class="num">${dt(o.createdAt)}, ${tm(o.createdAt)}</td><td class="num">${sum(o.items.map(i => i.qty))} items</td><td>${o.payment ? esc(payName(o.payment)) : '<span class="muted">Not yet</span>'}</td><td class="r num"><b>${peso(total(o))}</b></td><td>${oPill(o)}</td></tr>`).join('') || `<tr><td colspan="7"><div class="empty">${icon('search', 32)}No orders match. Check the order ID or pick another date range.</div></td></tr>`}
   </tbody></table></div>
   <p class="caption muted num">${list.length} orders · ${peso(sum(list.map(total)))}${list.length > 200 ? ' · showing the latest 200' : ''}</p>`;
 }
@@ -685,7 +694,7 @@ function vKitchen(){
     const list = S.orders.filter(o => o.status === st).sort((a, b) => a.createdAt - b.createdAt);
     return `<section class="col" aria-label="${OSTAT[st].l}"><div class="col-head"><h3>${OSTAT[st].l}</h3><span class="badge soft num">${list.length}</span></div>
     ${list.map(o => { const m = mins(o.createdAt); return `<article class="kcard${m > 20 ? ' overdue' : ''}">
-      <div class="kcard-top"><div><b class="num">${o.id}</b><div class="caption muted">${esc(tableOf(o.table).name)} · ${esc(o.by)}</div></div><span class="caption num ${m > 20 ? 'late label' : 'muted'}">${icon('clock', 16)} ${m} min</span></div>
+      <div class="kcard-top"><div><b class="num">${o.id}</b><div class="caption muted">${esc(tName(o.table))} · ${esc(o.by)}</div></div><span class="caption num ${m > 20 ? 'late label' : 'muted'}">${icon('clock', 16)} ${m} min</span></div>
       <ul>${o.items.map(i => `<li><b class="num">${i.qty}×</b><span>${esc(i.name)}</span></li>`).join('')}</ul>
       <button class="btn ${st === 'completed' ? 'btn-secondary' : 'btn-outline'} block" data-act="${st === 'completed' ? 'serve' : 'knext'}" data-id="${o.id}">${OSTAT[st].next}${st === 'completed' ? '' : icon('arrow', 20)}</button>
     </article>`; }).join('') || `<p class="col-empty">No orders here.</p>`}</section>`;
@@ -730,29 +739,42 @@ function tableBody(t){
   ${a.length ? `<div class="pop-actions">${a.join('')}</div>` : ''}`;
 }
 
+function tableShape(n){
+  // [top chairs, side chairs, bottom chairs, width, height, round]
+  if (n <= 2) return [1, 0, n > 1 ? 1 : 0, 84, 84, true];
+  if (n <= 4) return [1, 1, n > 3 ? 1 : 0, 104, 92, false];
+  const top = Math.min(8, Math.ceil((n - 2) / 2)), bot = Math.min(8, Math.floor((n - 2) / 2));
+  return [top, 1, bot, Math.max(120, top * 32 + 24), 92, false];
+}
 function vTables(){
   const chair = (n, v) => Array.from({length:n}, () => `<span class="chair${v ? ' v' : ''}"></span>`).join('');
-  const layout = t => t.seats === 2 ? [1, 0, 1] : t.seats === 4 ? [1, 1, 1] : [3, 0, 3];
-  return `<div class="page-head"><div><h1>Tables</h1><p class="muted">Floor plan of the dining room. Select a table to see its orders.</p></div></div>
-  <div class="legend">${Object.entries(TSTAT).map(([k, m]) => `${pill(m)}`).join('')}</div>
-  <div class="floor-scroll" data-keep="floor"><div class="floor">
-    <div class="zone" style="left:1%;top:2%;width:22%;height:11%">Counter and cashier</div>
+  if (!S.floors.some(f => f.id === S.floor)) S.floor = S.floors[0]?.id;
+  const tables = S.tables.filter(t => t.floor === S.floor), first = S.floor === S.floors[0]?.id, edit = S.layoutEdit;
+  return `<div class="page-head"><div><h1>Tables</h1><p class="muted">${edit ? 'Drag a table to where it sits in your dining room. Arrow keys move the selected table.' : 'Floor plan of the dining room. Select a table to see its orders.'}</p></div>
+    <button class="btn btn-outline" data-act="goto-set" data-v="tables">${icon('sliders', 20)}Manage tables</button>
+    <button class="btn ${edit ? 'btn-primary' : 'btn-outline'} desk-only" data-act="layout-edit" aria-pressed="${edit}">${icon(edit ? 'check' : 'grid', 20)}${edit ? 'Done arranging' : 'Arrange tables'}</button></div>
+  <div class="floor-bar"><div class="chips" role="group" aria-label="Floor level">${S.floors.map(f => `<button class="chip" data-act="floor" data-v="${f.id}" aria-pressed="${S.floor === f.id}">${esc(f.name)} <span class="num muted">${S.tables.filter(t => t.floor === f.id).length}</span></button>`).join('')}</div>
+    <span class="spacer"></span><div class="legend">${Object.values(TSTAT).map(m => pill(m)).join('')}</div></div>
+  <div class="floor-scroll" data-keep="floor"><div class="floor ${edit ? 'editing' : ''}">
+    ${first ? `<div class="zone" style="left:1%;top:2%;width:22%;height:11%">Counter and cashier</div>
     <div class="zone" style="left:64%;top:2%;width:35%;height:16%">${icon('pot', 20)} Kitchen pass</div>
     <div class="window"></div><span class="window-l">Windows</span>
-    <div class="door"></div><span class="door-l">Entrance</span>
-    ${S.tables.map(t => { const [tp, sd, bt] = layout(t), open = S.openTable === t.id;
+    <div class="door"></div><span class="door-l">Entrance</span>` : ''}
+    ${S.floors.length > 1 ? `<div class="zone" style="left:${first ? 1 : 2}%;bottom:2%;width:12%;height:12%">Stairs</div>` : ''}
+    ${tables.map(t => { const [tp, sd, bt, w, h, round] = tableShape(t.seats), open = !edit && S.openTable === t.id;
       return `<div class="tw ${open ? 'open' : ''}" style="left:${t.x}%;top:${t.y}%">
         <div class="chairs" style="grid-column:2;grid-row:1">${chair(tp)}</div>
         ${sd ? `<div style="grid-column:1;grid-row:2">${chair(1, 1)}</div><div style="grid-column:3;grid-row:2">${chair(1, 1)}</div>` : ''}
-        <button class="tbl s${t.seats} t-${t.status}" data-act="tbl" data-id="${t.id}" aria-expanded="${open}" aria-label="${t.name}, ${TSTAT[t.status].l}">
-          <b>${t.id.slice(1)} ${icon('chev', 16)}</b><span class="st">${icon(TSTAT[t.status].i, 16)}${TSTAT[t.status].l}</span></button>
+        <button id="tb-${t.id}" class="tbl ${round ? 'round' : ''} t-${t.status}" style="width:${w}px;height:${h}px" ${edit ? `data-drag="${t.id}" aria-label="Move ${esc(t.name)}. Use the arrow keys."` : `data-act="tbl" data-id="${t.id}" aria-expanded="${open}" aria-label="${esc(t.name)}, ${t.seats} seats, ${TSTAT[t.status].l}"`}>
+          <b>${esc(t.name)}</b><span class="st">${icon(edit ? 'grid' : TSTAT[t.status].i, 16)}${edit ? t.seats + ' seats' : TSTAT[t.status].l}</span></button>
         <div class="chairs" style="grid-column:2;grid-row:3">${chair(bt)}</div>
-        ${open ? `<div class="pop ${t.y > 55 ? 'up' : 'dn'} ${t.x > 60 ? 'ar' : 'al'}" role="region" aria-label="${t.name} details"><div class="pop-head"><h3>${t.name}</h3><button class="icon-btn" data-act="tbl" data-id="${t.id}" aria-label="Close">${icon('x')}</button></div>${tableBody(t)}</div>` : ''}
+        ${open ? `<div class="pop ${t.y > 55 ? 'up' : 'dn'} ${t.x > 60 ? 'ar' : 'al'}" role="region" aria-label="${esc(t.name)} details"><div class="pop-head"><h3>${esc(t.name)}</h3><button class="icon-btn" data-act="tbl" data-id="${t.id}" aria-label="Close">${icon('x')}</button></div>${tableBody(t)}</div>` : ''}
       </div>`; }).join('')}
+    ${tables.length ? '' : `<div class="empty" style="position:absolute;inset:0;justify-content:center">No tables on this floor yet.<button class="btn btn-primary" data-act="goto-set" data-v="tables">Add a table</button></div>`}
   </div></div>
-  <div class="tlist">${S.tables.map(t => { const open = S.openTable === t.id; return `<div class="trow ${open ? 'open' : ''}">
-    <button data-act="tbl" data-id="${t.id}" aria-expanded="${open}"><span class="grow"><b>${t.name}</b><span class="caption muted"> · ${t.seats} seats</span></span>${tPill(t)}<span class="chev">${icon('chev')}</span></button>
-    ${open ? `<div class="tbody">${tableBody(t)}</div>` : ''}</div>`; }).join('')}</div>`;
+  <div class="tlist">${tables.map(t => { const open = S.openTable === t.id; return `<div class="trow ${open ? 'open' : ''}">
+    <button data-act="tbl" data-id="${t.id}" aria-expanded="${open}"><span class="grow"><b>${esc(t.name)}</b><span class="caption muted"> · ${t.seats} seats</span></span>${tPill(t)}<span class="chev">${icon('chev')}</span></button>
+    ${open ? `<div class="tbody">${tableBody(t)}</div>` : ''}</div>`; }).join('') || '<div class="card empty">No tables on this floor yet.</div>'}</div>`;
 }
 
 const SET = {
@@ -760,7 +782,9 @@ const SET = {
   discounts:{title:'Discounts', one:'discount', fields:[{k:'name', l:'Name', req:1}, {k:'pct', l:'Percent off', t:'number', req:1}, {k:'note', l:'Requirement', hint:'For example: Valid senior citizen ID'}, {k:'active', l:'Active', t:'check'}]},
   users:{title:'Users', one:'user', fields:[{k:'name', l:'Full name', req:1}, {k:'username', l:'Username', req:1}, {k:'role', l:'Role', t:'select', opts:() => S.roles.map(r => [r.id, r.name])}, {k:'active', l:'Can sign in', t:'check'}]},
   roles:{title:'User roles', one:'role', fields:[{k:'name', l:'Role name', req:1}, {k:'modules', l:'Modules this role can open', t:'multi', opts:() => NAV.map(n => [n.id, n.label])}]},
-  categories:{title:'Food categories', one:'category', fields:[{k:'name', l:'Name', req:1}, {k:'desc', l:'Description'}]},
+  categories:{title:'Food categories', one:'category', fields:[{k:'name', l:'Name', req:1}, {k:'desc', l:'Description'}], extra:['Foods', r => `<span class="num">${S.foods.filter(f => f.cat === r.id).length}</span>`]},
+  tables:{title:'Tables', one:'table', fields:[{k:'name', l:'Table name', req:1, hint:'For example: Table 18 or VIP room'}, {k:'seats', l:'Seats', t:'number', req:1, max:40}, {k:'floor', l:'Floor level', t:'select', opts:() => S.floors.map(f => [f.id, f.name])}], extra:['Status', r => tPill(r)]},
+  floors:{title:'Floor levels', one:'floor level', fields:[{k:'name', l:'Floor name', req:1, hint:'For example: Ground floor, 2nd floor, Rooftop'}], extra:['Tables', r => `<span class="num">${S.tables.filter(t => t.floor === r.id).length}</span>`]},
 };
 function cell(f, v){
   if (f.t === 'check') return v ? '<span class="pill p-ok">Yes</span>' : '<span class="pill p-neutral">No</span>';
@@ -771,22 +795,22 @@ function cell(f, v){
 }
 function vSettings(){
   const cfg = SET[S.setTab], rows = S[S.setTab];
-  return `<div class="page-head"><div><h1>Settings</h1><p class="muted">Payment methods, discounts, users, roles and food categories.</p></div></div>
+  return `<div class="page-head"><div><h1>Settings</h1><p class="muted">Payment methods, discounts, users, roles, food categories, tables and floor levels.</p></div></div>
   <div class="tabs" role="tablist">${Object.entries(SET).map(([k, c]) => `<button class="tab" role="tab" data-act="set-tab" data-v="${k}" aria-selected="${S.setTab === k}">${c.title}</button>`).join('')}</div>
   <div class="toolbar"><h2 style="flex:1">${cfg.title}</h2><button class="btn btn-primary" data-act="set-add">${icon('plus', 20)}Add ${cfg.one}</button></div>
-  <div class="tbl-scroll"><table class="data"><thead><tr>${cfg.fields.map(f => `<th>${f.l}</th>`).join('')}${S.setTab === 'categories' ? '<th>Foods</th>' : ''}<th class="r">Actions</th></tr></thead><tbody>
-  ${rows.map(r => `<tr>${cfg.fields.map((f, i) => `<td>${i === 0 ? `<b>${cell(f, r[f.k])}</b>` : cell(f, r[f.k])}</td>`).join('')}${S.setTab === 'categories' ? `<td class="num">${S.foods.filter(f => f.cat === r.id).length}</td>` : ''}
+  <div class="tbl-scroll"><table class="data"><thead><tr>${cfg.fields.map(f => `<th>${f.l}</th>`).join('')}${cfg.extra ? `<th>${cfg.extra[0]}</th>` : ''}<th class="r">Actions</th></tr></thead><tbody>
+  ${rows.map(r => `<tr>${cfg.fields.map((f, i) => `<td>${i === 0 ? `<b>${cell(f, r[f.k])}</b>` : cell(f, r[f.k])}</td>`).join('')}${cfg.extra ? `<td>${cfg.extra[1](r)}</td>` : ''}
     <td class="r" style="white-space:nowrap"><button class="icon-btn" data-act="set-edit" data-id="${r.id}" aria-label="Edit ${esc(r.name)}">${icon('edit')}</button><button class="icon-btn danger" data-act="set-del" data-id="${r.id}" aria-label="Delete ${esc(r.name)}">${icon('trash')}</button></td></tr>`).join('') || `<tr><td colspan="9"><div class="empty">Nothing here yet. Add the first ${cfg.one}.</div></td></tr>`}
   </tbody></table></div>`;
 }
 
 const GUIDE = [
   {v:'dashboard', ic:'dash', t:'Dashboard', d:'See how the day is going at a glance.', s:['Check income today and the amount still to collect.', 'Count today’s orders, paid and open.', 'See the top 5 foods ordered today.', 'Check how many tables are active and inactive.']},
-  {v:'tables', ic:'table', t:'Tables', d:'Seat guests, collect payment and reset tables.', s:['Select an inactive table and tap Generate QR.', 'Show the QR to the guests. Every guest at the table scans the same code.', 'When a table shows Bill out, go to it and tap Receive payment.', 'After cleaning, tap Mark as clean. The old QR stops working.']},
+  {v:'tables', ic:'table', t:'Tables', d:'Seat guests, collect payment and reset tables.', s:['Pick the floor level, then select an inactive table and tap Generate QR.', 'Show the QR to the guests. Every guest at the table scans the same code.', 'When a table shows Bill out, go to it and tap Receive payment.', 'After cleaning, tap Mark as clean. The old QR stops working.', 'Tap Arrange tables and drag each table to where it sits in your restaurant.']},
   {v:'kitchen', ic:'pot', t:'Kitchen', d:'Cook orders in the order they arrived.', s:['New orders appear in Queued, oldest at the top.', 'Tap the button on a card to move it: Preparation, Cooking, Plating, Completed.', 'Guests see every change on their phone right away.', 'Waiters tap Mark as served after bringing the food to the table.']},
   {v:'orders', ic:'receipt', t:'Orders', d:'Find any order, in any status.', s:['Pick Today, This week or This month.', 'Type an order ID in the search box to find it on any date.', 'Select a row to see its items, payment and discount.']},
   {v:'foods', ic:'utensils', t:'Foods', d:'Keep the menu up to date.', s:['Tap Add food and fill in the name, category, price and description.', 'Add a photo and tags: New, Must try or Best seller.', 'Set a food to Not available when it runs out. Guests cannot order it.', 'Switch between Cards and Table view.']},
-  {v:'settings', ic:'sliders', t:'Settings', d:'Set up how the restaurant runs.', s:['Payment methods: choose what guests can pick when they ask for the bill.', 'Discounts: set the percent off and what the guest must show.', 'Users and roles: decide who can open each module.', 'Categories: group foods on the menu.']},
+  {v:'settings', ic:'sliders', t:'Settings', d:'Set up how the restaurant runs.', s:['Payment methods: choose what guests can pick when they ask for the bill.', 'Discounts: set the percent off and what the guest must show.', 'Users and roles: decide who can open each module.', 'Categories: group foods on the menu.', 'Tables and floor levels: add, rename or remove tables, set their seats, and add a 2nd floor.']},
 ];
 function vGuide(){
   return `<div class="page-head"><div><h1>Guide</h1><p class="muted">How each part of FBS Serve works.</p></div></div>
@@ -813,6 +837,7 @@ function staffShell(){
 /* ---------- Guest view ---------- */
 function guestShell(){
   const t = tableOf(S.guestTable);
+  if (!t) return `<main class="main"><div class="wrap"><div class="card empty">Add a table in Settings to preview the guest view.</div></div></main>`;
   const plate = (S.plates[t.id] || []);
   const n = sum(plate.map(l => l.qty));
   const live = t.token && !['inactive','cleaning'].includes(t.status);
@@ -887,8 +912,7 @@ function qrModal(t){
     `<div class="m-foot"><button class="btn btn-outline" data-act="close">Done</button><button class="btn btn-primary" data-act="open-guest" data-id="${t.id}">${icon('phone', 20)}Open guest view</button></div>`);
 }
 function orderModal(o){
-  const t = tableOf(o.table);
-  modal(o.id, `<div class="m-body"><dl class="kv"><dt>Status</dt><dd>${oPill(o)}</dd><dt>Table</dt><dd>${t.name}</dd><dt>Ordered</dt><dd class="num">${dt(o.createdAt)}, ${tm(o.createdAt)}</dd><dt>Sent by</dt><dd>${esc(o.by)}</dd>
+  modal(o.id, `<div class="m-body"><dl class="kv"><dt>Status</dt><dd>${oPill(o)}</dd><dt>Table</dt><dd>${esc(tName(o.table))}</dd><dt>Ordered</dt><dd class="num">${dt(o.createdAt)}, ${tm(o.createdAt)}</dd><dt>Sent by</dt><dd>${esc(o.by)}</dd>
     ${o.payment ? `<dt>Payment</dt><dd>${esc(payName(o.payment))}</dd>` : ''}${o.discount ? `<dt>Discount</dt><dd>${esc(o.discount.name)} (${o.discount.pct}%)</dd>` : ''}</dl>
     <ul class="items">${o.items.map(i => `<li><b class="num">${i.qty}×</b><span>${esc(i.name)}</span><span class="num">${peso(i.qty * i.price)}</span></li>`).join('')}</ul>
     <div class="sum"><div><span class="muted">Subtotal</span><span class="num">${peso(subtotal(o))}</span></div>${o.discount ? `<div><span class="muted">Discount</span><span class="num">−${peso(subtotal(o) - total(o))}</span></div>` : ''}<div class="total"><span>Total</span><span class="num">${peso(total(o))}</span></div></div></div>`,
@@ -931,7 +955,7 @@ function setModal(row){
       if (f.t === 'check') return `<label class="check"><input id="${id}" type="checkbox" name="${f.k}" ${v ? 'checked' : ''}>${f.l}</label>`;
       if (f.t === 'select') return `<label class="field"><span>${f.l}</span><select id="${id}" name="${f.k}" class="input">${f.opts().map(([k, l]) => `<option value="${k}" ${k === v ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select></label>`;
       if (f.t === 'multi') return `<fieldset class="field" style="border:0;padding:0;margin:0"><span class="label">${f.l}</span><div class="checks">${f.opts().map(([k, l]) => `<label class="check"><input type="checkbox" name="${f.k}" value="${k}" ${(v || []).includes(k) ? 'checked' : ''}>${l}</label>`).join('')}</div></fieldset>`;
-      return `<label class="field"><span>${f.l}</span><input id="${id}" name="${f.k}" class="input" ${f.t === 'number' ? 'type="number" min="1" max="100"' : ''} ${f.req ? 'required' : ''} value="${esc(v ?? '')}">${f.hint ? `<span class="hint">${f.hint}</span>` : ''}</label>`;
+      return `<label class="field"><span>${f.l}</span><input id="${id}" name="${f.k}" class="input" ${f.t === 'number' ? `type="number" min="1" max="${f.max || 100}"` : ''} ${f.req ? 'required' : ''} value="${esc(v ?? '')}" ${f.t === 'number' ? 'inputmode="numeric"' : ''}>${f.hint ? `<span class="hint">${f.hint}</span>` : ''}</label>`;
     }).join('')}
   </div><div class="m-foot"><button type="button" class="btn btn-outline" data-act="close">Cancel</button><button class="btn btn-primary">${n ? `Add ${cfg.one}` : 'Save changes'}</button></div></form>`);
 }
@@ -943,14 +967,14 @@ function toast(msg){ const el = $('#toast'); el.innerHTML = icon('check', 20) + 
 /* ---------- Actions ---------- */
 const ACT = {
   close:() => dlg.close(),
-  nav:d => { S.view = d.v; S.mode = 'staff'; S.openTable = null; dlg.close(); scrollTo(0, 0); },
+  nav:d => { S.view = d.v; S.mode = 'staff'; S.openTable = null; S.layoutEdit = false; dlg.close(); scrollTo(0, 0); },
   mode:d => { S.mode = d.v; dlg.close(); scrollTo(0, 0); },
   tbl:d => { S.openTable = S.openTable === d.id ? null : d.id; },
   'gen-qr':d => { const t = tableOf(d.id); Object.assign(t, {status:'active', token:uid(), openedAt:Date.now(), bill:null}); S.plates[t.id] = []; qrModal(t); toast(`${t.name} is now active`); },
   'show-qr':d => qrModal(tableOf(d.id)),
   'open-guest':d => { S.mode = 'guest'; S.guestTable = d.id; S.guestTab = 'menu'; dlg.close(); scrollTo(0, 0); },
   knext:d => { const o = S.orders.find(x => x.id === d.id); o.status = KITCHEN[KITCHEN.indexOf(o.status) + 1]; toast(`${o.id} moved to ${OSTAT[o.status].l}`); },
-  serve:d => { const o = S.orders.find(x => x.id === d.id); o.status = 'served'; o.servedAt = Date.now(); syncTable(tableOf(o.table)); toast(`${o.id} served to ${tableOf(o.table).name}`); },
+  serve:d => { const o = S.orders.find(x => x.id === d.id); o.status = 'served'; o.servedAt = Date.now(); syncTable(tableOf(o.table)); toast(`${o.id} served to ${tName(o.table)}`); },
   receive:d => payModal(tableOf(d.id)),
   clean:d => { const t = tableOf(d.id); Object.assign(t, {status:'inactive', token:null, openedAt:null, bill:null}); S.plates[t.id] = []; toast(`${t.name} is ready for new guests. The old QR no longer works.`); },
   order:d => orderModal(S.orders.find(o => o.id === d.id)),
@@ -966,11 +990,22 @@ const ACT = {
   'set-edit':d => setModal(S[S.setTab].find(r => r.id === d.id)),
   'set-del':d => {
     const row = S[S.setTab].find(r => r.id === d.id);
-    const used = S.setTab === 'categories' ? S.foods.filter(f => f.cat === d.id).length : S.setTab === 'roles' ? S.users.filter(u => u.role === d.id).length : 0;
-    if (used) return modal(`Can’t delete ${esc(row.name)}`, `<div class="m-body"><div class="alert warn">${icon('alert')}<p>${used} ${S.setTab === 'categories' ? 'foods use this category. Move them to another category first.' : 'users have this role. Give them another role first.'}</p></div></div>`, `<div class="m-foot"><button class="btn btn-outline" data-act="close">OK</button></div>`);
+    const block = S.setTab === 'categories' ? (n => n && `${n} foods use this category. Move them to another category first.`)(S.foods.filter(f => f.cat === d.id).length)
+      : S.setTab === 'roles' ? (n => n && `${n} users have this role. Give them another role first.`)(S.users.filter(u => u.role === d.id).length)
+      : S.setTab === 'floors' ? (S.floors.length === 1 ? 'The restaurant needs at least one floor level.' : (n => n && `${n} tables are on this floor. Move or delete them first.`)(S.tables.filter(t => t.floor === d.id).length))
+      : S.setTab === 'tables' && row.status !== 'inactive' ? `${row.name} has guests right now. Collect payment and mark it clean first.` : '';
+    if (block) return modal(`Can’t delete ${esc(row.name)}`, `<div class="m-body"><div class="alert warn">${icon('alert')}<p>${esc(block)}</p></div></div>`, `<div class="m-foot"><button class="btn btn-outline" data-act="close">OK</button></div>`);
     confirmModal(`Delete ${SET[S.setTab].one}?`, `<b>${esc(row.name)}</b> will be deleted.`, 'set-del-ok', d.id, 'Delete');
   },
-  'set-del-ok':d => { S[S.setTab] = S[S.setTab].filter(r => r.id !== d.id); dlg.close(); toast('Deleted'); },
+  'set-del-ok':d => {
+    S[S.setTab] = S[S.setTab].filter(r => r.id !== d.id);
+    if (S.guestTable === d.id) S.guestTable = S.tables[0]?.id;
+    if (S.openTable === d.id) S.openTable = null;
+    dlg.close(); toast('Deleted');
+  },
+  floor:d => { S.floor = d.v; S.openTable = null; },
+  'layout-edit':() => { S.layoutEdit = !S.layoutEdit; S.openTable = null; if (!S.layoutEdit) toast('Table layout saved'); },
+  'goto-set':d => { S.view = 'settings'; S.setTab = d.v; S.layoutEdit = false; scrollTo(0, 0); },
   // guest
   'g-who':d => { S.guestName = d.v; },
   'g-tab':d => { S.guestTab = d.v; },
@@ -1018,7 +1053,9 @@ const FORMS = {
   set:(fd, f) => {
     const cfg = SET[S.setTab], v = {};
     cfg.fields.forEach(x => v[x.k] = x.t === 'check' ? fd.has(x.k) : x.t === 'multi' ? fd.getAll(x.k) : x.t === 'number' ? +fd.get(x.k) : String(fd.get(x.k)).trim());
-    if (f.dataset.id) Object.assign(S[S.setTab].find(r => r.id === f.dataset.id), v); else S[S.setTab].push({id:uid(), ...v});
+    if (f.dataset.id) Object.assign(S[S.setTab].find(r => r.id === f.dataset.id), v);
+    else if (S.setTab === 'tables') S.tables.push({id:'T' + uid(), ...v, x:50, y:50, status:'inactive', token:null, openedAt:null, bill:null});
+    else S[S.setTab].push({id:uid(), ...v});
     dlg.close(); toast(`${v.name} saved`);
   },
 };
@@ -1061,6 +1098,30 @@ document.addEventListener('input', e => { const k = e.target.dataset.input; if (
 document.addEventListener('change', e => { const k = e.target.dataset.change; if (k && !CHANGE[k](e.target)) render(); });
 document.addEventListener('submit', e => { const f = e.target; if (!f.dataset.form) return; e.preventDefault(); FORMS[f.dataset.form](new FormData(f), f); render(); });
 dlg.addEventListener('close', () => { dlg.innerHTML = ''; });
+let drag = null;
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+document.addEventListener('pointerdown', e => {
+  const el = e.target.closest('[data-drag]'); if (!el) return;
+  const t = tableOf(el.dataset.drag), r = el.closest('.floor').getBoundingClientRect();
+  drag = {t, r, tw:el.closest('.tw'), dx:(e.clientX - r.left) / r.width * 100 - t.x, dy:(e.clientY - r.top) / r.height * 100 - t.y};
+  el.setPointerCapture(e.pointerId); el.focus(); e.preventDefault();
+});
+document.addEventListener('pointermove', e => {
+  if (!drag) return;
+  const {r, tw} = drag;
+  drag.x = clamp((e.clientX - r.left) / r.width * 100 - drag.dx, 3, 97);
+  drag.y = clamp((e.clientY - r.top) / r.height * 100 - drag.dy, 5, 95);
+  tw.style.left = drag.x + '%'; tw.style.top = drag.y + '%'; tw.classList.add('dragging');
+});
+const endDrag = () => { if (!drag) return; if (drag.x != null){ drag.t.x = r2(drag.x); drag.t.y = r2(drag.y); } drag = null; render(); };
+document.addEventListener('pointerup', endDrag);
+document.addEventListener('pointercancel', endDrag);
+document.addEventListener('keydown', e => {
+  const el = e.target.closest?.('[data-drag]'), k = {ArrowLeft:[-1, 0], ArrowRight:[1, 0], ArrowUp:[0, -1], ArrowDown:[0, 1]}[e.key];
+  if (!el || !k) return;
+  const t = tableOf(el.dataset.drag), step = e.shiftKey ? 5 : 1;
+  t.x = clamp(t.x + k[0] * step, 3, 97); t.y = clamp(t.y + k[1] * step, 5, 95); e.preventDefault(); render();
+});
 setInterval(() => { if (!dlg.open && document.activeElement?.tagName !== 'INPUT') render(); }, 30000);
 render();
 </script>
