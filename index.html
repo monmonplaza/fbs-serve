@@ -724,18 +724,18 @@ function tableBody(t){
   const os = sessionOrders(t), items = aggregate(os.filter(o => o.status !== 'paid' || t.status === 'cleaning'));
   const ready = os.filter(o => o.status === 'completed');
   const a = [];
-  if (t.status === 'inactive') a.push(`<button class="btn btn-primary" data-act="gen-qr" data-id="${t.id}">${icon('qr', 20)}Generate QR</button>`);
+  if (t.status === 'inactive') a.push(`<button class="btn btn-primary" data-act="activate" data-id="${t.id}">${icon('qr', 20)}Activate table</button>`);
   if (['active','ordering','eating'].includes(t.status)) a.push(`<button class="btn btn-outline" data-act="show-qr" data-id="${t.id}">${icon('qr', 20)}Show QR</button>`);
   ready.forEach(o => a.push(`<button class="btn btn-secondary" data-act="serve" data-id="${o.id}">${icon('check', 20)}Serve ${o.id}</button>`));
   if (t.status === 'billout') a.push(`<button class="btn btn-primary" data-act="receive" data-id="${t.id}">${icon('wallet', 20)}Receive payment</button>`);
   if (t.status === 'cleaning') a.push(`<button class="btn btn-primary" data-act="clean" data-id="${t.id}">${icon('sparkle', 20)}Mark as clean</button>`);
   if (t.token && t.status !== 'cleaning') a.push(`<button class="btn btn-ghost" data-act="open-guest" data-id="${t.id}">${icon('phone', 20)}Guest view</button>`);
-  return `<dl class="kv"><dt>Status</dt><dd>${tPill(t)}</dd><dt>Seats</dt><dd>${t.seats}</dd>
+  return `<dl class="kv"><dt>Status</dt><dd>${tPill(t)}</dd><dt>Seats</dt><dd>${t.seats}</dd>${t.guests ? `<dt>Guests</dt><dd class="num">${t.guests}</dd>` : ''}
     ${t.openedAt ? `<dt>Seated</dt><dd class="num">${tm(t.openedAt)} (${mins(t.openedAt)} min)</dd>` : ''}
     ${os.length ? `<dt>Orders</dt><dd class="num">${os.map(o => `${o.id} at ${tm(o.createdAt)} · ${OSTAT[o.status].l}`).join('<br>')}</dd>` : ''}
     ${t.bill ? `<dt>Pays with</dt><dd>${esc(payName(t.bill.method))}</dd>` : ''}</dl>
   ${items.length ? `<ul class="items">${items.map(i => `<li><b class="num">${i.qty}×</b><span>${esc(i.name)}</span><span class="num">${peso(i.qty * i.price)}</span></li>`).join('')}</ul><div class="sum"><div class="total"><span>Total</span><span class="num">${peso(sum(os.map(total)))}</span></div></div>`
-    : `<p class="caption muted">${t.status === 'inactive' ? 'No guests. Generate a QR when guests sit down.' : 'No orders yet.'}</p>`}
+    : `<p class="caption muted">${t.status === 'inactive' ? 'No guests. When guests sit here, tap Activate table to show their QR code.' : 'No orders yet.'}</p>`}
   ${a.length ? `<div class="pop-actions">${a.join('')}</div>` : ''}`;
 }
 
@@ -806,7 +806,7 @@ function vSettings(){
 
 const GUIDE = [
   {v:'dashboard', ic:'dash', t:'Dashboard', d:'See how the day is going at a glance.', s:['Check income today and the amount still to collect.', 'Count today’s orders, paid and open.', 'See the top 5 foods ordered today.', 'Check how many tables are active and inactive.']},
-  {v:'tables', ic:'table', t:'Tables', d:'Seat guests, collect payment and reset tables.', s:['Pick the floor level, then select an inactive table and tap Generate QR.', 'Show the QR to the guests. Every guest at the table scans the same code.', 'When a table shows Bill out, go to it and tap Receive payment.', 'After cleaning, tap Mark as clean. The old QR stops working.', 'Tap Arrange tables and drag each table to where it sits in your restaurant.']},
+  {v:'tables', ic:'table', t:'Tables', d:'Seat guests, collect payment and reset tables.', s:['When guests sit at an inactive table, select it and tap Activate table. This always comes first.', 'Show the QR to the guests. Every guest at the table scans the same code.', 'When a table shows Bill out, go to it and tap Receive payment.', 'After cleaning, tap Mark as clean. The old QR stops working.', 'Tap Arrange tables and drag each table to where it sits in your restaurant.']},
   {v:'kitchen', ic:'pot', t:'Kitchen', d:'Cook orders in the order they arrived.', s:['New orders appear in Queued, oldest at the top.', 'Tap the button on a card to move it: Preparation, Cooking, Plating, Completed.', 'Guests see every change on their phone right away.', 'Waiters tap Mark as served after bringing the food to the table.']},
   {v:'orders', ic:'receipt', t:'Orders', d:'Find any order, in any status.', s:['Pick Today, This week or This month.', 'Type an order ID in the search box to find it on any date.', 'Select a row to see its items, payment and discount.']},
   {v:'foods', ic:'utensils', t:'Foods', d:'Keep the menu up to date.', s:['Tap Add food and fill in the name, category, price and description.', 'Add a photo and tags: New, Must try or Best seller.', 'Set a food to Not available when it runs out. Guests cannot order it.', 'Switch between Cards and Table view.']},
@@ -815,7 +815,7 @@ const GUIDE = [
 function vGuide(){
   return `<div class="page-head"><div><h1>Guide</h1><p class="muted">How each part of FBS Serve works.</p></div></div>
   <section class="card"><div class="card-head"><h3>From QR to clean table</h3></div>
-    <ol class="flow">${[['Waiter','Generates the table QR. The table becomes Active.'], ['Guests','Add food to one shared plate. One guest sends it to the kitchen.'], ['Kitchen','Moves the order: Preparation, Cooking, Plating, Completed.'], ['Waiter','Brings the food. The table becomes Eating.'], ['Guest','Taps Bill out and picks a payment method. The waiter is called.'], ['Waiter','Collects payment, cleans, and marks the table clean.']].map(([w, d], i) => `<li><span class="n">${i + 1}</span><b>${w}</b><span class="caption muted">${d}</span></li>`).join('')}</ol>
+    <ol class="flow">${[['Waiter','Activates the inactive table the guests sat at. Its QR code appears.'], ['Guests','Add food to one shared plate. One guest sends it to the kitchen.'], ['Kitchen','Moves the order: Preparation, Cooking, Plating, Completed.'], ['Waiter','Brings the food. The table becomes Eating.'], ['Guest','Taps Bill out and picks a payment method. The waiter is called.'], ['Waiter','Collects payment, cleans, and marks the table clean.']].map(([w, d], i) => `<li><span class="n">${i + 1}</span><b>${w}</b><span class="caption muted">${d}</span></li>`).join('')}</ol>
   </section>
   <div class="guide-grid">${GUIDE.map(g => `<article class="card gcard"><div class="gi">${icon(g.ic)}</div><h3>${g.t}</h3><p class="muted">${g.d}</p><ol>${g.s.map(x => `<li>${x}</li>`).join('')}</ol><button class="btn btn-outline" data-act="nav" data-v="${g.v}">Open ${g.t}</button></article>`).join('')}
     <article class="card gcard"><div class="gi">${icon('phone')}</div><h3>Guest phone</h3><p class="muted">What guests see after scanning the QR.</p><ol><li>Browse the menu and tap Add to plate.</li><li>Check Your plate. Everyone at the table shares it.</li><li>One guest taps Send to kitchen.</li><li>Follow the order live, then tap Bill out to pay.</li></ol><button class="btn btn-outline" data-act="mode" data-v="guest">Preview guest view</button></article>
@@ -860,7 +860,7 @@ function guestShell(){
 }
 function gClosed(t){
   if (t.status === 'cleaning') return `<div class="center"><div class="big-ic">${icon('check', 32)}</div><h3>Payment received</h3><p class="muted">Thank you for dining at FBS Serve. This table QR is now closed.</p></div>`;
-  return `<div class="center"><div class="big-ic">${icon('qr', 32)}</div><h3>This QR code has expired</h3><p class="muted">Ask your waiter for a new QR code for ${t.name}.</p></div>`;
+  return `<div class="center"><div class="big-ic">${icon('qr', 32)}</div><h3>${t.name} is not active yet</h3><p class="muted">Ask your waiter to activate this table. Then scan the QR code they show you.</p></div>`;
 }
 function gMenu(){
   const cats = [['all','All']].concat(S.categories.map(c => [c.id, c.name]));
@@ -970,13 +970,19 @@ const ACT = {
   nav:d => { S.view = d.v; S.mode = 'staff'; S.openTable = null; S.layoutEdit = false; dlg.close(); scrollTo(0, 0); },
   mode:d => { S.mode = d.v; dlg.close(); scrollTo(0, 0); },
   tbl:d => { S.openTable = S.openTable === d.id ? null : d.id; },
-  'gen-qr':d => { const t = tableOf(d.id); Object.assign(t, {status:'active', token:uid(), openedAt:Date.now(), bill:null}); S.plates[t.id] = []; qrModal(t); toast(`${t.name} is now active`); },
+  activate:d => {
+    const t = tableOf(d.id);
+    modal(`Activate ${esc(t.name)}`, `<form id="act-form" data-form="activate" data-id="${t.id}"><div class="m-body">
+      <p>Activate this table after the guests sit down. Its QR code appears next, for the guests to scan and order.</p>
+      <label class="field"><span>Number of guests</span><input id="act-guests" name="guests" class="input num" type="number" min="1" max="99" inputmode="numeric" required value="${Math.min(2, t.seats)}"><span class="hint">${esc(t.name)} has ${t.seats} seats.</span></label>
+    </div><div class="m-foot"><button type="button" class="btn btn-outline" data-act="close">Cancel</button><button class="btn btn-primary">${icon('qr', 20)}Activate and show QR</button></div></form>`);
+  },
   'show-qr':d => qrModal(tableOf(d.id)),
   'open-guest':d => { S.mode = 'guest'; S.guestTable = d.id; S.guestTab = 'menu'; dlg.close(); scrollTo(0, 0); },
   knext:d => { const o = S.orders.find(x => x.id === d.id); o.status = KITCHEN[KITCHEN.indexOf(o.status) + 1]; toast(`${o.id} moved to ${OSTAT[o.status].l}`); },
   serve:d => { const o = S.orders.find(x => x.id === d.id); o.status = 'served'; o.servedAt = Date.now(); syncTable(tableOf(o.table)); toast(`${o.id} served to ${tName(o.table)}`); },
   receive:d => payModal(tableOf(d.id)),
-  clean:d => { const t = tableOf(d.id); Object.assign(t, {status:'inactive', token:null, openedAt:null, bill:null}); S.plates[t.id] = []; toast(`${t.name} is ready for new guests. The old QR no longer works.`); },
+  clean:d => { const t = tableOf(d.id); Object.assign(t, {status:'inactive', token:null, openedAt:null, bill:null, guests:null}); S.plates[t.id] = []; toast(`${t.name} is ready for new guests. The old QR no longer works.`); },
   order:d => orderModal(S.orders.find(o => o.id === d.id)),
   range:d => { S.orderRange = d.v; S.orderQ = ''; },
   'food-view':d => { S.foodView = d.v; },
@@ -1038,6 +1044,11 @@ const ACT = {
   },
 };
 const FORMS = {
+  activate:(fd, f) => {
+    const t = tableOf(f.dataset.id);
+    Object.assign(t, {status:'active', token:uid(), openedAt:Date.now(), bill:null, guests:+fd.get('guests')}); S.plates[t.id] = [];
+    qrModal(t); toast(`${t.name} is active. Show the QR code to the guests.`);
+  },
   pay:(fd, f) => {
     const t = tableOf(f.dataset.id), disc = S.discounts.find(d => d.id === fd.get('disc'));
     sessionOrders(t).filter(o => o.status !== 'paid').forEach(o => Object.assign(o, {status:'paid', payment:fd.get('method'), discount:disc ? {name:disc.name, pct:disc.pct} : null, paidAt:Date.now()}));
