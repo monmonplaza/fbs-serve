@@ -6,44 +6,47 @@
 </head>
 <body>
 <title>FBS Serve</title>
+<link rel="icon" href="assets/fbs-serve-logo.png">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap">
 <style>
-/* Layout: sticky top bar, left module rail on desktop (scroll strip on phone), content column max 1200px. Tokens from the Savora design system. */
+/* Layout: sticky top bar, left module rail on desktop (scroll strip on phone), content column max 1200px. Colors from the FBS Serve color system v1.0; type, spacing and radius from the Savora design guide. */
 :root{
-  --surface-page:#FAF7F2;--surface-card:#FFFFFF;--surface-sunken:#F0EBE1;
-  --ink:#1B1B18;--ink-muted:#5A564E;--border-control:#8A8479;--hairline:#E3DDD2;
-  --brand:#B8321A;--brand-hover:#962612;--brand-active:#7A1E0E;--on-brand:#FFFFFF;--brand-tint:#FBE6E0;
-  --secondary:#1F5D3A;--secondary-hover:#17482D;--secondary-active:#103520;--on-secondary:#FFFFFF;
-  --accent:#F4C95D;--on-accent:#1B1B18;
-  --disabled-bg:#E6E1D8;--disabled-ink:#5F5A51;--focus:#1B4FD8;
-  --success:#1F6B3F;--success-tint:#DDF0E4;--warning:#7A4E00;--warning-tint:#FFF0CC;--error:#A31621;--error-tint:#FBE3E4;
-  --info:#1B4FD8;--info-tint:#E3EAFB;
-  --shadow-card:0 1px 2px rgba(27,27,24,.08),0 4px 12px rgba(27,27,24,.06);
-  --shadow-lift:0 2px 4px rgba(27,27,24,.10),0 10px 24px rgba(27,27,24,.12);
+  --surface-page:#F4F6F8;--surface-card:#FFFFFF;--surface-elevated:#FFFFFF;--surface-sunken:#EEF1F5;
+  --ink:#16191F;--ink-muted:#525B69;--border-control:#6B7584;--hairline:#DCE1E7;
+  --brand:#476818;--brand-hover:#385217;--brand-active:#233510;--on-brand:#FFFFFF;--brand-tint:#EAF6CC;
+  --secondary:#107236;--secondary-hover:#0C5A2A;--secondary-active:#08431F;--on-secondary:#FFFFFF;
+  --accent:#C42A93;--accent-ink:#A51E7A;--accent-tint:#FADCEF;--on-accent:#FFFFFF;
+  --disabled-bg:#EBEEF2;--disabled-ink:#5E6876;--focus:#C42A93;
+  --success:#107236;--success-tint:#DCF5E5;--warning:#A7530A;--warning-tint:#FEF0D7;--error:#C11E38;--error-tint:#FDE2E6;
+  --info:#1D5BD8;--info-tint:#DBE8FF;--purple:#6D33D9;--purple-tint:#ECE4FF;
+  --shadow-card:0 1px 2px rgba(22,25,31,.08),0 4px 12px rgba(22,25,31,.06);
+  --shadow-lift:0 2px 4px rgba(22,25,31,.10),0 10px 24px rgba(22,25,31,.12);
   --font:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --r-sm:8px;--r-md:12px;--r-lg:20px;--r-pill:999px;--tap:48px;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --surface-page:#16130F;--surface-card:#211D18;--surface-sunken:#0F0D0A;
-  --ink:#F6F1E8;--ink-muted:#BDB6A9;--border-control:#8F8777;--hairline:#3A342C;
-  --brand:#FF7A5C;--brand-hover:#FF9279;--brand-active:#FFB09D;--on-brand:#16130F;--brand-tint:#3A1D16;
-  --secondary:#7FD4A0;--secondary-hover:#9BE0B5;--secondary-active:#B7EACA;--on-secondary:#10200F;
-  --disabled-bg:#2B2620;--disabled-ink:#A39C8E;--focus:#8FB0FF;
-  --success:#6FD59A;--success-tint:#12261B;--warning:#F2C14E;--warning-tint:#2E2410;--error:#FF8A8F;--error-tint:#341517;
-  --info:#8FB0FF;--info-tint:#18213A;
+  --surface-page:#0F1115;--surface-card:#16191F;--surface-elevated:#1D2128;--surface-sunken:#22262E;
+  --ink:#EDF0F4;--ink-muted:#A9B2BF;--border-control:#808A98;--hairline:#2A2F38;
+  --brand:#B8DF63;--brand-hover:#D4EC9C;--brand-active:#EAF6CC;--on-brand:#16191F;--brand-tint:#24301A;
+  --secondary:#5EE08F;--secondary-hover:#8BE9AE;--secondary-active:#B5F1CB;--on-secondary:#0F1115;
+  --accent:#E35BBF;--accent-ink:#E35BBF;--accent-tint:#3A1530;--on-accent:#16191F;
+  --disabled-bg:#272C35;--disabled-ink:#A9B2BF;--focus:#E35BBF;
+  --success:#5EE08F;--success-tint:#12301F;--warning:#FDBA4D;--warning-tint:#3A2810;--error:#FF8F8F;--error-tint:#3D161D;
+  --info:#7DB0FF;--info-tint:#172A4A;--purple:#BCA4FF;--purple-tint:#2A1F4A;
   --shadow-card:0 1px 2px rgba(0,0,0,.5),0 4px 12px rgba(0,0,0,.35);
   --shadow-lift:0 2px 4px rgba(0,0,0,.6),0 10px 24px rgba(0,0,0,.5);
   color-scheme:dark}}
 :root[data-theme="dark"]{
-  --surface-page:#16130F;--surface-card:#211D18;--surface-sunken:#0F0D0A;
-  --ink:#F6F1E8;--ink-muted:#BDB6A9;--border-control:#8F8777;--hairline:#3A342C;
-  --brand:#FF7A5C;--brand-hover:#FF9279;--brand-active:#FFB09D;--on-brand:#16130F;--brand-tint:#3A1D16;
-  --secondary:#7FD4A0;--secondary-hover:#9BE0B5;--secondary-active:#B7EACA;--on-secondary:#10200F;
-  --disabled-bg:#2B2620;--disabled-ink:#A39C8E;--focus:#8FB0FF;
-  --success:#6FD59A;--success-tint:#12261B;--warning:#F2C14E;--warning-tint:#2E2410;--error:#FF8A8F;--error-tint:#341517;
-  --info:#8FB0FF;--info-tint:#18213A;
+  --surface-page:#0F1115;--surface-card:#16191F;--surface-elevated:#1D2128;--surface-sunken:#22262E;
+  --ink:#EDF0F4;--ink-muted:#A9B2BF;--border-control:#808A98;--hairline:#2A2F38;
+  --brand:#B8DF63;--brand-hover:#D4EC9C;--brand-active:#EAF6CC;--on-brand:#16191F;--brand-tint:#24301A;
+  --secondary:#5EE08F;--secondary-hover:#8BE9AE;--secondary-active:#B5F1CB;--on-secondary:#0F1115;
+  --accent:#E35BBF;--accent-ink:#E35BBF;--accent-tint:#3A1530;--on-accent:#16191F;
+  --disabled-bg:#272C35;--disabled-ink:#A9B2BF;--focus:#E35BBF;
+  --success:#5EE08F;--success-tint:#12301F;--warning:#FDBA4D;--warning-tint:#3A2810;--error:#FF8F8F;--error-tint:#3D161D;
+  --info:#7DB0FF;--info-tint:#172A4A;--purple:#BCA4FF;--purple-tint:#2A1F4A;
   --shadow-card:0 1px 2px rgba(0,0,0,.5),0 4px 12px rgba(0,0,0,.35);
   --shadow-lift:0 2px 4px rgba(0,0,0,.6),0 10px 24px rgba(0,0,0,.5);
   color-scheme:dark}
@@ -67,7 +70,8 @@ button,input,select,textarea{font:inherit;color:inherit}
 /* Top bar */
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface-card);border-bottom:1px solid var(--hairline)}
 .top-in{display:flex;align-items:center;gap:16px;min-height:64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));flex-wrap:wrap}
-.brand{display:flex;align-items:center;gap:8px;font-weight:700;font-size:22px;color:var(--brand)}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:22px;color:var(--ink)}
+.logo{width:36px;height:36px;border-radius:9px;display:block;flex:none}
 .brand small{font-size:14px;color:var(--ink-muted);font-weight:400}
 .spacer{flex:1}
 .seg{display:inline-flex;background:var(--surface-sunken);border-radius:var(--r-pill);padding:4px;gap:4px}
@@ -99,8 +103,8 @@ button,input,select,textarea{font:inherit;color:inherit}
 /* Alert banner */
 .alert{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:var(--r-md);flex-wrap:wrap}
 .alert p{flex:1;min-width:200px}
-.alert.brand{background:var(--brand-tint);color:var(--ink)}
-.alert.brand .ic{color:var(--brand)}
+.alert.brand{background:var(--accent-tint);color:var(--ink)}
+.alert.brand .ic{color:var(--accent)}
 .alert.info{background:var(--info-tint)}
 .alert.warn{background:var(--warning-tint)}
 .alert.warn .ic{color:var(--warning)}
@@ -134,12 +138,13 @@ button,input,select,textarea{font:inherit;color:inherit}
 .card-head h3{flex:1}
 .pill{display:inline-flex;align-items:center;gap:4px;padding:2px 10px 2px 8px;border-radius:var(--r-pill);font-size:14px;line-height:20px;font-weight:700;white-space:nowrap}
 .pill .ic{width:16px;height:16px}
-.p-neutral{background:var(--surface-sunken);color:var(--ink)}
+.p-neutral{background:var(--disabled-bg);color:var(--disabled-ink)}
 .p-info{background:var(--info-tint);color:var(--info)}
 .p-warn{background:var(--warning-tint);color:var(--warning)}
 .p-ok{background:var(--success-tint);color:var(--success)}
 .p-brand{background:var(--brand-tint);color:var(--brand)}
-.p-accent{background:var(--accent);color:var(--on-accent)}
+.p-accent{background:var(--accent-tint);color:var(--accent-ink)}
+.p-purple{background:var(--purple-tint);color:var(--purple)}
 .p-error{background:var(--error-tint);color:var(--error)}
 .chips{display:flex;gap:8px;flex-wrap:wrap}
 .chip{min-height:40px;padding:0 16px;border-radius:var(--r-pill);border:1.5px solid var(--border-control);background:var(--surface-card);font-weight:700;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
@@ -147,8 +152,8 @@ button,input,select,textarea{font:inherit;color:inherit}
 .chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--surface-card)}
 .tag{display:inline-block;padding:0 8px;border-radius:var(--r-sm);font-size:14px;line-height:22px;font-weight:700}
 .tag-new{background:var(--info-tint);color:var(--info)}
-.tag-must{background:var(--success-tint);color:var(--success)}
-.tag-best{background:var(--accent);color:var(--on-accent)}
+.tag-must{background:var(--brand-tint);color:var(--brand)}
+.tag-best{background:var(--accent-tint);color:var(--accent-ink)}
 
 /* Dashboard */
 .tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
@@ -206,7 +211,7 @@ textarea.input{min-height:96px;resize:vertical}
 .radio-card .grow{flex:1}
 
 /* Dialog */
-dialog{border:0;padding:0;border-radius:var(--r-lg);background:var(--surface-card);color:var(--ink);box-shadow:var(--shadow-lift);width:min(560px,calc(100% - 32px));max-height:calc(100% - 48px)}
+dialog{border:0;padding:0;border-radius:var(--r-lg);background:var(--surface-elevated);color:var(--ink);box-shadow:var(--shadow-lift);width:min(560px,calc(100% - 32px));max-height:calc(100% - 48px)}
 dialog::backdrop{background:rgba(22,19,15,.55)}
 .m-head{display:flex;align-items:center;gap:12px;padding:16px 16px 0 24px}
 .m-head h2{flex:1;font-size:22px;line-height:30px}
@@ -232,6 +237,7 @@ dialog::backdrop{background:rgba(22,19,15,.55)}
 .kcard li{display:flex;gap:8px}
 .kcard li b{min-width:28px}
 .late{color:var(--error)}
+.kcard.overdue{box-shadow:0 0 0 2px var(--focus),var(--shadow-card)}
 .col-empty{color:var(--ink-muted);text-align:center;padding:24px 8px;font-size:14px}
 
 /* Foods */
@@ -244,10 +250,10 @@ dialog::backdrop{background:rgba(22,19,15,.55)}
 .fimg img{width:100%;height:100%;object-fit:cover;display:block}
 .ph{width:100%;height:100%;display:grid;place-items:center}
 .cat-0{background:var(--brand-tint);color:var(--brand)}
-.cat-1{background:var(--success-tint);color:var(--success)}
+.cat-1{background:var(--accent-tint);color:var(--accent-ink)}
 .cat-2{background:var(--info-tint);color:var(--info)}
 .cat-3{background:var(--warning-tint);color:var(--warning)}
-.cat-4{background:var(--surface-sunken);color:var(--ink-muted)}
+.cat-4{background:var(--purple-tint);color:var(--purple)}
 .fimg .pill{position:absolute;top:12px;left:12px}
 .fbody{padding:16px;display:flex;flex-direction:column;gap:8px;flex:1}
 .fbody .row{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
@@ -309,11 +315,12 @@ dialog::backdrop{background:rgba(22,19,15,.55)}
 .tbl.t-ordering .st{color:var(--warning)}
 .tbl.t-eating{border-color:var(--success);background:var(--success-tint)}
 .tbl.t-eating .st{color:var(--success)}
-.tbl.t-billout{border-color:var(--brand);background:var(--brand-tint);animation:ring 1.6s ease-out infinite}
-.tbl.t-billout .st{color:var(--brand)}
-.tbl.t-cleaning{border-color:var(--on-accent);background:var(--accent);color:var(--on-accent)}
-@keyframes ring{0%{box-shadow:0 0 0 0 var(--brand)}100%{box-shadow:0 0 0 14px transparent}}
-.pop{position:absolute;width:320px;background:var(--surface-card);border-radius:var(--r-lg);box-shadow:var(--shadow-lift);padding:16px;display:flex;flex-direction:column;gap:12px;z-index:6;text-align:left;cursor:default}
+.tbl.t-billout{border-color:var(--accent);background:var(--accent-tint);animation:ring 1.6s ease-out infinite}
+.tbl.t-billout .st{color:var(--accent-ink)}
+.tbl.t-cleaning{border-color:var(--purple);background:var(--purple-tint)}
+.tbl.t-cleaning .st{color:var(--purple)}
+@keyframes ring{0%{box-shadow:0 0 0 0 var(--accent)}100%{box-shadow:0 0 0 14px transparent}}
+.pop{position:absolute;width:320px;background:var(--surface-elevated);border-radius:var(--r-lg);box-shadow:var(--shadow-lift);padding:16px;display:flex;flex-direction:column;gap:12px;z-index:6;text-align:left;cursor:default}
 .pop.dn{top:calc(100% + 8px)}
 .pop.up{bottom:calc(100% + 8px)}
 .pop.al{left:0}
@@ -437,6 +444,7 @@ const IC = {
   cash:'<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/>',
   image:'<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/>',
 };
+const LOGO = '<img class="logo" src="assets/fbs-serve-logo.png" alt="FBS Serve logo">';
 const icon = (n, s = 24) => `<svg class="ic" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[n] || IC.plate}</svg>`;
 
 /* ---------- Sample data ---------- */
@@ -454,17 +462,17 @@ const TSTAT = {
   active:{l:'Active', c:'info', i:'qr'},
   ordering:{l:'Ordering', c:'warn', i:'pot'},
   eating:{l:'Eating', c:'ok', i:'utensils'},
-  billout:{l:'Bill out', c:'brand', i:'bell'},
-  cleaning:{l:'Cleaning', c:'accent', i:'sparkle'},
+  billout:{l:'Bill out', c:'accent', i:'bell'},
+  cleaning:{l:'Cleaning', c:'purple', i:'sparkle'},
 };
 const KITCHEN = ['queued','preparation','cooking','plating','completed'];
 const OSTAT = {
-  queued:{l:'Queued', c:'neutral', g:'Order received', d:'Your order is in the kitchen queue.', next:'Start preparation'},
-  preparation:{l:'Preparation', c:'info', g:'Preparing your order', d:'The kitchen is getting your ingredients ready.', next:'Start cooking'},
+  queued:{l:'Queued', c:'info', g:'Order received', d:'Your order is in the kitchen queue.', next:'Start preparation'},
+  preparation:{l:'Preparation', c:'warn', g:'Preparing your order', d:'The kitchen is getting your ingredients ready.', next:'Start cooking'},
   cooking:{l:'Cooking', c:'warn', g:'Cooking your food', d:'Your food is on the stove.', next:'Start plating'},
-  plating:{l:'Plating', c:'accent', g:'Plating your food', d:'Almost there. The kitchen is putting it on the plate.', next:'Mark completed'},
+  plating:{l:'Plating', c:'warn', g:'Plating your food', d:'Almost there. The kitchen is putting it on the plate.', next:'Mark completed'},
   completed:{l:'Completed', c:'ok', g:'Your food is ready', d:'A waiter is bringing it to your table.', next:'Mark as served'},
-  served:{l:'Served', c:'ok', g:'Served. Enjoy your meal!', d:'Tap Bill when you are ready to pay.'},
+  served:{l:'Served', c:'purple', g:'Served. Enjoy your meal!', d:'Tap Bill when you are ready to pay.'},
   paid:{l:'Paid', c:'neutral', g:'Paid', d:'Thank you for dining with us.'},
 };
 const GSTEPS = ['queued','preparation','cooking','plating','completed','served'];
@@ -676,7 +684,7 @@ function vKitchen(){
   <div class="kanban" data-keep="kanban">${KITCHEN.map(st => {
     const list = S.orders.filter(o => o.status === st).sort((a, b) => a.createdAt - b.createdAt);
     return `<section class="col" aria-label="${OSTAT[st].l}"><div class="col-head"><h3>${OSTAT[st].l}</h3><span class="badge soft num">${list.length}</span></div>
-    ${list.map(o => { const m = mins(o.createdAt); return `<article class="kcard">
+    ${list.map(o => { const m = mins(o.createdAt); return `<article class="kcard${m > 20 ? ' overdue' : ''}">
       <div class="kcard-top"><div><b class="num">${o.id}</b><div class="caption muted">${esc(tableOf(o.table).name)} · ${esc(o.by)}</div></div><span class="caption num ${m > 20 ? 'late label' : 'muted'}">${icon('clock', 16)} ${m} min</span></div>
       <ul>${o.items.map(i => `<li><b class="num">${i.qty}×</b><span>${esc(i.name)}</span></li>`).join('')}</ul>
       <button class="btn ${st === 'completed' ? 'btn-secondary' : 'btn-outline'} block" data-act="${st === 'completed' ? 'serve' : 'knext'}" data-id="${o.id}">${OSTAT[st].next}${st === 'completed' ? '' : icon('arrow', 20)}</button>
@@ -818,7 +826,7 @@ function guestShell(){
       <button class="btn btn-outline" data-act="mode" data-v="staff">Back to staff view</button>
     </aside>
     <div class="phone" aria-label="Guest phone preview">
-      <div class="g-top"><span class="brand">${icon('store')}</span><div class="grow"><b>FBS Serve</b><div class="caption muted">${t.name} · ${esc(S.guestName)}</div></div>${live ? tPill(t) : ''}</div>
+      <div class="g-top">${LOGO}<div class="grow"><b>FBS Serve</b><div class="caption muted">${t.name} · ${esc(S.guestName)}</div></div>${live ? tPill(t) : ''}</div>
       ${!live ? `<div class="g-scroll">${gClosed(t)}</div>` : `<div class="g-scroll" data-keep="gscroll">${({menu:gMenu, plate:gPlate, orders:gOrders, bill:gBill})[S.guestTab](t)}</div>
       ${S.guestTab === 'plate' && n ? `<div class="g-foot"><button class="btn btn-primary block" data-act="g-send">Send to kitchen · ${peso(sum(plate.map(l => food(l.foodId).price * l.qty)))}</button></div>` : ''}
       <nav class="g-tabs" aria-label="Guest menu">${[['menu','Menu','utensils'], ['plate','Plate','plate'], ['orders','Orders','clock'], ['bill','Bill','wallet']].map(([k, l, ic]) => `<button class="g-tab" data-act="g-tab" data-v="${k}" ${S.guestTab === k ? 'aria-current="page"' : ''}>${icon(ic)}${l}${k === 'plate' && n ? `<span class="badge num">${n}</span>` : ''}</button>`).join('')}</nav>`}
@@ -1037,7 +1045,7 @@ const CHANGE = {
 function render(){
   const a = document.activeElement, id = a?.id, sel = a?.selectionStart;
   const keep = {}; document.querySelectorAll('[data-keep]').forEach(el => keep[el.dataset.keep] = [el.scrollLeft, el.scrollTop]);
-  $('#app').innerHTML = `<header class="top"><div class="top-in"><span class="brand">${icon('store')}FBS Serve <small>Restaurant manager</small></span><span class="spacer"></span>
+  $('#app').innerHTML = `<header class="top"><div class="top-in"><span class="brand">${LOGO}FBS Serve <small>Restaurant manager</small></span><span class="spacer"></span>
     <div class="seg" role="group" aria-label="View as"><button data-act="mode" data-v="staff" aria-pressed="${S.mode === 'staff'}">${icon('user', 20)}Staff</button><button data-act="mode" data-v="guest" aria-pressed="${S.mode === 'guest'}">${icon('phone', 20)}Guest phone</button></div></div></header>
     ${S.mode === 'guest' ? guestShell() : staffShell()}`;
   document.querySelectorAll('[data-keep]').forEach(el => { const k = keep[el.dataset.keep]; if (k) [el.scrollLeft, el.scrollTop] = k; });
