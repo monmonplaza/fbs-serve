@@ -66,7 +66,8 @@ The top bar switches between **Staff** and **Guest phone**. Guest phone is a pho
   - Cards over 20 minutes old get a magenta ring and a red time
 - **Foods**:
   - Card or table view, filter by category
-  - Add and edit in one modal: name, category, price, description, photo (FileReader data URL, memory only), status (available or not available), tags (New, Must try, Best seller)
+  - Add and edit in one modal: name, category, price, **prep time in minutes** (shown to guests as the estimated wait), description, **several photos** (FileReader data URLs, memory only; the first is the cover), status (available or not available), tags (New, Must try, Best seller)
+  - Tapping a food photo opens the **lightbox gallery**
   - Delete with a confirm modal
 - **Tables**:
   - Floor plan like a real dining room, with one tab per **floor level**
@@ -85,6 +86,13 @@ The top bar switches between **Staff** and **Guest phone**. Guest phone is a pho
   - **Floor levels**
 
   Some deletes are blocked: a category with foods, a role with users, a floor with tables, the only floor, and a table that has guests.
+- **Guest menu**:
+  - Each dish shows its prep time ("About 20 min") and a small **Add** button
+  - Tapping the photo opens a full-screen **lightbox gallery**: previous and next, thumbnails, zoom 100–400% (buttons, double-click, mouse wheel, pinch), drag to pan when zoomed, and arrow and +/- keys
+  - The plate shows an **estimated wait**, which is the slowest dish's prep time, since dishes cook in parallel
+  - The order tracker shows "Ready in about N min" until the order is completed
+  - Kitchen cards show elapsed time against that target and turn overdue past it
+  - Sample photos are drawn SVG stand-ins made by `samplePhoto()`
 - **Guide**: one "From QR to clean table" flow card, plus a how-to card for each module and for the guest phone.
 
 ## Code map (`index.html`)
@@ -107,6 +115,8 @@ The app is plain JS with no framework. It re-renders the whole `#app` from state
 - `render()` keeps focus and the scroll position of elements marked `data-keep`.
 - `modal(title, body, foot)` uses one `<dialog id="modal">`. `toast(msg)` shows a status toast.
 - `qrSvg()` draws a **decorative** QR. It is not scannable.
+- `orderEta(items)` returns the largest `eta` among the items. Orders store it as `order.eta` when they are created.
+- The lightbox uses its own `<dialog id="lb">`, with state in `LB` and the functions `lbRender`, `lbApply`, `lbZoom` and `lbGo`.
 - Money is in ₱ with two decimals, formatted by `peso()`. `total()` applies the order's discount percent, and a `console.assert` checks it.
 
 ## Design rules

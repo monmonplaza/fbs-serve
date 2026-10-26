@@ -366,7 +366,46 @@ dialog::backdrop{background:rgba(22,19,15,.55)}
 .g-cats{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;flex:none}
 .g-cats .chip{flex:none}
 .gfood{display:grid;grid-template-columns:88px minmax(0,1fr);gap:12px;background:var(--surface-card);border-radius:var(--r-lg);box-shadow:var(--shadow-card);padding:12px}
-.gfood .gimg{width:88px;height:88px;border-radius:var(--r-md);overflow:hidden}
+.gfood .gimg{width:88px;height:88px;border-radius:var(--r-md);overflow:hidden;position:relative;border:0;padding:0;background:none;cursor:zoom-in;display:block}
+.photo-btn{border:0;padding:0;background:none;width:100%;height:100%;display:block;cursor:zoom-in;position:relative}
+.pcount{position:absolute;right:6px;bottom:6px;display:inline-flex;align-items:center;gap:2px;padding:0 6px;border-radius:var(--r-pill);background:rgba(15,17,21,.72);color:#fff;font-size:12px;line-height:20px;font-weight:700}
+.pcount .ic{width:14px;height:14px}
+.eta{display:inline-flex;align-items:center;gap:4px;font-size:14px;line-height:20px;color:var(--ink-muted)}
+.eta .ic{width:16px;height:16px}
+.btn-add{min-height:40px;padding:0 14px;font-size:14px;line-height:20px;gap:4px;border-radius:var(--r-pill)}
+.ff-photos{display:flex;flex-wrap:wrap;gap:8px}
+.ff-photo{position:relative;width:96px;height:72px;border-radius:var(--r-sm);overflow:hidden}
+.ff-photo img{width:100%;height:100%;object-fit:cover}
+.ff-photo button{position:absolute;top:4px;right:4px;width:28px;height:28px;border-radius:50%;border:0;background:rgba(15,17,21,.72);color:#fff;display:grid;place-items:center;cursor:pointer}
+.ff-photo button .ic{width:16px;height:16px}
+.ff-add{position:relative;width:96px;height:72px;border:1.5px dashed var(--border-control);border-radius:var(--r-sm);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;color:var(--ink-muted);font-size:14px;font-weight:700;text-align:center}
+.ff-add:focus-within{outline:3px solid var(--focus);outline-offset:2px}
+.ff-add input{position:absolute;width:1px;height:1px;opacity:0}
+/* Lightbox: always dark, like a photo viewer */
+.lb{width:100%;max-width:100%;height:100%;max-height:100%;margin:0;border:0;border-radius:0;padding:0;background:#0F1115;color:#EDF0F4;overflow:hidden}
+.lb[open]{display:flex;flex-direction:column}
+.lb::backdrop{background:rgba(0,0,0,.6)}
+.lb .icon-btn{color:#EDF0F4}
+.lb .icon-btn:hover{background:rgba(255,255,255,.14)}
+.lb .icon-btn:disabled{opacity:.35;cursor:not-allowed;background:none}
+.lb-top{display:flex;align-items:center;gap:12px;padding:calc(8px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) 8px max(16px,env(safe-area-inset-left,0px))}
+.lb-top .grow{flex:1;min-width:0}
+.lb-top .caption{color:#A9B2BF}
+.lb-stage{flex:1;min-height:0;position:relative;overflow:hidden;display:grid;place-items:center;touch-action:none;cursor:zoom-in;user-select:none}
+.lb-stage.zoomed{cursor:grab}
+.lb-stage.panning{cursor:grabbing}
+.lb-stage img{max-width:100%;max-height:100%;object-fit:contain;transform-origin:center;transition:transform .15s ease;-webkit-user-drag:none;pointer-events:none}
+.lb-stage.panning img{transition:none}
+.lb-nav{position:absolute;top:50%;transform:translateY(-50%);width:52px;height:52px;border-radius:50%;background:rgba(15,17,21,.6)!important}
+.lb-nav.prev{left:max(12px,env(safe-area-inset-left,0px));transform:translateY(-50%) scaleX(-1)}
+.lb-nav.next{right:max(12px,env(safe-area-inset-right,0px))}
+.lb-bottom{display:flex;align-items:center;gap:12px;padding:8px max(16px,env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));flex-wrap:wrap}
+.lb-thumbs{display:flex;gap:8px;overflow-x:auto;flex:1;min-width:0}
+.lb-thumbs button{flex:none;width:64px;height:48px;border-radius:8px;overflow:hidden;border:2px solid transparent;padding:0;opacity:.6;cursor:pointer;background:none}
+.lb-thumbs button[aria-current="true"]{border-color:#B8DF63;opacity:1}
+.lb-thumbs img{width:100%;height:100%;object-fit:cover}
+.lb-zoom{display:flex;align-items:center;gap:4px}
+.lb-zoom span{min-width:48px;text-align:center;font-weight:700}
 .gfood .gimg img{width:100%;height:100%;object-fit:cover}
 .gfood .info{display:flex;flex-direction:column;gap:4px;min-width:0}
 .gfood .foot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto}
@@ -400,6 +439,7 @@ dialog::backdrop{background:rgba(22,19,15,.55)}
 
 <div id="app"></div>
 <dialog id="modal" aria-labelledby="m-title"></dialog>
+<dialog id="lb" class="lb" aria-label="Food photos"></dialog>
 <div id="toast" role="status" hidden></div>
 
 <script>
@@ -496,23 +536,23 @@ const S = {
     {id:'sidedish', name:'Side dish', desc:'Rice and vegetables'},
   ],
   foods:[
-    {id:'f1', cat:'appetizer', name:'Lumpiang Shanghai', price:180, desc:'Pork and shrimp spring rolls, sweet chili dip.', status:'available', tags:['best'], img:''},
-    {id:'f2', cat:'appetizer', name:'Calamares', price:220, desc:'Fried squid rings, garlic aioli, calamansi.', status:'available', tags:[], img:''},
-    {id:'f3', cat:'appetizer', name:'Chicharon Bulaklak', price:240, desc:'Crispy pork ruffle fat, spiced vinegar.', status:'unavailable', tags:[], img:''},
-    {id:'f4', cat:'main', name:'Crispy Pata', price:695, desc:'Deep-fried pork knuckle, soy-vinegar dip. Good for 3.', status:'available', tags:['best','must'], img:''},
-    {id:'f5', cat:'main', name:'Kare-Kare', price:560, desc:'Oxtail and tripe in peanut sauce, bagoong.', status:'available', tags:['must'], img:''},
-    {id:'f6', cat:'main', name:'Chicken Inasal', price:245, desc:'Lemongrass-annatto grilled chicken leg, chicken oil.', status:'available', tags:['best'], img:''},
-    {id:'f7', cat:'main', name:'Sinigang na Hipon', price:420, desc:'Shrimp in tamarind broth, kangkong, radish.', status:'available', tags:[], img:''},
-    {id:'f8', cat:'main', name:'Beef Tapa Bowl', price:265, desc:'Cured beef, garlic rice, fried egg, atchara.', status:'available', tags:['new'], img:''},
-    {id:'f9', cat:'sidedish', name:'Garlic Rice', price:65, desc:'Rice fried with toasted garlic.', status:'available', tags:[], img:''},
-    {id:'f10', cat:'sidedish', name:'Ensaladang Talong', price:95, desc:'Grilled eggplant, tomato, onion, salted egg.', status:'available', tags:[], img:''},
-    {id:'f11', cat:'sidedish', name:'Java Rice', price:75, desc:'Annatto butter rice.', status:'available', tags:['new'], img:''},
-    {id:'f12', cat:'drinks', name:'Calamansi Juice', price:85, desc:'Fresh calamansi, honey, ice.', status:'available', tags:[], img:''},
-    {id:'f13', cat:'drinks', name:'Iced Tea Pitcher', price:180, desc:'House-brewed black tea with lemon. Serves 4.', status:'available', tags:[], img:''},
-    {id:'f14', cat:'drinks', name:'Buko Shake', price:120, desc:'Young coconut, milk, crushed ice.', status:'available', tags:['new'], img:''},
-    {id:'f15', cat:'dessert', name:'Halo-Halo', price:165, desc:'Shaved ice, ube, leche flan, sweet beans, milk.', status:'available', tags:['best'], img:''},
-    {id:'f16', cat:'dessert', name:'Leche Flan', price:120, desc:'Egg custard, burnt caramel.', status:'available', tags:['must'], img:''},
-    {id:'f17', cat:'dessert', name:'Turon à la Mode', price:140, desc:'Banana and jackfruit roll, vanilla ice cream.', status:'unavailable', tags:['new'], img:''},
+    {id:'f1', cat:'appetizer', name:'Lumpiang Shanghai', price:180, desc:'Pork and shrimp spring rolls, sweet chili dip.', status:'available', tags:['best'], eta:12, photos:[]},
+    {id:'f2', cat:'appetizer', name:'Calamares', price:220, desc:'Fried squid rings, garlic aioli, calamansi.', status:'available', tags:[], eta:12, photos:[]},
+    {id:'f3', cat:'appetizer', name:'Chicharon Bulaklak', price:240, desc:'Crispy pork ruffle fat, spiced vinegar.', status:'unavailable', tags:[], eta:15, photos:[]},
+    {id:'f4', cat:'main', name:'Crispy Pata', price:695, desc:'Deep-fried pork knuckle, soy-vinegar dip. Good for 3.', status:'available', tags:['best','must'], eta:35, photos:[]},
+    {id:'f5', cat:'main', name:'Kare-Kare', price:560, desc:'Oxtail and tripe in peanut sauce, bagoong.', status:'available', tags:['must'], eta:30, photos:[]},
+    {id:'f6', cat:'main', name:'Chicken Inasal', price:245, desc:'Lemongrass-annatto grilled chicken leg, chicken oil.', status:'available', tags:['best'], eta:20, photos:[]},
+    {id:'f7', cat:'main', name:'Sinigang na Hipon', price:420, desc:'Shrimp in tamarind broth, kangkong, radish.', status:'available', tags:[], eta:25, photos:[]},
+    {id:'f8', cat:'main', name:'Beef Tapa Bowl', price:265, desc:'Cured beef, garlic rice, fried egg, atchara.', status:'available', tags:['new'], eta:15, photos:[]},
+    {id:'f9', cat:'sidedish', name:'Garlic Rice', price:65, desc:'Rice fried with toasted garlic.', status:'available', tags:[], eta:5, photos:[]},
+    {id:'f10', cat:'sidedish', name:'Ensaladang Talong', price:95, desc:'Grilled eggplant, tomato, onion, salted egg.', status:'available', tags:[], eta:8, photos:[]},
+    {id:'f11', cat:'sidedish', name:'Java Rice', price:75, desc:'Annatto butter rice.', status:'available', tags:['new'], eta:5, photos:[]},
+    {id:'f12', cat:'drinks', name:'Calamansi Juice', price:85, desc:'Fresh calamansi, honey, ice.', status:'available', tags:[], eta:3, photos:[]},
+    {id:'f13', cat:'drinks', name:'Iced Tea Pitcher', price:180, desc:'House-brewed black tea with lemon. Serves 4.', status:'available', tags:[], eta:5, photos:[]},
+    {id:'f14', cat:'drinks', name:'Buko Shake', price:120, desc:'Young coconut, milk, crushed ice.', status:'available', tags:['new'], eta:5, photos:[]},
+    {id:'f15', cat:'dessert', name:'Halo-Halo', price:165, desc:'Shaved ice, ube, leche flan, sweet beans, milk.', status:'available', tags:['best'], eta:8, photos:[]},
+    {id:'f16', cat:'dessert', name:'Leche Flan', price:120, desc:'Egg custard, burnt caramel.', status:'available', tags:['must'], eta:5, photos:[]},
+    {id:'f17', cat:'dessert', name:'Turon à la Mode', price:140, desc:'Banana and jackfruit roll, vanilla ice cream.', status:'unavailable', tags:['new'], eta:10, photos:[]},
   ],
   payments:[
     {id:'cash', name:'Cash', details:'Pay the waiter at the table', active:true},
@@ -565,7 +605,32 @@ const nextId = () => 'ORD-' + (++S.seq);
 
 console.assert(total({items:[{price:100, qty:2}, {price:65, qty:1}], discount:{pct:20}}) === 212, 'discount math');
 
+const PHOTO_COLORS = {
+  appetizer:['#C2702B','#E0A24A','#7A3E12','#6E9A2C'], main:['#8B4A1F','#B5651D','#5B7F2A','#D9A441'],
+  drinks:['#F2C14E','#E8D9A8','#9CCB5A','#C9772E'], dessert:['#8E5BB5','#F2D16B','#F7F1E1','#C2702B'], sidedish:['#F3E7C9','#D9A441','#6E9A2C','#B5651D'],
+};
+// Drawn stand-in photos so the gallery has something to show before real photos are uploaded.
+function samplePhoto(f, v){
+  const r = rng(hash(f.id + v)), pal = PHOTO_COLORS[f.cat] || PHOTO_COLORS.main;
+  const bg = ['#D8C7AE', '#2E2A26', '#B9A588'][v % 3];
+  const cx = [400, 330, 470][v % 3], cy = [300, 320, 280][v % 3], pr = [210, 290, 180][v % 3];
+  let dish = '';
+  if (f.cat === 'drinks'){
+    dish = `<rect x="${cx - 70}" y="${cy - 150}" width="140" height="250" rx="18" fill="#ffffff" fill-opacity=".35"/><rect x="${cx - 62}" y="${cy - 90}" width="124" height="182" rx="14" fill="${pal[0]}"/><circle cx="${cx + 30}" cy="${cy - 120}" r="26" fill="${pal[2]}"/>`;
+  } else {
+    for (let i = 0; i < 9; i++){
+      const a = r() * 6.28, d = r() * pr * .55;
+      dish += `<ellipse cx="${(cx + Math.cos(a) * d).toFixed(0)}" cy="${(cy + Math.sin(a) * d).toFixed(0)}" rx="${(30 + r() * 50).toFixed(0)}" ry="${(24 + r() * 40).toFixed(0)}" fill="${pal[i % pal.length]}" opacity=".92"/>`;
+    }
+  }
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600"><rect width="800" height="600" fill="${bg}"/><circle cx="${cx + 12}" cy="${cy + 16}" r="${pr + 22}" fill="#000" opacity=".18"/><circle cx="${cx}" cy="${cy}" r="${pr + 22}" fill="#F7F5F0"/><circle cx="${cx}" cy="${cy}" r="${pr - 8}" fill="#ECE8DF"/>${dish}${v === 2 ? `<circle cx="660" cy="470" r="80" fill="#F7F5F0"/><circle cx="660" cy="470" r="58" fill="${pal[1]}"/>` : ''}</svg>`;
+  return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+}
+const orderEta = items => Math.max(1, ...items.map(i => food(i.foodId)?.eta || 15));
+const etaHtml = f => `<span class="eta">${icon('clock', 16)}About ${f.eta} min</span>`;
+console.assert(orderEta([{foodId:'f4'}, {foodId:'f9'}]) === 35, 'order eta is the slowest dish');
 function seed(){
+  S.foods.forEach(f => f.photos = [0, 1, 2].map(v => samplePhoto(f, v)));
   const r = rng(11), pick = a => a[Math.floor(r() * a.length)];
   const mk = (when, status, table, extra = {}) => {
     const items = [], n = 1 + Math.floor(r() * 4);
@@ -573,7 +638,7 @@ function seed(){
       const f = pick(S.foods);
       if (!items.some(i => i.foodId === f.id)) items.push({foodId:f.id, name:f.name, price:f.price, qty:1 + Math.floor(r() * 2)});
     }
-    S.orders.push({id:nextId(), table, session:'old', items, status, createdAt:+when, by:'Guest 1', ...extra});
+    S.orders.push({id:nextId(), table, session:'old', items, status, createdAt:+when, by:'Guest 1', eta:orderEta(items), ...extra});
   };
   for (let d = 34; d >= 1; d--){
     const n = 8 + Math.floor(r() * 9);
@@ -620,7 +685,7 @@ const pill = (meta, withIcon = true) => `<span class="pill p-${meta.c}">${withIc
 const tPill = t => pill(TSTAT[t.status]);
 const oPill = o => pill(OSTAT[o.status], false);
 const tagHtml = tags => tags.map(t => `<span class="tag tag-${t}">${TAGS[t]}</span>`).join(' ');
-const foodImg = (f, size = 40) => f.img ? `<img src="${f.img}" alt="${esc(f.name)}">` : `<div class="ph cat-${catIdx(f.cat)}" role="img" aria-label="${esc(f.name)}, no photo yet">${icon(CAT_IC[f.cat] || 'plate', size)}</div>`;
+const foodImg = (f, size = 40) => f.photos[0] ? `<img src="${f.photos[0]}" alt="${esc(f.name)}">` : `<div class="ph cat-${catIdx(f.cat)}" role="img" aria-label="${esc(f.name)}, no photo yet">${icon(CAT_IC[f.cat] || 'plate', size)}</div>`;
 function aggregate(orders){
   const m = new Map();
   orders.forEach(o => o.items.forEach(i => { const e = m.get(i.name) || {name:i.name, qty:0, price:i.price}; e.qty += i.qty; m.set(i.name, e); }));
@@ -693,8 +758,8 @@ function vKitchen(){
   <div class="kanban" data-keep="kanban">${KITCHEN.map(st => {
     const list = S.orders.filter(o => o.status === st).sort((a, b) => a.createdAt - b.createdAt);
     return `<section class="col" aria-label="${OSTAT[st].l}"><div class="col-head"><h3>${OSTAT[st].l}</h3><span class="badge soft num">${list.length}</span></div>
-    ${list.map(o => { const m = mins(o.createdAt); return `<article class="kcard${m > 20 ? ' overdue' : ''}">
-      <div class="kcard-top"><div><b class="num">${o.id}</b><div class="caption muted">${esc(tName(o.table))} · ${esc(o.by)}</div></div><span class="caption num ${m > 20 ? 'late label' : 'muted'}">${icon('clock', 16)} ${m} min</span></div>
+    ${list.map(o => { const m = mins(o.createdAt); const late = m > (o.eta || 20); return `<article class="kcard${late ? ' overdue' : ''}">
+      <div class="kcard-top"><div><b class="num">${o.id}</b><div class="caption muted">${esc(tName(o.table))} · ${esc(o.by)}</div></div><span class="caption num ${late ? 'late label' : 'muted'}" title="Target ${o.eta || 20} min">${icon('clock', 16)} ${m} / ${o.eta || 20} min</span></div>
       <ul>${o.items.map(i => `<li><b class="num">${i.qty}×</b><span>${esc(i.name)}</span></li>`).join('')}</ul>
       <button class="btn ${st === 'completed' ? 'btn-secondary' : 'btn-outline'} block" data-act="${st === 'completed' ? 'serve' : 'knext'}" data-id="${o.id}">${OSTAT[st].next}${st === 'completed' ? '' : icon('arrow', 20)}</button>
     </article>`; }).join('') || `<p class="col-empty">No orders here.</p>`}</section>`;
@@ -711,12 +776,12 @@ function vFoods(){
   </div>
   ${!list.length ? `<div class="card empty">${icon('utensils', 32)}No foods in this category yet.<button class="btn btn-primary" data-act="food-add">Add food</button></div>`
   : S.foodView === 'card' ? `<div class="food-grid">${list.map(f => `<article class="fcard ${f.status !== 'available' ? 'unavail' : ''}">
-      <div class="fimg">${foodImg(f, 48)}<span class="pill ${f.status === 'available' ? 'p-ok' : 'p-error'}">${icon(f.status === 'available' ? 'check' : 'x', 16)}${f.status === 'available' ? 'Available' : 'Not available'}</span></div>
-      <div class="fbody"><span class="label muted">${esc(catName(f.cat))}</span><div class="row"><h3>${esc(f.name)}</h3><span class="price num">${peso(f.price)}</span></div><p class="muted">${esc(f.desc)}</p><div>${tagHtml(f.tags)}</div></div>
+      <div class="fimg"><button class="photo-btn" data-act="gallery" data-id="${f.id}" aria-label="View photos of ${esc(f.name)}">${foodImg(f, 48)}${f.photos.length > 1 ? `<span class="pcount">${icon('image', 14)}${f.photos.length}</span>` : ''}</button><span class="pill ${f.status === 'available' ? 'p-ok' : 'p-error'}">${icon(f.status === 'available' ? 'check' : 'x', 16)}${f.status === 'available' ? 'Available' : 'Not available'}</span></div>
+      <div class="fbody"><span class="label muted">${esc(catName(f.cat))}</span><div class="row"><h3>${esc(f.name)}</h3><span class="price num">${peso(f.price)}</span></div><p class="muted">${esc(f.desc)}</p>${etaHtml(f)}<div>${tagHtml(f.tags)}</div></div>
       <div class="factions"><button class="btn btn-outline" data-act="food-edit" data-id="${f.id}">${icon('edit', 20)}Edit</button><button class="icon-btn danger" data-act="food-del" data-id="${f.id}" aria-label="Delete ${esc(f.name)}">${icon('trash')}</button></div>
     </article>`).join('')}</div>`
-  : `<div class="tbl-scroll"><table class="data"><thead><tr><th>Food</th><th>Category</th><th>Description</th><th>Tags</th><th>Status</th><th class="r">Price</th><th class="r">Actions</th></tr></thead><tbody>
-    ${list.map(f => `<tr><td><div style="display:flex;gap:12px;align-items:center"><div class="thumb">${foodImg(f, 20)}</div><b>${esc(f.name)}</b></div></td><td>${esc(catName(f.cat))}</td><td class="muted" style="min-width:220px">${esc(f.desc)}</td><td>${tagHtml(f.tags) || '<span class="muted">None</span>'}</td><td><span class="pill ${f.status === 'available' ? 'p-ok' : 'p-error'}">${f.status === 'available' ? 'Available' : 'Not available'}</span></td><td class="r num"><b>${peso(f.price)}</b></td><td class="r" style="white-space:nowrap"><button class="icon-btn" data-act="food-edit" data-id="${f.id}" aria-label="Edit ${esc(f.name)}">${icon('edit')}</button><button class="icon-btn danger" data-act="food-del" data-id="${f.id}" aria-label="Delete ${esc(f.name)}">${icon('trash')}</button></td></tr>`).join('')}
+  : `<div class="tbl-scroll"><table class="data"><thead><tr><th>Food</th><th>Category</th><th>Description</th><th>Prep time</th><th>Tags</th><th>Status</th><th class="r">Price</th><th class="r">Actions</th></tr></thead><tbody>
+    ${list.map(f => `<tr><td><div style="display:flex;gap:12px;align-items:center"><div class="thumb">${foodImg(f, 20)}</div><b>${esc(f.name)}</b></div></td><td>${esc(catName(f.cat))}</td><td class="muted" style="min-width:220px">${esc(f.desc)}</td><td class="num" style="white-space:nowrap">${f.eta} min</td><td>${tagHtml(f.tags) || '<span class="muted">None</span>'}</td><td><span class="pill ${f.status === 'available' ? 'p-ok' : 'p-error'}">${f.status === 'available' ? 'Available' : 'Not available'}</span></td><td class="r num"><b>${peso(f.price)}</b></td><td class="r" style="white-space:nowrap"><button class="icon-btn" data-act="food-edit" data-id="${f.id}" aria-label="Edit ${esc(f.name)}">${icon('edit')}</button><button class="icon-btn danger" data-act="food-del" data-id="${f.id}" aria-label="Delete ${esc(f.name)}">${icon('trash')}</button></td></tr>`).join('')}
   </tbody></table></div>`}`;
 }
 
@@ -809,7 +874,7 @@ const GUIDE = [
   {v:'tables', ic:'table', t:'Tables', d:'Seat guests, collect payment and reset tables.', s:['When guests sit at an inactive table, select it and tap Activate table. This always comes first.', 'Show the QR to the guests. Every guest at the table scans the same code.', 'When a table shows Bill out, go to it and tap Receive payment.', 'After cleaning, tap Mark as clean. The old QR stops working.', 'Tap Arrange tables and drag each table to where it sits in your restaurant.']},
   {v:'kitchen', ic:'pot', t:'Kitchen', d:'Cook orders in the order they arrived.', s:['New orders appear in Queued, oldest at the top.', 'Tap the button on a card to move it: Preparation, Cooking, Plating, Completed.', 'Guests see every change on their phone right away.', 'Waiters tap Mark as served after bringing the food to the table.']},
   {v:'orders', ic:'receipt', t:'Orders', d:'Find any order, in any status.', s:['Pick Today, This week or This month.', 'Type an order ID in the search box to find it on any date.', 'Select a row to see its items, payment and discount.']},
-  {v:'foods', ic:'utensils', t:'Foods', d:'Keep the menu up to date.', s:['Tap Add food and fill in the name, category, price and description.', 'Add a photo and tags: New, Must try or Best seller.', 'Set a food to Not available when it runs out. Guests cannot order it.', 'Switch between Cards and Table view.']},
+  {v:'foods', ic:'utensils', t:'Foods', d:'Keep the menu up to date.', s:['Tap Add food and fill in the name, category, price and description.', 'Add photos for the gallery, the prep time guests see as the estimated wait, and tags: New, Must try or Best seller.', 'Set a food to Not available when it runs out. Guests cannot order it.', 'Switch between Cards and Table view.']},
   {v:'settings', ic:'sliders', t:'Settings', d:'Set up how the restaurant runs.', s:['Payment methods: choose what guests can pick when they ask for the bill.', 'Discounts: set the percent off and what the guest must show.', 'Users and roles: decide who can open each module.', 'Categories: group foods on the menu.', 'Tables and floor levels: add, rename or remove tables, set their seats, and add a 2nd floor.']},
 ];
 function vGuide(){
@@ -818,7 +883,7 @@ function vGuide(){
     <ol class="flow">${[['Waiter','Activates the inactive table the guests sat at. Its QR code appears.'], ['Guests','Add food to one shared plate. One guest sends it to the kitchen.'], ['Kitchen','Moves the order: Preparation, Cooking, Plating, Completed.'], ['Waiter','Brings the food. The table becomes Eating.'], ['Guest','Taps Bill out and picks a payment method. The waiter is called.'], ['Waiter','Collects payment, cleans, and marks the table clean.']].map(([w, d], i) => `<li><span class="n">${i + 1}</span><b>${w}</b><span class="caption muted">${d}</span></li>`).join('')}</ol>
   </section>
   <div class="guide-grid">${GUIDE.map(g => `<article class="card gcard"><div class="gi">${icon(g.ic)}</div><h3>${g.t}</h3><p class="muted">${g.d}</p><ol>${g.s.map(x => `<li>${x}</li>`).join('')}</ol><button class="btn btn-outline" data-act="nav" data-v="${g.v}">Open ${g.t}</button></article>`).join('')}
-    <article class="card gcard"><div class="gi">${icon('phone')}</div><h3>Guest phone</h3><p class="muted">What guests see after scanning the QR.</p><ol><li>Browse the menu and tap Add to plate.</li><li>Check Your plate. Everyone at the table shares it.</li><li>One guest taps Send to kitchen.</li><li>Follow the order live, then tap Bill out to pay.</li></ol><button class="btn btn-outline" data-act="mode" data-v="guest">Preview guest view</button></article>
+    <article class="card gcard"><div class="gi">${icon('phone')}</div><h3>Guest phone</h3><p class="muted">What guests see after scanning the QR.</p><ol><li>Browse the menu. Tap a photo to open the gallery and zoom in. Tap Add to put a dish on the plate.</li><li>Check Your plate. Everyone at the table shares it.</li><li>One guest taps Send to kitchen.</li><li>Follow the order live, then tap Bill out to pay.</li></ol><button class="btn btn-outline" data-act="mode" data-v="guest">Preview guest view</button></article>
   </div>`;
 }
 
@@ -866,16 +931,18 @@ function gMenu(){
   const cats = [['all','All']].concat(S.categories.map(c => [c.id, c.name]));
   const list = S.foods.filter(f => S.guestCat === 'all' || f.cat === S.guestCat);
   return `<div class="g-cats" data-keep="gcats">${cats.map(([k, l]) => `<button class="chip" data-act="g-cat" data-v="${k}" aria-pressed="${S.guestCat === k}">${esc(l)}</button>`).join('')}</div>
-  ${list.map(f => { const ok = f.status === 'available'; return `<article class="gfood ${ok ? '' : 'unavail'}"><div class="gimg">${foodImg(f, 32)}</div><div class="info">
-    <div>${tagHtml(f.tags)}</div><h4>${esc(f.name)}</h4><p class="caption muted">${esc(f.desc)}</p>
-    <div class="foot"><span class="price num">${peso(f.price)}</span>${ok ? `<button class="btn btn-primary" style="min-height:44px;padding:0 14px" data-act="g-add" data-id="${f.id}">${icon('plus', 20)}Add to plate</button>` : `<span class="pill p-error">Not available</span>`}</div>
+  ${list.map(f => { const ok = f.status === 'available'; return `<article class="gfood ${ok ? '' : 'unavail'}"><button class="gimg" data-act="gallery" data-id="${f.id}" aria-label="View photos of ${esc(f.name)}">${foodImg(f, 32)}${f.photos.length > 1 ? `<span class="pcount">${icon('image', 14)}${f.photos.length}</span>` : ''}</button><div class="info">
+    <div>${tagHtml(f.tags)}</div><h4>${esc(f.name)}</h4><p class="caption muted">${esc(f.desc)}</p>${etaHtml(f)}
+    <div class="foot"><span class="price num">${peso(f.price)}</span>${ok ? `<button class="btn btn-primary btn-add" data-act="g-add" data-id="${f.id}" aria-label="Add ${esc(f.name)} to plate">${icon('plus', 18)}Add</button>` : `<span class="pill p-error">Not available</span>`}</div>
   </div></article>`; }).join('')}`;
 }
 function gPlate(t){
   const plate = S.plates[t.id] || [];
   if (!plate.length) return `<div class="center"><div class="big-ic">${icon('plate', 32)}</div><h3>Your plate is empty</h3><p class="muted">Everyone at ${t.name} adds to the same plate. Pick food from the menu.</p><button class="btn btn-primary" data-act="g-tab" data-v="menu">Browse menu</button></div>`;
+  const wait = orderEta(plate);
   return `<div><h3>Your plate</h3><p class="caption muted">Shared by everyone at ${t.name}. Only one guest sends it to the kitchen.</p></div>
-  <div class="card" style="padding:4px 16px">${plate.map(l => { const f = food(l.foodId); return `<div class="pline"><div class="grow"><b>${esc(f.name)}</b><div class="caption muted">${esc(l.by)}${l.by === S.guestName ? ' (you)' : ''} · <span class="num">${peso(f.price * l.qty)}</span></div></div>
+  <div class="alert info">${icon('clock')}<p><b>Estimated wait: about ${wait} min</b><br><span class="caption">The kitchen cooks your dishes at the same time, so the wait is about as long as the slowest dish.</span></p></div>
+  <div class="card" style="padding:4px 16px">${plate.map(l => { const f = food(l.foodId); return `<div class="pline"><div class="grow"><b>${esc(f.name)}</b><div class="caption muted">${esc(l.by)}${l.by === S.guestName ? ' (you)' : ''} · <span class="num">${peso(f.price * l.qty)}</span> · <span class="num">${f.eta} min</span></div></div>
     <div class="stepper"><button data-act="g-qty" data-id="${l.id}" data-v="-1" aria-label="Remove one ${esc(f.name)}">${icon(l.qty > 1 ? 'minus' : 'trash', 20)}</button><span class="num">${l.qty}</span><button data-act="g-qty" data-id="${l.id}" data-v="1" aria-label="Add one ${esc(f.name)}">${icon('plus', 20)}</button></div></div>`; }).join('')}</div>`;
 }
 function gOrders(t){
@@ -884,6 +951,7 @@ function gOrders(t){
   return os.map(o => { const k = GSTEPS.indexOf(o.status), m = OSTAT[o.status]; return `<section class="card track" style="padding:16px">
     <span class="caption muted num">${o.id} · ${tm(o.createdAt)} · sent by ${esc(o.by)}</span>
     <h3>${m.g}</h3><p class="caption muted">${m.d}</p>
+    ${['queued','preparation','cooking','plating'].includes(o.status) ? (left => `<span class="pill p-info" style="align-self:flex-start">${icon('clock', 16)}${left > 0 ? `Ready in about ${left} min` : 'Almost ready'}</span>`)((o.eta || orderEta(o.items)) - mins(o.createdAt)) : ''}
     <div class="prog" aria-hidden="true">${GSTEPS.map((_, i) => `<i class="${i <= k ? 'on' : ''}"></i>`).join('')}</div>
     <ol class="steps">${GSTEP_L.map((l, i) => `<li class="${i < k || o.status === 'served' ? 'done' : i === k ? 'now' : ''}"><span class="dot">${i < k || o.status === 'served' ? icon('check') : ''}</span>${l}</li>`).join('')}</ol>
     <ul class="items">${o.items.map(i => `<li><b class="num">${i.qty}×</b><span>${esc(i.name)}</span><span class="num">${peso(i.qty * i.price)}</span></li>`).join('')}</ul>
@@ -934,18 +1002,22 @@ function confirmModal(title, text, act, id, label){
   modal(title, `<div class="m-body"><p>${text}</p></div>`, `<div class="m-foot"><button class="btn btn-outline" data-act="close">Cancel</button><button class="btn btn-danger" data-act="${act}" data-id="${id}">${icon('trash', 20)}${label}</button></div>`);
 }
 function foodModal(f){
-  const n = !f; f = f || {name:'', cat:S.categories[0]?.id, price:'', desc:'', status:'available', tags:[], img:''};
-  dlg.dataset.img = f.img;
+  const n = !f; f = f || {name:'', cat:S.categories[0]?.id, price:'', desc:'', status:'available', tags:[], photos:[], eta:15};
+  draftPhotos = [...f.photos];
   modal(n ? 'Add food' : `Edit ${esc(f.name)}`, `<form id="food-form" data-form="food" data-id="${n ? '' : f.id}"><div class="m-body"><div class="form-grid">
     <label class="field full"><span>Name</span><input id="ff-name" name="name" class="input" required value="${esc(f.name)}" placeholder="Chicken Inasal"></label>
     <label class="field"><span>Category</span><select id="ff-cat" name="cat" class="input">${S.categories.map(c => `<option value="${c.id}" ${c.id === f.cat ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</select></label>
     <label class="field"><span>Price (₱)</span><input id="ff-price" name="price" class="input num" type="number" min="1" step="0.01" required value="${f.price}" placeholder="245.00"></label>
+    <label class="field"><span>Prep time (minutes)</span><input id="ff-eta" name="eta" class="input num" type="number" min="1" max="180" inputmode="numeric" required value="${f.eta}"><span class="hint">Guests see this as the estimated wait.</span></label>
     <label class="field full"><span>Description</span><textarea id="ff-desc" name="desc" class="input" placeholder="Ingredients in one line">${esc(f.desc)}</textarea></label>
-    <div class="field full"><span>Photo</span><div style="display:flex;gap:12px;align-items:center"><div class="thumb" id="ff-prev" style="width:96px;height:64px">${f.img ? `<img src="${f.img}" alt="">` : `<div class="ph cat-4">${icon('image', 24)}</div>`}</div><input id="ff-img" type="file" accept="image/*" data-change="foodImg" class="input" style="padding:8px"></div></div>
+    <div class="field full"><span>Photos</span><div class="ff-photos" id="ff-photos">${photoDraftHtml()}</div><span class="hint">The first photo is the cover. Guests can open all photos in a gallery.</span></div>
     <fieldset class="field full" style="border:0;padding:0;margin:0"><span class="label">Status</span><div class="checks">${[['available','Available'], ['unavailable','Not available']].map(([v, l]) => `<label class="check"><input type="radio" name="status" value="${v}" ${f.status === v ? 'checked' : ''}>${l}</label>`).join('')}</div></fieldset>
     <fieldset class="field full" style="border:0;padding:0;margin:0"><span class="label">Menu tags</span><div class="checks">${Object.entries(TAGS).map(([k, l]) => `<label class="check"><input type="checkbox" name="tags" value="${k}" ${f.tags.includes(k) ? 'checked' : ''}>${l}</label>`).join('')}</div></fieldset>
   </div></div><div class="m-foot"><button type="button" class="btn btn-outline" data-act="close">Cancel</button><button class="btn btn-primary">${n ? 'Add food' : 'Save changes'}</button></div></form>`);
 }
+let draftPhotos = [];
+const photoDraftHtml = () => draftPhotos.map((src, i) => `<div class="ff-photo"><img src="${src}" alt="Photo ${i + 1}"><button type="button" data-act="ff-rm" data-v="${i}" aria-label="Remove photo ${i + 1}">${icon('x', 16)}</button></div>`).join('')
+  + `<label class="ff-add">${icon('plus', 20)}Add photos<input id="ff-img" type="file" accept="image/*" multiple data-change="foodPhotos"></label>`;
 function setModal(row){
   const cfg = SET[S.setTab], n = !row;
   row = row || {active:true, modules:[]};
@@ -959,6 +1031,51 @@ function setModal(row){
     }).join('')}
   </div><div class="m-foot"><button type="button" class="btn btn-outline" data-act="close">Cancel</button><button class="btn btn-primary">${n ? `Add ${cfg.one}` : 'Save changes'}</button></div></form>`);
 }
+
+/* ---------- Lightbox ---------- */
+const lb = $('#lb');
+let LB = null;
+function lbRender(){
+  const {f, i} = LB, n = f.photos.length;
+  lb.innerHTML = `<div class="lb-top"><div class="grow"><b>${esc(f.name)}</b><div class="caption num">Photo ${i + 1} of ${n} · ${peso(f.price)} · about ${f.eta} min</div></div>
+    <button class="icon-btn" data-act="lb-close" aria-label="Close photos">${icon('x')}</button></div>
+  <div class="lb-stage" id="lb-stage"><img id="lb-img" src="${f.photos[i]}" alt="${esc(f.name)}, photo ${i + 1} of ${n}">
+    ${n > 1 ? `<button class="icon-btn lb-nav prev" data-act="lb-step" data-v="-1" aria-label="Previous photo" ${i ? '' : 'disabled'}>${icon('arrow')}</button><button class="icon-btn lb-nav next" data-act="lb-step" data-v="1" aria-label="Next photo" ${i < n - 1 ? '' : 'disabled'}>${icon('arrow')}</button>` : ''}</div>
+  <div class="lb-bottom"><div class="lb-thumbs">${n > 1 ? f.photos.map((src, k) => `<button data-act="lb-go" data-v="${k}" aria-label="Photo ${k + 1}" aria-current="${k === i}"><img src="${src}" alt=""></button>`).join('') : ''}</div>
+    <div class="lb-zoom"><button class="icon-btn" data-act="lb-zoom" data-v="-0.5" aria-label="Zoom out">${icon('minus')}</button><span id="lb-pct" class="num" aria-live="polite"></span><button class="icon-btn" data-act="lb-zoom" data-v="0.5" aria-label="Zoom in">${icon('plus')}</button></div></div>`;
+  lbApply();
+}
+function lbApply(){
+  const st = $('#lb-stage'), img = $('#lb-img'); if (!st) return;
+  const mx = (LB.s - 1) * st.clientWidth / 2, my = (LB.s - 1) * st.clientHeight / 2;
+  LB.x = clamp(LB.x, -mx, mx); LB.y = clamp(LB.y, -my, my);
+  img.style.transform = `translate(${LB.x}px, ${LB.y}px) scale(${LB.s})`;
+  st.classList.toggle('zoomed', LB.s > 1);
+  $('#lb-pct').textContent = Math.round(LB.s * 100) + '%';
+}
+const lbZoom = z => { LB.s = clamp(z, 1, 4); if (LB.s === 1){ LB.x = 0; LB.y = 0; } lbApply(); };
+const lbGo = i => { if (i < 0 || i >= LB.f.photos.length) return; Object.assign(LB, {i, s:1, x:0, y:0}); lbRender(); };
+const ptrs = new Map(); let pinch = null, pan = null;
+lb.addEventListener('pointerdown', e => {
+  const st = e.target.closest('#lb-stage'); if (!st || e.target.closest('button')) return;
+  st.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, e);
+  if (ptrs.size === 2){ const [a, b] = [...ptrs.values()]; pinch = {d:Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY), s:LB.s}; pan = null; }
+  else if (LB.s > 1){ pan = {x:e.clientX - LB.x, y:e.clientY - LB.y}; st.classList.add('panning'); }
+});
+lb.addEventListener('pointermove', e => {
+  if (!ptrs.has(e.pointerId)) return; ptrs.set(e.pointerId, e);
+  if (pinch && ptrs.size === 2){ const [a, b] = [...ptrs.values()]; lbZoom(pinch.s * Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY) / pinch.d); }
+  else if (pan){ LB.x = e.clientX - pan.x; LB.y = e.clientY - pan.y; lbApply(); }
+});
+const lbUp = e => { ptrs.delete(e.pointerId); if (ptrs.size < 2) pinch = null; if (!ptrs.size){ pan = null; $('#lb-stage')?.classList.remove('panning'); } };
+lb.addEventListener('pointerup', lbUp); lb.addEventListener('pointercancel', lbUp);
+lb.addEventListener('dblclick', e => { if (e.target.closest('#lb-stage') && !e.target.closest('button')) lbZoom(LB.s > 1 ? 1 : 2.5); });
+lb.addEventListener('wheel', e => { if (!e.target.closest('#lb-stage')) return; e.preventDefault(); lbZoom(LB.s - Math.sign(e.deltaY) * .25); }, {passive:false});
+lb.addEventListener('keydown', e => {
+  const k = {ArrowLeft:() => lbGo(LB.i - 1), ArrowRight:() => lbGo(LB.i + 1), '+':() => lbZoom(LB.s + .5), '=':() => lbZoom(LB.s + .5), '-':() => lbZoom(LB.s - .5)}[e.key];
+  if (k){ e.preventDefault(); k(); }
+});
+lb.addEventListener('close', () => { lb.innerHTML = ''; LB = null; ptrs.clear(); pinch = pan = null; });
 
 /* ---------- Toast ---------- */
 let toastT;
@@ -992,6 +1109,12 @@ const ACT = {
   'food-del':d => confirmModal('Delete food?', `<b>${esc(food(d.id).name)}</b> will be removed from the menu. Past orders keep their record.`, 'food-del-ok', d.id, 'Delete food'),
   'food-del-ok':d => { const f = food(d.id); S.foods = S.foods.filter(x => x.id !== d.id); dlg.close(); toast(`${f.name} deleted`); },
   'set-tab':d => { S.setTab = d.v; },
+  'ff-rm':d => { draftPhotos.splice(+d.v, 1); $('#ff-photos').innerHTML = photoDraftHtml(); },
+  gallery:d => { const f = food(d.id); if (!f.photos.length) return toast('No photos yet for ' + f.name); LB = {f, i:0, s:1, x:0, y:0}; lb.showModal(); lbRender(); },
+  'lb-close':() => lb.close(),
+  'lb-go':d => lbGo(+d.v),
+  'lb-step':d => lbGo(LB.i + +d.v),
+  'lb-zoom':d => lbZoom(LB.s + +d.v),
   'set-add':() => setModal(null),
   'set-edit':d => setModal(S[S.setTab].find(r => r.id === d.id)),
   'set-del':d => {
@@ -1025,14 +1148,14 @@ const ACT = {
   'g-qty':d => { const p = S.plates[S.guestTable], l = p.find(x => x.id === d.id); l.qty += +d.v; if (l.qty < 1) S.plates[S.guestTable] = p.filter(x => x !== l); },
   'g-send':() => {
     const t = tableOf(S.guestTable), p = S.plates[t.id];
-    modal('Send plate to kitchen?', `<div class="m-body"><p>You are sending the plate for everyone at ${t.name}. Only one guest sends it, so check with your table first.</p>
+    modal('Send plate to kitchen?', `<div class="m-body"><p>You are sending the plate for everyone at ${t.name}. Only one guest sends it, so check with your table first.</p><p><b>Estimated wait: about ${orderEta(p)} min</b></p>
       <ul class="items">${p.map(l => `<li><b class="num">${l.qty}×</b><span>${esc(food(l.foodId).name)}</span><span class="caption muted">${esc(l.by)}</span></li>`).join('')}</ul></div>`,
       `<div class="m-foot"><button class="btn btn-outline" data-act="close">Not yet</button><button class="btn btn-primary" data-act="g-send-ok">Send to kitchen</button></div>`);
   },
   'g-send-ok':() => {
     const t = tableOf(S.guestTable), p = S.plates[t.id];
     const items = []; p.forEach(l => { const f = food(l.foodId), e = items.find(i => i.foodId === f.id); e ? e.qty += l.qty : items.push({foodId:f.id, name:f.name, price:f.price, qty:l.qty}); });
-    const o = {id:nextId(), table:t.id, session:t.token, items, status:'queued', createdAt:Date.now(), by:S.guestName};
+    const o = {id:nextId(), table:t.id, session:t.token, items, status:'queued', createdAt:Date.now(), by:S.guestName, eta:orderEta(items)};
     S.orders.push(o); S.plates[t.id] = []; syncTable(t); S.guestTab = 'orders'; dlg.close(); toast(`${o.id} sent to the kitchen`);
   },
   'g-billout':() => {
@@ -1056,7 +1179,7 @@ const FORMS = {
   },
   bill:fd => { const t = tableOf(S.guestTable); t.status = 'billout'; t.bill = {method:fd.get('method'), at:Date.now()}; dlg.close(); toast('Your waiter has been called'); },
   food:(fd, f) => {
-    const v = {name:fd.get('name').trim(), cat:fd.get('cat'), price:r2(+fd.get('price')), desc:fd.get('desc').trim(), status:fd.get('status'), tags:fd.getAll('tags'), img:dlg.dataset.img || ''};
+    const v = {name:fd.get('name').trim(), cat:fd.get('cat'), price:r2(+fd.get('price')), eta:Math.round(+fd.get('eta')), desc:fd.get('desc').trim(), status:fd.get('status'), tags:fd.getAll('tags'), photos:[...draftPhotos]};
     if (!v.name) return;
     if (f.dataset.id) Object.assign(food(f.dataset.id), v); else S.foods.push({id:'f' + uid(), ...v});
     dlg.close(); toast(f.dataset.id ? `${v.name} saved` : `${v.name} added to the menu`);
@@ -1081,11 +1204,9 @@ const CHANGE = {
     $('#pay-note').textContent = d ? `Requirement: ${d.note || 'none'}.` : 'Check the guest’s ID before applying a discount.';
     return true;
   },
-  foodImg:el => {
-    const file = el.files[0]; if (!file) return true;
-    const rd = new FileReader();
-    rd.onload = () => { dlg.dataset.img = rd.result; $('#ff-prev').innerHTML = `<img src="${rd.result}" alt="">`; };
-    rd.readAsDataURL(file); return true;
+  foodPhotos:el => {
+    [...el.files].forEach(file => { const rd = new FileReader(); rd.onload = () => { draftPhotos.push(rd.result); $('#ff-photos').innerHTML = photoDraftHtml(); }; rd.readAsDataURL(file); });
+    return true;
   },
 };
 
