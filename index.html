@@ -53,7 +53,7 @@
 
 *{box-sizing:border-box}
 html,body{height:100%}
-body{background:var(--surface-page);color:var(--ink);font:400 16px/26px var(--font)}
+body{margin:0;background:var(--surface-page);color:var(--ink);font:400 16px/26px var(--font)}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface-card)}
 h1,h2,h3,h4,p{margin:0}
 h1,h2,h3,h4,b,strong,th{font-weight:500}
@@ -81,8 +81,15 @@ button,input,select,textarea{font:inherit;color:inherit}
 .seg button[aria-pressed="true"]{background:var(--surface-card);color:var(--ink);box-shadow:var(--shadow-card)}
 
 /* Shell */
-.shell{display:grid;grid-template-columns:232px minmax(0,1fr);min-height:calc(100% - 65px)}
-.rail{border-right:1px solid var(--hairline);background:var(--surface-card);padding:16px 12px;display:flex;flex-direction:column;gap:4px}
+.shell{display:grid;grid-template-columns:232px minmax(0,1fr);min-height:calc(100dvh - 65px - env(safe-area-inset-top,0px))}
+/* Rail is always as tall as the screen under the top bar, even when the page is short, and stays put while the page scrolls. */
+.rail{position:sticky;top:calc(65px + env(safe-area-inset-top,0px));align-self:start;height:calc(100dvh - 65px - env(safe-area-inset-top,0px));overflow-y:auto;border-right:1px solid var(--hairline);background:var(--surface-card);padding:16px 12px;display:flex;flex-direction:column;gap:4px}
+.rail-foot{margin-top:auto;padding-top:16px;border-top:1px solid var(--hairline);display:flex;flex-direction:column;gap:12px}
+.me{display:flex;align-items:center;gap:12px;min-width:0}
+.me .av{width:40px;height:40px;border-radius:50%;background:var(--brand-tint);color:var(--brand);display:grid;place-items:center;font-weight:500;flex:none}
+.me .who{min-width:0;display:flex;flex-direction:column}
+.me .who b{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rail-foot .ver{font-size:14px;line-height:20px;color:var(--ink-muted)}
 .nav{display:flex;align-items:center;gap:12px;min-height:var(--tap);padding:0 12px;border-radius:var(--r-md);border:0;background:none;cursor:pointer;font-weight:500;color:var(--ink-muted);text-align:left;width:100%;transition:background .15s}
 .nav:hover{background:var(--brand-tint);color:var(--ink)}
 .nav[aria-current="page"]{background:var(--brand-tint);color:var(--brand)}
@@ -96,7 +103,8 @@ button,input,select,textarea{font:inherit;color:inherit}
 .page-head p{margin-top:4px}
 @media (max-width:860px){
   .shell{grid-template-columns:minmax(0,1fr)}
-  .rail{flex-direction:row;overflow-x:auto;border-right:0;border-bottom:1px solid var(--hairline);padding:8px max(16px,env(safe-area-inset-left,0px));position:sticky;top:calc(env(safe-area-inset-top,0px) + 65px);z-index:15}
+  .rail-foot{display:none}
+  .rail{height:auto;align-self:stretch;flex-direction:row;overflow-x:auto;border-right:0;border-bottom:1px solid var(--hairline);padding:8px max(16px,env(safe-area-inset-left,0px));position:sticky;top:calc(env(safe-area-inset-top,0px) + 65px);z-index:15}
   .nav{width:auto;flex:none}
   h1{font-size:28px;line-height:36px}
 }
@@ -899,7 +907,9 @@ function staffShell(){
   const kq = S.orders.filter(o => KITCHEN.includes(o.status)).length;
   const badge = {kitchen:kq, tables:bills.length};
   const views = {dashboard:vDashboard, orders:vOrders, kitchen:vKitchen, foods:vFoods, tables:vTables, settings:vSettings, guide:vGuide};
-  return `<div class="shell"><nav class="rail" aria-label="Modules" data-keep="rail">${NAV.map(n => `<button class="nav" data-act="nav" data-v="${n.id}" ${S.view === n.id ? 'aria-current="page"' : ''}>${icon(n.ic)}${n.label}${badge[n.id] ? `<span class="badge num" aria-label="${badge[n.id]} waiting">${badge[n.id]}</span>` : ''}</button>`).join('')}</nav>
+  return `<div class="shell"><nav class="rail" aria-label="Modules" data-keep="rail">${NAV.map(n => `<button class="nav" data-act="nav" data-v="${n.id}" ${S.view === n.id ? 'aria-current="page"' : ''}>${icon(n.ic)}${n.label}${badge[n.id] ? `<span class="badge num" aria-label="${badge[n.id]} waiting">${badge[n.id]}</span>` : ''}</button>`).join('')}
+    <div class="rail-foot"><div class="me"><span class="av" aria-hidden="true">${esc(S.users[0].name[0])}</span><span class="who"><b>${esc(S.users[0].name)}</b><span class="caption muted">${esc(S.roles.find(r => r.id === S.users[0].role)?.name || '')}</span></span></div>
+      <span class="ver">FBS Serve v1.0<br>Frontline Business Solutions</span></div></nav>
   <main class="main"><div class="wrap">
     ${bills.map(t => `<div class="alert brand" role="alert">${icon('bell')}<p><b>${t.name} is asking for the bill.</b> Pays with ${esc(payName(t.bill.method))} · ${mins(t.bill.at)} min ago</p><button class="btn btn-primary" data-act="receive" data-id="${t.id}">Receive payment</button></div>`).join('')}
     ${views[S.view]()}
