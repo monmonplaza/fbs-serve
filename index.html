@@ -353,6 +353,8 @@ dialog::backdrop{background:rgba(22,19,15,.55)}
 [hidden]{display:none!important}
 
 /* Guest preview */
+body.solo .phone{width:100%;max-width:520px;height:100dvh;min-height:0;border:0;border-radius:0;box-shadow:none}
+body.solo .phone-wrap{display:flex;justify-content:center;height:100%}
 .guest-layout{display:grid;grid-template-columns:minmax(0,320px) auto;gap:32px;justify-content:center;align-items:start}
 @media (max-width:820px){.guest-layout{grid-template-columns:minmax(0,1fr)}}
 .phone{width:min(400px,100%);height:min(800px,calc(100dvh - 120px));min-height:600px;border:10px solid var(--ink);border-radius:40px;background:var(--surface-page);display:flex;flex-direction:column;overflow:hidden;box-shadow:var(--shadow-lift);margin:0 auto}
@@ -443,6 +445,7 @@ dialog::backdrop{background:rgba(22,19,15,.55)}
 <dialog id="lb" class="lb" aria-label="Food photos"></dialog>
 <div id="toast" role="status" hidden></div>
 
+<script src="assets/qrcode.js"></script>
 <script>
 // shortcut: all data lives in this page's memory and resets on reload; connect a backend to persist it.
 const $ = s => document.querySelector(s);
@@ -694,13 +697,15 @@ function aggregate(orders){
   return [...m.values()];
 }
 
-function qrSvg(seedStr){
-  const N = 25, r = rng(hash(seedStr)); let cells = '';
-  const inFinder = (x, y) => (x < 8 && y < 8) || (x > N - 9 && y < 8) || (x < 8 && y > N - 9);
-  for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) if (!inFinder(x, y) && r() < .48) cells += `<rect x="${x}" y="${y}" width="1" height="1"/>`;
-  const f = (x, y) => `<rect x="${x}" y="${y}" width="7" height="7"/><rect x="${x + 1}" y="${y + 1}" width="5" height="5" fill="#fff"/><rect x="${x + 2}" y="${y + 2}" width="3" height="3"/>`;
-  return `<svg class="qr" viewBox="-2 -2 ${N + 4} ${N + 4}" role="img" aria-label="QR code"><rect x="-2" y="-2" width="${N + 4}" height="${N + 4}" fill="#fff"/><g fill="#1B1B18">${cells}${f(0, 0)}${f(N - 7, 0)}${f(0, N - 7)}</g></svg>`;
+// Real QR code (qrcode-generator, MIT, assets/qrcode.js). Quiet zone of 2 modules, always dark-on-white so phones can read it.
+function qrSvg(text){
+  const q = qrcode(0, 'M'); q.addData(text); q.make();
+  const n = q.getModuleCount(); let d = '';
+  for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) if (q.isDark(y, x)) d += `M${x} ${y}h1v1h-1z`;
+  return `<svg class="qr" viewBox="-2 -2 ${n + 4} ${n + 4}" shape-rendering="crispEdges" role="img" aria-label="QR code for the table link"><rect x="-2" y="-2" width="${n + 4}" height="${n + 4}" fill="#fff"/><path d="${d}" fill="#000"/></svg>`;
 }
+// The QR opens this same page in guest mode for one table. shortcut: no backend yet, so the phone gets its own copy of the sample data.
+const guestLink = t => location.href.split('#')[0] + '#t=' + encodeURIComponent(t.id) + '&k=' + t.token;
 
 /* ---------- Staff views ---------- */
 function vDashboard(){
@@ -904,10 +909,17 @@ function staffShell(){
 /* ---------- Guest view ---------- */
 function guestShell(){
   const t = tableOf(S.guestTable);
-  if (!t) return `<main class="main"><div class="wrap"><div class="card empty">Add a table in Settings to preview the guest view.</div></div></main>`;
+  if (!t) return S.guestOnly ? `<main class="phone-wrap"><div class="phone"><div class="g-scroll"><div class="center"><div class="big-ic">${icon('qr', 32)}</div><h3>We can't find this table</h3><p class="muted">Ask your waiter for a new QR code.</p></div></div></div></main>` : `<main class="main"><div class="wrap"><div class="card empty">Add a table in Settings to preview the guest view.</div></div></main>`;
   const plate = (S.plates[t.id] || []);
   const n = sum(plate.map(l => l.qty));
   const live = t.token && !['inactive','cleaning'].includes(t.status);
+  const phone = `<div class="phone" aria-label="Guest phone preview">
+      <div class="g-top">${LOGO}<div class="grow"><b>FBS Serve</b><div class="caption muted">${t.name} · ${esc(S.guestName)}</div></div>${live ? tPill(t) : ''}</div>
+      ${!live ? `<div class="g-scroll">${gClosed(t)}</div>` : `<div class="g-scroll" data-keep="gscroll">${({menu:gMenu, plate:gPlate, orders:gOrders, bill:gBill})[S.guestTab](t)}</div>
+      ${S.guestTab === 'plate' && n ? `<div class="g-foot"><button class="btn btn-primary block" data-act="g-send">Send to kitchen · ${peso(sum(plate.map(l => food(l.foodId).price * l.qty)))}</button></div>` : ''}
+      <nav class="g-tabs" aria-label="Guest menu">${[['menu','Menu','utensils'], ['plate','Plate','plate'], ['orders','Orders','clock'], ['bill','Bill','wallet']].map(([k, l, ic]) => `<button class="g-tab" data-act="g-tab" data-v="${k}" ${S.guestTab === k ? 'aria-current="page"' : ''}>${icon(ic)}${l}${k === 'plate' && n ? `<span class="badge num">${n}</span>` : ''}</button>`).join('')}</nav>`}
+</div>`;
+  if (S.guestOnly) return `<main class="phone-wrap">${phone}</main>`;
   return `<main class="main"><div class="wrap"><div class="guest-layout">
     <aside class="side card">
       <h2>Guest view</h2>
@@ -917,12 +929,7 @@ function guestShell(){
       <span class="hint">Many guests share one QR. Switch guests to see the shared plate.</span></div>
       <button class="btn btn-outline" data-act="mode" data-v="staff">Back to staff view</button>
     </aside>
-    <div class="phone" aria-label="Guest phone preview">
-      <div class="g-top">${LOGO}<div class="grow"><b>FBS Serve</b><div class="caption muted">${t.name} · ${esc(S.guestName)}</div></div>${live ? tPill(t) : ''}</div>
-      ${!live ? `<div class="g-scroll">${gClosed(t)}</div>` : `<div class="g-scroll" data-keep="gscroll">${({menu:gMenu, plate:gPlate, orders:gOrders, bill:gBill})[S.guestTab](t)}</div>
-      ${S.guestTab === 'plate' && n ? `<div class="g-foot"><button class="btn btn-primary block" data-act="g-send">Send to kitchen · ${peso(sum(plate.map(l => food(l.foodId).price * l.qty)))}</button></div>` : ''}
-      <nav class="g-tabs" aria-label="Guest menu">${[['menu','Menu','utensils'], ['plate','Plate','plate'], ['orders','Orders','clock'], ['bill','Bill','wallet']].map(([k, l, ic]) => `<button class="g-tab" data-act="g-tab" data-v="${k}" ${S.guestTab === k ? 'aria-current="page"' : ''}>${icon(ic)}${l}${k === 'plate' && n ? `<span class="badge num">${n}</span>` : ''}</button>`).join('')}</nav>`}
-    </div>
+${phone}
   </div></div></main>`;
 }
 function gClosed(t){
@@ -977,9 +984,9 @@ const modal = (title, body, foot = '') => { dlg.innerHTML = `<div class="m-head"
 dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
 
 function qrModal(t){
-  modal(`${t.name} QR code`, `<div class="m-body"><div class="qr-box">${qrSvg(t.id + t.token)}<b>Scan to order</b><span class="caption muted num">fbsserve.app/t/${t.id}?k=${t.token}</span></div>
+  modal(`${t.name} QR code`, `<div class="m-body"><div class="qr-box">${qrSvg(guestLink(t))}<b>Scan to order</b><span class="caption muted" style="word-break:break-all;user-select:all">${esc(guestLink(t))}</span></div>
     <p class="caption muted">Every guest at ${t.name} scans this same code. It stops working once the table is marked clean.</p></div>`,
-    `<div class="m-foot"><button class="btn btn-outline" data-act="close">Done</button><button class="btn btn-primary" data-act="open-guest" data-id="${t.id}">${icon('phone', 20)}Open guest view</button></div>`);
+    `<div class="m-foot"><button class="btn btn-outline" data-act="close">Done</button><button class="btn btn-outline" data-act="copy-link" data-id="${t.id}">Copy link</button><button class="btn btn-primary" data-act="open-guest" data-id="${t.id}">${icon('phone', 20)}Open guest view</button></div>`);
 }
 function orderModal(o){
   modal(o.id, `<div class="m-body"><dl class="kv"><dt>Status</dt><dd>${oPill(o)}</dd><dt>Table</dt><dd>${esc(tName(o.table))}</dd><dt>Ordered</dt><dd class="num">${dt(o.createdAt)}, ${tm(o.createdAt)}</dd><dt>Sent by</dt><dd>${esc(o.by)}</dd>
@@ -1096,6 +1103,7 @@ const ACT = {
       <label class="field"><span>Number of guests</span><input id="act-guests" name="guests" class="input num" type="number" min="1" max="99" inputmode="numeric" required value="${Math.min(2, t.seats)}"><span class="hint">${esc(t.name)} has ${t.seats} seats.</span></label>
     </div><div class="m-foot"><button type="button" class="btn btn-outline" data-act="close">Cancel</button><button class="btn btn-primary">${icon('qr', 20)}Activate and show QR</button></div></form>`);
   },
+  'copy-link':d => { navigator.clipboard?.writeText(guestLink(tableOf(d.id))).then(() => toast('Link copied'), () => toast('Select the link above and copy it')) ?? toast('Select the link above and copy it'); },
   'show-qr':d => qrModal(tableOf(d.id)),
   'open-guest':d => { S.mode = 'guest'; S.guestTable = d.id; S.guestTab = 'menu'; dlg.close(); scrollTo(0, 0); },
   knext:d => { const o = S.orders.find(x => x.id === d.id); o.status = KITCHEN[KITCHEN.indexOf(o.status) + 1]; toast(`${o.id} moved to ${OSTAT[o.status].l}`); },
@@ -1229,9 +1237,10 @@ matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { if
 function render(){
   const a = document.activeElement, id = a?.id, sel = a?.selectionStart;
   const keep = {}; document.querySelectorAll('[data-keep]').forEach(el => keep[el.dataset.keep] = [el.scrollLeft, el.scrollTop]);
-  $('#app').innerHTML = `<header class="top"><div class="top-in"><span class="brand">${LOGO}FBS Serve <small>Restaurant manager</small></span><span class="spacer"></span>
+  document.body.classList.toggle('solo', !!S.guestOnly);
+  $('#app').innerHTML = `${S.guestOnly ? '' : `<header class="top"><div class="top-in"><span class="brand">${LOGO}FBS Serve <small>Restaurant manager</small></span><span class="spacer"></span>
     <button class="icon-btn" data-act="theme" aria-label="${isDark() ? 'Switch to light mode' : 'Switch to dark mode'}" title="${isDark() ? 'Light mode' : 'Dark mode'}">${icon(isDark() ? 'sun' : 'moon')}</button>
-    <div class="seg" role="group" aria-label="View as"><button data-act="mode" data-v="staff" aria-pressed="${S.mode === 'staff'}">${icon('user', 20)}Staff</button><button data-act="mode" data-v="guest" aria-pressed="${S.mode === 'guest'}">${icon('phone', 20)}Guest phone</button></div></div></header>
+    <div class="seg" role="group" aria-label="View as"><button data-act="mode" data-v="staff" aria-pressed="${S.mode === 'staff'}">${icon('user', 20)}Staff</button><button data-act="mode" data-v="guest" aria-pressed="${S.mode === 'guest'}">${icon('phone', 20)}Guest phone</button></div></div></header>`}
     ${S.mode === 'guest' ? guestShell() : staffShell()}`;
   document.querySelectorAll('[data-keep]').forEach(el => { const k = keep[el.dataset.keep]; if (k) [el.scrollLeft, el.scrollTop] = k; });
   if (id && !dlg.contains(a)){ const n = document.getElementById(id); if (n){ n.focus(); if (sel != null) try { n.setSelectionRange(sel, sel); } catch {} } }
@@ -1271,6 +1280,15 @@ document.addEventListener('keydown', e => {
   t.x = clamp(t.x + k[0] * step, 3, 97); t.y = clamp(t.y + k[1] * step, 5, 95); e.preventDefault(); render();
 });
 setInterval(() => { if (!dlg.open && document.activeElement?.tagName !== 'INPUT') render(); }, 30000);
+// Opened from a table QR code: show only the guest phone screen for that table.
+{
+  const q = new URLSearchParams(location.hash.slice(1)), qt = q.get('t'), qk = q.get('k');
+  if (qt && qk){
+    Object.assign(S, {guestOnly:true, mode:'guest', guestTable:qt, guestName:'Guest ' + (10 + Math.floor(Math.random() * 90))});
+    const t = tableOf(qt);
+    if (t){ Object.assign(t, {status:'active', token:qk, openedAt:Date.now(), bill:null}); S.plates[t.id] = []; }
+  }
+}
 render();
 </script>
 

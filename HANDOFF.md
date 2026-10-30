@@ -13,6 +13,8 @@ FBS Serve is a restaurant management web app. Guests order from their table by s
 
 ## Run it
 
+Hosted copy: GitHub Pages, https://monmonplaza.github.io/fbs-serve/ (turn it on in the repo under Settings, Pages, Deploy from branch `main`, folder `/ (root)`). A phone needs a public address like this to open a table QR link.
+
 No build step and no dependencies. Open `index.html` in a browser, or serve the folder:
 
 ```sh
@@ -27,6 +29,7 @@ The page loads Instrument Sans from Google Fonts. Everything else is inline.
 | --- | --- |
 | `index.html` | The whole app: CSS tokens, markup and JS (~1,140 lines) |
 | `assets/fbs-serve-logo.png` | Logo, 256 px (green service-bell cloche on dark tile) |
+| `assets/qrcode.js` | QR code generator library (MIT, unmodified) |
 | `docs/FBS-Serve-Color-System.pdf` | Owner's color system v1.0 (source of all colors) |
 | `HANDOFF.md` | This file |
 
@@ -150,7 +153,7 @@ The app is plain JS with no framework. It re-renders the whole `#app` from state
 
 - No backend, database, auth or real roles. The Staff and Guest switch is a preview toggle, not a login.
 - Nothing persists: drag positions, new foods and settings all reset on reload.
-- The QR is decorative. Real QR codes need a library and a real URL such as `/t/<tableId>?k=<token>`.
+- The QR is **real** (`assets/qrcode.js`, qrcode-generator, MIT) and encodes `<page url>#t=<tableId>&k=<token>`. Opening that link shows only the guest phone screen for that table (the `guestOnly` mode, see the boot block at the end of `index.html`). But with no backend the phone gets its **own copy** of the sample data, so the kitchen and waiter on another device do not see its orders.
 - Guest and staff screens are not synced across devices. They only appear linked inside one page.
 - The "only one guest sends the plate" rule is only a confirm modal. A real version needs a server-side lock on the table's plate.
 - There is no void or cancel order, no reservations, no printing or receipts, and no reports beyond the dashboard.
