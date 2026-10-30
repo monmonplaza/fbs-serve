@@ -130,7 +130,8 @@ The app is plain JS with no framework. It re-renders the whole `#app` from state
   - Magenta text on a pink tint uses Magenta 600 `#A51E7A`, because `#C42A93` there is 4.0:1.
   - Input borders use Gray 500 `#6B7584`, because `#C2C9D3` is too faint on white.
   - Table "Cleaning" is violet, not orange, so it stays distinct from "Ordering".
-- **Font:** Instrument Sans, weights 400–700. The owner chose it.
+- **Font:** Instrument Sans. The owner chose it, and asked for **medium (500) instead of bold** everywhere, so there is no 700 weight in the UI.
+- **Theme:** a sun/moon button in the top bar switches light and dark. The choice is saved in `localStorage` (`fbs-theme`). With no saved choice, the page follows the system setting.
 - **Layout, from the Savora design guide (a private claude.ai design system the owner used first):**
   - Body text at least 16px, nothing under 14px
   - Tap targets at least 48px
