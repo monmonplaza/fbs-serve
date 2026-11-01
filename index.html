@@ -58,7 +58,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 h1,h2,h3,h4,p{margin:0}
 h1,h2,h3,h4,b,strong,th{font-weight:500}
 h1{font-size:36px;line-height:44px;text-wrap:balance}
-h2{font-size:28px;line-height:36px;text-wrap:balance}
+h2{font-size:23px;line-height:36px;text-wrap:balance}
 h3{font-size:22px;line-height:30px}
 .num{font-variant-numeric:tabular-nums}
 .muted{color:var(--ink-muted)}
@@ -100,7 +100,7 @@ button,input,select,textarea{font:inherit;color:inherit}
   .shell{grid-template-columns:minmax(0,1fr)}
   .rail{height:auto;align-self:stretch;flex-direction:row;overflow-x:auto;border-right:0;border-bottom:1px solid var(--hairline);padding:8px max(16px,env(safe-area-inset-left,0px));position:sticky;top:calc(env(safe-area-inset-top,0px) + 65px);z-index:15}
   .nav{width:auto;flex:none}
-  h1{font-size:28px;line-height:36px}
+  h1{font-size:23px;line-height:36px}
 }
 
 /* Alert banner */
@@ -901,7 +901,7 @@ function staffShell(){
   const kq = S.orders.filter(o => KITCHEN.includes(o.status)).length;
   const badge = {kitchen:kq, tables:bills.length};
   const views = {dashboard:vDashboard, orders:vOrders, kitchen:vKitchen, foods:vFoods, tables:vTables, settings:vSettings, guide:vGuide};
-  return `<div class="shell"><nav class="rail" aria-label="Modules" data-keep="rail">${NAV.map(n => `<button class="nav" data-act="nav" data-v="${n.id}" ${S.view === n.id ? 'aria-current="page"' : ''}>${icon(n.ic)}${n.label}${badge[n.id] ? `<span class="badge num" aria-label="${badge[n.id]} waiting">${badge[n.id]}</span>` : ''}</button>`).join('')}</nav>
+  return `<div class="shell"><nav class="rail" aria-label="Modules" data-keep="rail">${NAV.map(n => `<button class="nav" data-act="nav" data-v="${n.id}" ${S.view === n.id ? 'aria-current="page"' : ''}>${icon(n.ic, 18)}${n.label}${badge[n.id] ? `<span class="badge num" aria-label="${badge[n.id]} waiting">${badge[n.id]}</span>` : ''}</button>`).join('')}</nav>
   <main class="main"><div class="wrap">
     ${bills.map(t => `<div class="alert brand" role="alert">${icon('bell')}<p><b>${t.name} is asking for the bill.</b> Pays with ${esc(payName(t.bill.method))} · ${mins(t.bill.at)} min ago</p><button class="btn btn-primary" data-act="receive" data-id="${t.id}">Receive payment</button></div>`).join('')}
     ${views[S.view]()}
