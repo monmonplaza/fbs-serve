@@ -97,8 +97,12 @@ button,input,select,textarea{font:inherit;color:inherit}
 .badge{min-width:24px;height:24px;padding:0 8px;border-radius:var(--r-pill);background:var(--brand);color:var(--on-brand);font-size:14px;line-height:24px;font-weight:500;text-align:center}
 .badge.soft{background:var(--surface-sunken);color:var(--ink)}
 .main{min-width:0;display:flex;flex-direction:column;padding-block:24px 0;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-/* The wrap is a light content panel floating on the dark green main canvas, so every page keeps its normal, theme-correct text contrast inside it. */
-.wrap{width:100%;max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:24px;flex:1;background:var(--surface-page);border-radius:var(--r-lg);padding:24px;box-shadow:var(--shadow-lift)}
+/* The wrap is the same dark green as the main canvas, flat with no panel edge. Cards, columns and rows inside it keep their own surface color, so their text stays readable; loose text straight on the canvas (page titles, toolbar headings, the two notes below) is set to a light color explicitly. */
+.wrap{width:100%;max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:24px;flex:1}
+.page-head h1{color:var(--nav-ink)}
+.page-head p{color:var(--nav-ink-muted)}
+.toolbar h2{color:var(--nav-ink)}
+.canvas-note{color:var(--nav-ink-muted)}
 .main > .foot{width:100%;max-width:1200px;margin:16px auto 0;padding:12px 0 16px;border-top:1px solid var(--chrome-border);display:flex;justify-content:space-between;gap:4px 16px;flex-wrap:wrap;font-size:14px;line-height:20px;color:var(--nav-ink-muted)}
 .page-head{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap}
 .page-head > div{flex:1;min-width:240px}
@@ -772,11 +776,11 @@ function vOrders(){
     <div class="spacer"></div>
     <label class="search"><span class="sr" hidden>Search order ID</span>${icon('search')}<input id="order-q" class="input" data-input="orderQ" placeholder="Search order ID, e.g. 1042" value="${esc(S.orderQ)}" aria-label="Search order ID"></label>
   </div>
-  ${q ? `<p class="caption muted">Searching all dates for “${esc(S.orderQ)}”. Clear the search to use the date filter.</p>` : ''}
+  ${q ? `<p class="caption canvas-note">Searching all dates for “${esc(S.orderQ)}”. Clear the search to use the date filter.</p>` : ''}
   <div class="tbl-scroll"><table class="data"><thead><tr><th>Order ID</th><th>Table</th><th>Date and time</th><th>Items</th><th>Payment</th><th class="r">Total</th><th>Status</th></tr></thead><tbody>
   ${list.slice(0, 200).map(o => `<tr class="click" data-act="order" data-id="${o.id}"><td><button class="link num" data-act="order" data-id="${o.id}">${o.id}</button></td><td>${esc(tName(o.table))}</td><td class="num">${dt(o.createdAt)}, ${tm(o.createdAt)}</td><td class="num">${sum(o.items.map(i => i.qty))} items</td><td>${o.payment ? esc(payName(o.payment)) : '<span class="muted">Not yet</span>'}</td><td class="r num"><b>${peso(total(o))}</b></td><td>${oPill(o)}</td></tr>`).join('') || `<tr><td colspan="7"><div class="empty">${icon('search', 32)}No orders match. Check the order ID or pick another date range.</div></td></tr>`}
   </tbody></table></div>
-  <p class="caption muted num">${list.length} orders · ${peso(sum(list.map(total)))}${list.length > 200 ? ' · showing the latest 200' : ''}</p>`;
+  <p class="caption canvas-note num">${list.length} orders · ${peso(sum(list.map(total)))}${list.length > 200 ? ' · showing the latest 200' : ''}</p>`;
 }
 
 function vKitchen(){
