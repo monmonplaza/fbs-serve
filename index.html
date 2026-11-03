@@ -34,8 +34,8 @@
   --chrome-bg:#F3F8F0;--chrome-border:#D5E2D0;--canvas-ink:#16191F;--canvas-ink-muted:#4A5A4F;--canvas-hover:rgba(22,25,31,.06);
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --surface-page:#0F1115;--surface-card:#22452E;--surface-elevated:#284F35;--surface-sunken:#183522;
-  --ink:#EDF0F4;--ink-muted:#A9B2BF;--border-control:#808A98;--hairline:#35593F;
+  --surface-page:#0F1115;--surface-card:#0D4746;--surface-elevated:#12514F;--surface-sunken:#093837;
+  --ink:#EDF0F4;--ink-muted:#A9B2BF;--border-control:#808A98;--hairline:#1B5F5D;
   --brand:#B8DF63;--brand-hover:#D4EC9C;--brand-active:#EAF6CC;--on-brand:#16191F;--brand-tint:#24301A;
   --secondary:#357A47;--secondary-hover:#2E6B3E;--secondary-active:#24563A;--on-secondary:#FFFFFF;
   --accent:#E35BBF;--accent-ink:#E35BBF;--accent-tint:#3A1530;--on-accent:#16191F;
@@ -44,12 +44,12 @@
   --info:#7DB0FF;--info-tint:#172A4A;--purple:#BCA4FF;--purple-tint:#2A1F4A;
   --shadow-card:0 1px 2px #3f1f140f;
   --shadow-lift:0 2px 4px rgba(0,0,0,.6),0 10px 24px rgba(0,0,0,.5);
-  --chrome-bg:#0B1A10;--chrome-border:rgba(255,255,255,.12);--canvas-ink:#FFFFFF;--canvas-ink-muted:#D7ECDB;--canvas-hover:rgba(255,255,255,.14);
+  --chrome-bg:#022B2B;--chrome-border:rgba(255,255,255,.12);--canvas-ink:#FFFFFF;--canvas-ink-muted:#D7ECDB;--canvas-hover:rgba(255,255,255,.14);
   --brand-fill:#357A47;--brand-fill-hover:#2E6B3E;--brand-fill-active:#24563A;--on-brand-fill:#FFFFFF;--chip-on:#357A47;--on-chip-on:#FFFFFF;--tip-bg:#163C22;--nav-active-bg:#163C22;--nav-active-ink:#FFFFFF;
   color-scheme:dark}}
 :root[data-theme="dark"]{
-  --surface-page:#0F1115;--surface-card:#22452E;--surface-elevated:#284F35;--surface-sunken:#183522;
-  --ink:#EDF0F4;--ink-muted:#A9B2BF;--border-control:#808A98;--hairline:#35593F;
+  --surface-page:#0F1115;--surface-card:#0D4746;--surface-elevated:#12514F;--surface-sunken:#093837;
+  --ink:#EDF0F4;--ink-muted:#A9B2BF;--border-control:#808A98;--hairline:#1B5F5D;
   --brand:#B8DF63;--brand-hover:#D4EC9C;--brand-active:#EAF6CC;--on-brand:#16191F;--brand-tint:#24301A;
   --secondary:#357A47;--secondary-hover:#2E6B3E;--secondary-active:#24563A;--on-secondary:#FFFFFF;
   --accent:#E35BBF;--accent-ink:#E35BBF;--accent-tint:#3A1530;--on-accent:#16191F;
@@ -58,7 +58,7 @@
   --info:#7DB0FF;--info-tint:#172A4A;--purple:#BCA4FF;--purple-tint:#2A1F4A;
   --shadow-card:0 1px 2px #3f1f140f;
   --shadow-lift:0 2px 4px rgba(0,0,0,.6),0 10px 24px rgba(0,0,0,.5);
-  --chrome-bg:#0B1A10;--chrome-border:rgba(255,255,255,.12);--canvas-ink:#FFFFFF;--canvas-ink-muted:#D7ECDB;--canvas-hover:rgba(255,255,255,.14);
+  --chrome-bg:#022B2B;--chrome-border:rgba(255,255,255,.12);--canvas-ink:#FFFFFF;--canvas-ink-muted:#D7ECDB;--canvas-hover:rgba(255,255,255,.14);
   --brand-fill:#357A47;--brand-fill-hover:#2E6B3E;--brand-fill-active:#24563A;--on-brand-fill:#FFFFFF;--chip-on:#357A47;--on-chip-on:#FFFFFF;--tip-bg:#163C22;--nav-active-bg:#163C22;--nav-active-ink:#FFFFFF;
   color-scheme:dark}
 
@@ -174,6 +174,8 @@ button,input,select,textarea{font:inherit;color:inherit}
 .card-head h3{flex:1}
 .pill{display:inline-flex;align-items:center;gap:4px;padding:2px 10px 2px 8px;border-radius:var(--r-pill);font-size:14px;line-height:20px;font-weight:500;white-space:nowrap}
 .pill .ic{width:16px;height:16px}
+.data .pill{font-size:12px;line-height:16px;padding:2px 8px 2px 6px}
+.data .pill .ic{width:14px;height:14px}
 .p-neutral{background:var(--disabled-bg);color:var(--disabled-ink)}
 .p-info{background:var(--info-tint);color:var(--info)}
 .p-warn{background:var(--warning-tint);color:var(--warning)}
@@ -228,6 +230,22 @@ table.data{width:100%;border-collapse:collapse;min-width:720px}
 .pg[aria-current="page"]{background:var(--chip-on);border-color:var(--chip-on);color:var(--on-chip-on)}
 .pg:disabled{opacity:.4;cursor:default}
 .pg-gap{min-width:20px;text-align:center;color:var(--canvas-ink-muted)}
+/* Column filters (Orders): a funnel button in each header opens a small panel; a filtered column's button is filled. */
+.th-f{display:flex;align-items:center;gap:6px}
+.data th.r .th-f{justify-content:flex-end}
+.th-btn{width:26px;height:26px;border:0;border-radius:6px;background:none;color:var(--nav-ink-muted);display:inline-grid;place-items:center;cursor:pointer;flex:none}
+.th-btn:hover{background:var(--nav-hover);color:var(--nav-ink)}
+.th-btn.on{background:var(--nav-ink);color:var(--nav-bg)}
+.colpop{position:fixed;z-index:100;width:264px;max-height:calc(100vh - 16px);overflow:auto;padding:12px;border-radius:10px;background:var(--surface-elevated);border:1px solid var(--hairline);box-shadow:var(--shadow-lift);display:flex;flex-direction:column;gap:10px;color:var(--ink)}
+.cf-list{display:flex;flex-direction:column;max-height:240px;overflow:auto;margin:0 -4px}
+.cf-opt{display:flex;align-items:center;gap:8px;min-height:36px;padding:0 4px;border-radius:6px;cursor:pointer}
+.cf-opt:hover{background:var(--brand-tint)}
+.cf-opt input{width:18px;height:18px;accent-color:var(--brand-fill);flex:none}
+.cf-opt .grow{flex:1;min-width:0}
+.cf-range{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cf-range .input{min-width:0}
+.cf-foot{display:flex;justify-content:flex-end;gap:8px}
+.cf-foot .btn{min-height:36px}
 /* Row actions: up to 3 icon buttons with a tooltip; 4 or more go in a ⋯ menu (see rowActions). */
 .row-acts{display:inline-flex;gap:4px;justify-content:flex-end;vertical-align:middle}
 .icon-btn.sm{width:32px;height:32px;border-radius:8px}
@@ -346,16 +364,10 @@ dialog::backdrop{background:rgba(22,19,15,.55)}
   background-color:var(--surface-sunken);
   background-image:linear-gradient(var(--hairline) 1px,transparent 1px),linear-gradient(90deg,var(--hairline) 1px,transparent 1px);
   background-size:40px 40px}
-.zone{position:absolute;display:grid;place-items:center;border:1.5px dashed var(--border-control);border-radius:var(--r-md);color:var(--ink-muted);font-size:14px;font-weight:500;background:var(--surface-card);text-align:center;padding:4px}
-.window{position:absolute;left:0;top:10%;bottom:10%;width:6px;background:var(--info);opacity:.5;border-radius:0 4px 4px 0}
-.window-l{position:absolute;left:12px;top:50%;transform:rotate(-90deg) translateX(50%);transform-origin:left top;font-size:14px;color:var(--ink-muted);font-weight:500}
-.door{position:absolute;bottom:0;left:38%;width:12%;height:8px;background:var(--surface-card);border:1.5px solid var(--border-control);border-bottom:0;border-radius:4px 4px 0 0}
-.door-l{position:absolute;bottom:12px;left:38%;width:12%;text-align:center;font-size:14px;color:var(--ink-muted);font-weight:500}
 .tw{position:absolute;transform:translate(-50%,-50%);display:grid;grid-template-columns:auto auto auto;grid-template-rows:auto auto auto;align-items:center;justify-items:center;gap:4px}
 .tw.open{z-index:5}
 .chairs{display:flex;gap:10px}
 .chair{width:22px;height:10px;border-radius:6px;background:var(--border-control);opacity:.55}
-.chair.v{width:10px;height:22px}
 .tbl{grid-column:2;grid-row:2;border:2px solid var(--border-control);background:var(--surface-card);border-radius:var(--r-md);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:6px 8px;box-shadow:var(--shadow-card);transition:box-shadow .2s}
 .tbl:hover{box-shadow:var(--shadow-lift)}
 .tbl.round{border-radius:50%}
@@ -578,6 +590,7 @@ const IC = {
   cake:'<path d="M4 20h16v-8H4z"/><path d="M4 15c2 1.5 4 1.5 6 0s4-1.5 6 0 3 1 4 0M12 12V8M12 5v0"/>',
   cash:'<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/>',
   left:'<path d="M15 6l-6 6 6 6"/>', right:'<path d="M9 6l6 6-6 6"/>',
+  filter:'<path d="M4 5h16l-6 7.5V18l-4 2v-7.5z"/>',
   dots:'<circle cx="5" cy="12" r="1.25"/><circle cx="12" cy="12" r="1.25"/><circle cx="19" cy="12" r="1.25"/>',
   bag:'<path d="M5 8h14l-1 13H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>',
   image:'<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/>',
@@ -707,7 +720,7 @@ const S = {
     {id:'T1', seats:2, x:11, y:26}, {id:'T2', seats:2, x:11, y:52}, {id:'T3', seats:2, x:11, y:78},
     {id:'T4', seats:4, x:31, y:32}, {id:'T5', seats:4, x:31, y:70}, {id:'T6', seats:4, x:51, y:32}, {id:'T7', seats:4, x:51, y:70},
     {id:'T8', seats:6, x:74, y:44}, {id:'T9', seats:6, x:74, y:76},
-    {id:'T10', seats:2, x:93, y:36}, {id:'T11', seats:2, x:93, y:58}, {id:'T12', seats:2, x:93, y:80},
+    {id:'T10', seats:2, x:93, y:24}, {id:'T11', seats:2, x:93, y:51}, {id:'T12', seats:2, x:93, y:78},
       {id:'T13', seats:12, x:38, y:36, name:'Function room', floor:'f2'}, {id:'T14', seats:8, x:38, y:76, floor:'f2'},
     {id:'T15', seats:4, x:72, y:36, floor:'f2'}, {id:'T16', seats:4, x:72, y:74, floor:'f2'}, {id:'T17', seats:2, x:12, y:40, floor:'f2'},
   ].map(t => ({floor:'f1', name:'Table ' + t.id.slice(1), ...t, status:'inactive', token:null, openedAt:null, bill:null})),
@@ -888,13 +901,50 @@ function inRange(d, r){
   if (r === 'week'){ const s = new Date(n); s.setHours(0, 0, 0, 0); s.setDate(s.getDate() - ((s.getDay() + 6) % 7)); return t >= s; }
   return t.getFullYear() === n.getFullYear() && t.getMonth() === n.getMonth();
 }
+// Orders after the date range, type chips and search; the column filters narrow this further.
+function ordersBase(){
+  const q = S.orderQ.trim().toUpperCase();
+  return S.orders.filter(o => (q ? o.id.includes(q) : inRange(o.createdAt, S.orderRange)) && (S.orderType === 'all' || (S.orderType === 'takeout') === isTO(o))).sort((a, b) => b.createdAt - a.createdAt);
+}
+// Column filters for the Orders table. list: show only the checked values (none checked = all); range: min and max; text: contains.
+const OCOLS = [
+  {k:'id', l:'Order ID', t:'text', v:o => o.id},
+  {k:'status', l:'Status', t:'list', v:o => oMeta(o).l},
+  {k:'table', l:'Table or pickup', t:'list', v:o => isTO(o) ? 'Takeout' : tName(o.table)},
+  {k:'day', l:'Date and time', t:'list', v:o => dt(o.createdAt)},
+  {k:'items', l:'Items', t:'range', v:o => sum(o.items.map(i => i.qty))},
+  {k:'pay', l:'Payment', t:'list', v:o => o.payment ? payName(o.payment) : 'Not yet'},
+  {k:'total', l:'Total', t:'range', r:true, v:o => total(o)},
+];
+const cfBlank = c => c.t === 'list' ? [] : c.t === 'range' ? {min:'', max:''} : '';
+S.colF = Object.fromEntries(OCOLS.map(c => [c.k, cfBlank(c)]));
+const cfOn = c => { const v = S.colF[c.k]; return c.t === 'list' ? v.length > 0 : c.t === 'range' ? v.min !== '' || v.max !== '' : !!v.trim(); };
+const cfMatch = o => OCOLS.every(c => {
+  if (!cfOn(c)) return true;
+  const x = c.v(o), v = S.colF[c.k];
+  if (c.t === 'list') return v.includes(x);
+  if (c.t === 'range') return (v.min === '' || x >= +v.min) && (v.max === '' || x <= +v.max);
+  return String(x).toUpperCase().includes(v.trim().toUpperCase());
+});
+function colPopHtml(c){
+  const v = S.colF[c.k];
+  let body;
+  if (c.t === 'list'){
+    const counts = new Map(); ordersBase().forEach(o => { const x = c.v(o); counts.set(x, (counts.get(x) || 0) + 1); });
+    v.forEach(x => counts.has(x) || counts.set(x, 0));
+    const opts = [...counts]; if (c.k !== 'day') opts.sort((a, b) => a[0].localeCompare(b[0], 'en', {numeric:true}));
+    body = `<span class="caption muted">Show only</span><div class="cf-list">${opts.map(([x, n]) => `<label class="cf-opt"><input type="checkbox" data-cf="${c.k}" value="${esc(x)}" ${v.includes(x) ? 'checked' : ''}><span class="grow">${esc(x)}</span><span class="caption muted num">${n}</span></label>`).join('') || '<span class="caption muted">No values in this view.</span>'}</div>`;
+  } else if (c.t === 'range') body = `<div class="cf-range">${['min', 'max'].map(e => `<label class="field"><span>${e === 'min' ? 'Min' : 'Max'}${c.r ? ' (₱)' : ''}</span><input class="input num" type="number" min="0" inputmode="decimal" data-cf="${c.k}" data-end="${e}" value="${esc(v[e])}"></label>`).join('')}</div>`;
+  else body = `<label class="field"><span>Contains</span><input class="input num" data-cf="${c.k}" value="${esc(v)}" placeholder="e.g. 1042" autocomplete="off"></label>`;
+  return `<b>Filter: ${c.l}</b>${body}<div class="cf-foot"><button class="btn btn-ghost" data-act="cf-clear" data-v="${c.k}">Clear</button><button class="btn btn-primary" data-act="cf-done">Done</button></div>`;
+}
 function vOrders(){
   const q = S.orderQ.trim().toUpperCase();
-  const list = S.orders.filter(o => (q ? o.id.includes(q) : inRange(o.createdAt, S.orderRange)) && (S.orderType === 'all' || (S.orderType === 'takeout') === isTO(o))).sort((a, b) => b.createdAt - a.createdAt);
+  const list = ordersBase().filter(cfMatch), nOn = OCOLS.filter(cfOn).length;
   const ranges = [['today','Today'], ['week','This week'], ['month','This month']];
   const types = [['all','All'], ['dinein','Dine-in'], ['takeout','Takeout']];
   const ready = toReady().sort((a, b) => a.createdAt - b.createdAt);
-  const pg = paged('orders', list, `${S.orderRange}|${S.orderType}|${q}`);
+  const pg = paged('orders', list, `${S.orderRange}|${S.orderType}|${q}|${JSON.stringify(S.colF)}`);
   return `<div class="page-head"><div><h1>Orders</h1><p class="muted">Every dine-in and takeout order, in any status.</p></div>
     <button class="btn btn-outline" data-act="to-qr">${icon('qr', 20)}Takeout QR</button><button class="btn btn-primary" data-act="to-new">${icon('bag', 20)}New takeout order</button></div>
   ${ready.length ? `<section class="card"><div class="card-head"><h3>Ready for pickup</h3><span class="badge num">${ready.length}</span></div><ul class="rows">${ready.map(o => `<li><div class="grow"><b class="num">${o.pickup}</b> <span class="muted">· ${esc(o.customer)}${o.phone ? ` · <span class="num">${esc(o.phone)}</span>` : ''}</span><div class="caption muted num">${o.id} · ${sum(o.items.map(i => i.qty))} items · pay on pickup</div></div><b class="num">${peso(total(o))}</b><button class="btn btn-primary" data-act="pickup" data-id="${o.id}">${icon('wallet', 20)}Collect payment</button></li>`).join('')}</ul></section>` : ''}
@@ -902,11 +952,12 @@ function vOrders(){
     <div class="chips" role="group" aria-label="Date range">${ranges.map(([k, l]) => `<button class="chip" data-act="range" data-v="${k}" aria-pressed="${S.orderRange === k && !q}">${l}</button>`).join('')}</div>
     <div class="chips" role="group" aria-label="Order type">${types.map(([k, l]) => `<button class="chip" data-act="otype" data-v="${k}" aria-pressed="${S.orderType === k}">${l}</button>`).join('')}</div>
     <div class="spacer"></div>
+    ${nOn ? `<button class="btn btn-outline" data-act="cf-reset">${icon('x', 18)}Clear filters (${nOn})</button>` : ''}
     <label class="search"><span class="sr" hidden>Search order ID</span>${icon('search')}<input id="order-q" class="input" data-input="orderQ" placeholder="Search order ID, e.g. 1042" value="${esc(S.orderQ)}" aria-label="Search order ID"></label>
   </div>
   ${q ? `<p class="caption canvas-note">Searching all dates for “${esc(S.orderQ)}”. Clear the search to use the date filter.</p>` : ''}
-  <div class="tbl-scroll"><table class="data"><thead><tr><th>Order ID</th><th>Table or pickup</th><th>Date and time</th><th>Items</th><th>Payment</th><th class="r">Total</th><th>Status</th></tr></thead><tbody>
-  ${pg.rows.map(o => `<tr class="click" data-act="order" data-id="${o.id}"><td><button class="link num" data-act="order" data-id="${o.id}">${o.id}</button></td><td>${isTO(o) ? `${toTag()} <span class="num">${o.pickup}</span>` : esc(tName(o.table))}</td><td class="num">${dt(o.createdAt)}, ${tm(o.createdAt)}</td><td class="num">${sum(o.items.map(i => i.qty))} items</td><td>${o.payment ? esc(payName(o.payment)) : '<span class="muted">Not yet</span>'}</td><td class="r num"><b>${peso(total(o))}</b></td><td>${oPill(o)}</td></tr>`).join('') || `<tr><td colspan="7"><div class="empty">${icon('search', 32)}No orders match. Check the order ID or pick another date range.</div></td></tr>`}
+  <div class="tbl-scroll"><table class="data"><thead><tr>${OCOLS.map(c => `<th class="${c.r ? 'r' : ''}"><div class="th-f"><span>${c.l}</span><button class="th-btn ${cfOn(c) ? 'on' : ''}" data-act="col-filter" data-v="${c.k}" aria-haspopup="dialog" aria-label="Filter ${c.l}${cfOn(c) ? ', filter on' : ''}">${icon('filter', 16)}</button></div></th>`).join('')}</tr></thead><tbody>
+  ${pg.rows.map(o => `<tr class="click" data-act="order" data-id="${o.id}"><td><button class="link num" data-act="order" data-id="${o.id}">${o.id}</button></td><td>${oPill(o)}</td><td>${isTO(o) ? `${toTag()} <span class="num">${o.pickup}</span>` : esc(tName(o.table))}</td><td class="num">${dt(o.createdAt)}, ${tm(o.createdAt)}</td><td class="num">${sum(o.items.map(i => i.qty))} items</td><td>${o.payment ? esc(payName(o.payment)) : '<span class="muted">Not yet</span>'}</td><td class="r num"><b>${peso(total(o))}</b></td></tr>`).join('') || `<tr><td colspan="7"><div class="empty">${icon('search', 32)}No orders match. Check the filters or pick another date range.</div></td></tr>`}
   </tbody></table></div>
   ${pg.bar}
   <p class="caption canvas-note num">${list.length} orders · ${peso(sum(list.map(total)))}</p>`;
@@ -968,33 +1019,27 @@ function tableBody(t){
 }
 
 function tableShape(n){
-  // [top chairs, side chairs, bottom chairs, width, height, round]
-  if (n <= 2) return [1, 0, n > 1 ? 1 : 0, 84, 84, true];
-  if (n <= 4) return [1, 1, n > 3 ? 1 : 0, 104, 92, false];
-  const top = Math.min(8, Math.ceil((n - 2) / 2)), bot = Math.min(8, Math.floor((n - 2) / 2));
-  return [top, 1, bot, Math.max(120, top * 32 + 24), 92, false];
+  // [top chairs, bottom chairs, width, height, round]. One chair per seat, split above and below the table,
+  // so the chairs show the seat count (Table 4: two above, two below). The table is at least as wide as its chair row.
+  const top = Math.ceil(n / 2), bot = Math.floor(n / 2);
+  if (n <= 2) return [top, bot, 96, 96, true];
+  return [top, bot, Math.max(n <= 4 ? 120 : 136, top * 32 + 22), 92, false];
 }
 function vTables(){
-  const chair = (n, v) => Array.from({length:n}, () => `<span class="chair${v ? ' v' : ''}"></span>`).join('');
+  const chair = n => Array.from({length:n}, () => '<span class="chair"></span>').join('');
   if (!S.floors.some(f => f.id === S.floor)) S.floor = S.floors[0]?.id;
-  const tables = S.tables.filter(t => t.floor === S.floor), first = S.floor === S.floors[0]?.id, edit = S.layoutEdit;
+  const tables = S.tables.filter(t => t.floor === S.floor), edit = S.layoutEdit;
   return `<div class="page-head"><div><h1>Tables</h1><p class="muted">${edit ? 'Drag a table to where it sits in your dining room. Arrow keys move the selected table.' : 'Floor plan of the dining room. Select a table to see its orders.'}</p></div>
     <button class="btn btn-outline" data-act="goto-set" data-v="tables">${icon('sliders', 20)}Manage tables</button>
     <button class="btn ${edit ? 'btn-primary' : 'btn-outline'} desk-only" data-act="layout-edit" aria-pressed="${edit}">${icon(edit ? 'check' : 'grid', 20)}${edit ? 'Done arranging' : 'Arrange tables'}</button></div>
   <div class="floor-bar"><div class="chips" role="group" aria-label="Floor level">${S.floors.map(f => `<button class="chip" data-act="floor" data-v="${f.id}" aria-pressed="${S.floor === f.id}">${esc(f.name)} <span class="num muted">${S.tables.filter(t => t.floor === f.id).length}</span></button>`).join('')}</div>
     <span class="spacer"></span><div class="legend">${Object.values(TSTAT).map(m => pill(m)).join('')}</div></div>
   <div class="floor-scroll" data-keep="floor"><div class="floor ${edit ? 'editing' : ''}">
-    ${first ? `<div class="zone" style="left:1%;top:2%;width:22%;height:11%">Counter and cashier</div>
-    <div class="zone" style="left:64%;top:2%;width:35%;height:16%">${icon('pot', 20)} Kitchen pass</div>
-    <div class="window"></div><span class="window-l">Windows</span>
-    <div class="door"></div><span class="door-l">Entrance</span>` : ''}
-    ${S.floors.length > 1 ? `<div class="zone" style="left:${first ? 1 : 2}%;bottom:2%;width:12%;height:12%">Stairs</div>` : ''}
-    ${tables.map(t => { const [tp, sd, bt, w, h, round] = tableShape(t.seats), open = !edit && S.openTable === t.id, over = !edit && tableOverLimit(t);
+    ${tables.map(t => { const [tp, bt, w, h, round] = tableShape(t.seats), open = !edit && S.openTable === t.id, over = !edit && tableOverLimit(t);
       return `<div class="tw ${open ? 'open' : ''}" style="left:${t.x}%;top:${t.y}%">
         <div class="chairs" style="grid-column:2;grid-row:1">${chair(tp)}</div>
-        ${sd ? `<div style="grid-column:1;grid-row:2">${chair(1, 1)}</div><div style="grid-column:3;grid-row:2">${chair(1, 1)}</div>` : ''}
         <button id="tb-${t.id}" class="tbl ${round ? 'round' : ''} t-${t.status}${over ? ' overstay' : ''}" style="width:${w}px;height:${h}px" ${edit ? `data-drag="${t.id}" aria-label="Move ${esc(t.name)}. Use the arrow keys."` : `data-act="tbl" data-id="${t.id}" aria-expanded="${open}" aria-label="${esc(t.name)}, ${t.seats} seats, ${TSTAT[t.status].l}${over ? ', over the stay time limit' : ''}"`}>
-          <b>${esc(t.name)}</b><span class="st">${icon(edit ? 'grid' : TSTAT[t.status].i, 16)}${edit ? t.seats + ' seats' : TSTAT[t.status].l}</span></button>
+          <b>${esc(t.name)}</b><span class="st">${icon(edit ? 'grid' : TSTAT[t.status].i, 16)}${edit ? 'Drag to move' : TSTAT[t.status].l}</span></button>
         ${over ? `<span class="overstay-badge" title="Over the ${S.tableTimerMins} min stay limit" aria-hidden="true">${icon('clock', 14)}</span>` : ''}
         <div class="chairs" style="grid-column:2;grid-row:3">${chair(bt)}</div>
         ${open ? `<div class="pop ${t.y > 55 ? 'up' : 'dn'} ${t.x > 60 ? 'ar' : 'al'}" role="region" aria-label="${esc(t.name)} details"><div class="pop-head"><h3>${esc(t.name)}</h3><button class="icon-btn" data-act="tbl" data-id="${t.id}" aria-label="Close">${icon('x')}</button></div>${tableBody(t)}</div>` : ''}
@@ -1553,8 +1598,9 @@ ACT['row-menu'] = (d, el) => {
 document.addEventListener('click', e => {
   const el = e.target.closest('[data-act]'), inMenu = !!e.target.closest('#rowmenu');
   // A click on the same ⋯ button that opened the menu just closes it.
-  const toggleOff = el?.dataset.act === 'row-menu' && rowMenu.dataset.v === el.dataset.v;
+  const toggleOff = el?.dataset.act === 'row-menu' && rowMenu.dataset.v === el.dataset.v || el?.dataset.act === 'col-filter' && colPop.dataset.k === el.dataset.v;
   if (!inMenu) closeMenu();
+  if (!e.target.closest('#colpop')) closeColPop();
   if (!el || el.disabled || toggleOff) return;
   e.stopPropagation();
   if (inMenu) closeMenu();
@@ -1567,8 +1613,42 @@ rowMenu.addEventListener('keydown', e => {
   else if (e.key === 'ArrowDown' || e.key === 'ArrowUp'){ e.preventDefault(); items[(i + (e.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length]?.focus(); }
   else if (e.key === 'Tab') closeMenu(true);
 });
-addEventListener('scroll', () => closeMenu(), true);
-addEventListener('resize', () => closeMenu());
+// Column filter panel: like the row menu it lives outside #app, so it stays open while the table re-renders behind it.
+const colPop = document.body.appendChild(Object.assign(document.createElement('div'), {id:'colpop', className:'colpop', hidden:true}));
+colPop.setAttribute('role', 'dialog');
+const closeColPop = (refocus = false) => {
+  if (colPop.hidden) return;
+  const k = colPop.dataset.k; colPop.hidden = true; colPop.innerHTML = ''; delete colPop.dataset.k;
+  if (refocus) $(`[data-act="col-filter"][data-v="${k}"]`)?.focus();
+};
+const fillColPop = k => { const c = OCOLS.find(x => x.k === k); colPop.innerHTML = colPopHtml(c); colPop.setAttribute('aria-label', 'Filter ' + c.l); };
+// Keeps the panel under its header button; the table re-renders and the page can scroll while the panel is open.
+const placeColPop = () => {
+  if (colPop.hidden) return;
+  const el = $(`[data-act="col-filter"][data-v="${colPop.dataset.k}"]`); if (!el) return closeColPop();
+  const r = el.getBoundingClientRect(), w = colPop.offsetWidth, h = colPop.offsetHeight;
+  if (r.bottom < 0 || r.top > innerHeight) return closeColPop();
+  colPop.style.left = clamp(r.left, 8, innerWidth - w - 8) + 'px';
+  colPop.style.top = (r.bottom + 6 + h > innerHeight - 8 ? Math.max(8, r.top - h - 6) : r.bottom + 6) + 'px';
+};
+ACT['col-filter'] = d => {
+  fillColPop(d.v); colPop.dataset.k = d.v; colPop.hidden = false;
+  requestAnimationFrame(placeColPop);
+  colPop.querySelector('input')?.focus({preventScroll:true});
+};
+ACT['cf-clear'] = d => { S.colF[d.v] = cfBlank(OCOLS.find(c => c.k === d.v)); fillColPop(d.v); };
+ACT['cf-done'] = () => closeColPop(true);
+ACT['cf-reset'] = () => { OCOLS.forEach(c => S.colF[c.k] = cfBlank(c)); closeColPop(); };
+colPop.addEventListener('input', e => {
+  const t = e.target, k = t.dataset.cf; if (!k) return;
+  if (t.type === 'checkbox'){ const set = new Set(S.colF[k]); t.checked ? set.add(t.value) : set.delete(t.value); S.colF[k] = [...set]; }
+  else if (t.dataset.end) S.colF[k] = {...S.colF[k], [t.dataset.end]:t.value};
+  else S.colF[k] = t.value;
+  render(); placeColPop();
+});
+colPop.addEventListener('keydown', e => { if (e.key === 'Escape'){ e.preventDefault(); closeColPop(true); } });
+addEventListener('scroll', e => { closeMenu(); if (!colPop.contains(e.target)) placeColPop(); }, true);
+addEventListener('resize', () => { closeMenu(); placeColPop(); });
 document.addEventListener('input', e => { const k = e.target.dataset.input; if (k){ S[k] = e.target.value; render(); } });
 document.addEventListener('change', e => { const k = e.target.dataset.change; if (k && !CHANGE[k](e.target)) render(); });
 document.addEventListener('submit', e => { const f = e.target; if (!f.dataset.form) return; e.preventDefault(); FORMS[f.dataset.form](new FormData(f), f); render(); });
