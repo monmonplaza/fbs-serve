@@ -16,6 +16,7 @@
   --surface-page:#F4F6F8;--surface-card:#FFFFFF;--surface-elevated:#FFFFFF;--surface-sunken:#EEF1F5;
   --ink:#16191F;--ink-muted:#525B69;--border-control:#6B7584;--hairline:#DCE1E7;
   --brand:#476818;--brand-hover:#385217;--brand-active:#233510;--on-brand:#FFFFFF;--brand-tint:#EAF6CC;
+  --brand-fill:#476818;--brand-fill-hover:#385217;--brand-fill-active:#233510;--on-brand-fill:#FFFFFF;
   --secondary:#107236;--secondary-hover:#0C5A2A;--secondary-active:#08431F;--on-secondary:#FFFFFF;
   --accent:#C42A93;--accent-ink:#A51E7A;--accent-tint:#FADCEF;--on-accent:#FFFFFF;
   --disabled-bg:#EBEEF2;--disabled-ink:#5E6876;--focus:#C42A93;
@@ -25,34 +26,39 @@
   --shadow-lift:0 2px 4px rgba(22,25,31,.10),0 10px 24px rgba(22,25,31,.12);
   --font:"Instrument Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --r-sm:8px;--r-md:12px;--r-lg:20px;--r-pill:999px;--tap:48px;
-  /* Sidebar and header/main chrome: fixed green brand treatment, same in light and dark mode. */
+  /* Sidebar: fixed green brand treatment, same in light and dark mode. */
   --nav-bg:#2E6B3E;--nav-ink:#FFFFFF;--nav-ink-muted:#D7ECDB;--nav-hover:rgba(255,255,255,.14);
-  --nav-active-bg:#E9F7E2;--nav-active-ink:#163C22;
-  --chrome-bg:#132A1C;--chrome-border:rgba(255,255,255,.12);
+  --nav-active-bg:#E9F7E2;--nav-active-ink:#163C22;--nav-border:rgba(255,255,255,.12);
+  /* Canvas (top bar and main area): near-white green in light mode, dark green in dark mode. Text on it: 16.9:1 and 7.2:1. */
+  --chrome-bg:#F3F8F0;--chrome-border:#D5E2D0;--canvas-ink:#16191F;--canvas-ink-muted:#4A5A4F;--canvas-hover:rgba(22,25,31,.06);
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --surface-page:#0F1115;--surface-card:#16191F;--surface-elevated:#1D2128;--surface-sunken:#22262E;
-  --ink:#EDF0F4;--ink-muted:#A9B2BF;--border-control:#808A98;--hairline:#2A2F38;
+  --surface-page:#0F1115;--surface-card:#22452E;--surface-elevated:#284F35;--surface-sunken:#183522;
+  --ink:#EDF0F4;--ink-muted:#A9B2BF;--border-control:#808A98;--hairline:#35593F;
   --brand:#B8DF63;--brand-hover:#D4EC9C;--brand-active:#EAF6CC;--on-brand:#16191F;--brand-tint:#24301A;
-  --secondary:#5EE08F;--secondary-hover:#8BE9AE;--secondary-active:#B5F1CB;--on-secondary:#0F1115;
+  --secondary:#357A47;--secondary-hover:#2E6B3E;--secondary-active:#24563A;--on-secondary:#FFFFFF;
   --accent:#E35BBF;--accent-ink:#E35BBF;--accent-tint:#3A1530;--on-accent:#16191F;
   --disabled-bg:#272C35;--disabled-ink:#A9B2BF;--focus:#E35BBF;
   --success:#5EE08F;--success-tint:#12301F;--warning:#FDBA4D;--warning-tint:#3A2810;--error:#FF8F8F;--error-tint:#3D161D;
   --info:#7DB0FF;--info-tint:#172A4A;--purple:#BCA4FF;--purple-tint:#2A1F4A;
   --shadow-card:0 1px 2px rgba(0,0,0,.5),0 4px 12px rgba(0,0,0,.35);
   --shadow-lift:0 2px 4px rgba(0,0,0,.6),0 10px 24px rgba(0,0,0,.5);
+  --chrome-bg:#132A1C;--chrome-border:rgba(255,255,255,.12);--canvas-ink:#FFFFFF;--canvas-ink-muted:#D7ECDB;--canvas-hover:rgba(255,255,255,.14);
+  --brand-fill:#357A47;--brand-fill-hover:#2E6B3E;--brand-fill-active:#24563A;--on-brand-fill:#FFFFFF;--nav-active-bg:#163C22;--nav-active-ink:#FFFFFF;
   color-scheme:dark}}
 :root[data-theme="dark"]{
-  --surface-page:#0F1115;--surface-card:#16191F;--surface-elevated:#1D2128;--surface-sunken:#22262E;
-  --ink:#EDF0F4;--ink-muted:#A9B2BF;--border-control:#808A98;--hairline:#2A2F38;
+  --surface-page:#0F1115;--surface-card:#22452E;--surface-elevated:#284F35;--surface-sunken:#183522;
+  --ink:#EDF0F4;--ink-muted:#A9B2BF;--border-control:#808A98;--hairline:#35593F;
   --brand:#B8DF63;--brand-hover:#D4EC9C;--brand-active:#EAF6CC;--on-brand:#16191F;--brand-tint:#24301A;
-  --secondary:#5EE08F;--secondary-hover:#8BE9AE;--secondary-active:#B5F1CB;--on-secondary:#0F1115;
+  --secondary:#357A47;--secondary-hover:#2E6B3E;--secondary-active:#24563A;--on-secondary:#FFFFFF;
   --accent:#E35BBF;--accent-ink:#E35BBF;--accent-tint:#3A1530;--on-accent:#16191F;
   --disabled-bg:#272C35;--disabled-ink:#A9B2BF;--focus:#E35BBF;
   --success:#5EE08F;--success-tint:#12301F;--warning:#FDBA4D;--warning-tint:#3A2810;--error:#FF8F8F;--error-tint:#3D161D;
   --info:#7DB0FF;--info-tint:#172A4A;--purple:#BCA4FF;--purple-tint:#2A1F4A;
   --shadow-card:0 1px 2px rgba(0,0,0,.5),0 4px 12px rgba(0,0,0,.35);
   --shadow-lift:0 2px 4px rgba(0,0,0,.6),0 10px 24px rgba(0,0,0,.5);
+  --chrome-bg:#132A1C;--chrome-border:rgba(255,255,255,.12);--canvas-ink:#FFFFFF;--canvas-ink-muted:#D7ECDB;--canvas-hover:rgba(255,255,255,.14);
+  --brand-fill:#357A47;--brand-fill-hover:#2E6B3E;--brand-fill-active:#24563A;--on-brand-fill:#FFFFFF;--nav-active-bg:#163C22;--nav-active-ink:#FFFFFF;
   color-scheme:dark}
 
 *{box-sizing:border-box}
@@ -72,44 +78,52 @@ h3{font-size:22px;line-height:30px}
 button,input,select,textarea{font:inherit;color:inherit}
 :focus-visible{outline:3px solid var(--focus);outline-offset:2px}
 
-/* Top bar: fixed dark-green chrome, same in light and dark mode */
+/* Top bar: on staff screens it is the top of the main column (the brand lives in the sidebar); on the guest preview it is full width with the brand. */
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--chrome-bg);border-bottom:1px solid var(--chrome-border)}
+.main > .top{margin:-24px calc(-1 * max(16px,env(safe-area-inset-right,0px))) 24px calc(-1 * max(16px,env(safe-area-inset-left,0px)))}
+.main > .top .top-in{max-width:1232px;margin:0 auto}
 .top-in{display:flex;align-items:center;gap:16px;min-height:64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));flex-wrap:wrap}
-.brand{display:flex;align-items:center;gap:10px;font-weight:500;font-size:22px;color:var(--nav-ink)}
+.brand{display:flex;align-items:center;gap:10px;font-weight:500;font-size:22px;color:var(--canvas-ink)}
 .logo{width:36px;height:36px;border-radius:9px;display:block;flex:none}
-.brand small{font-size:14px;color:var(--nav-ink-muted);font-weight:400}
+.brand small{font-size:14px;color:var(--canvas-ink-muted);font-weight:400}
 .spacer{flex:1}
-.top .icon-btn{color:var(--nav-ink)}
-.top .icon-btn:hover{background:var(--nav-hover)}
-.seg{display:inline-flex;background:var(--nav-hover);border-radius:var(--r-pill);padding:4px;gap:4px}
-.seg button{min-height:40px;border:0;background:none;border-radius:var(--r-pill);padding:0 16px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:8px;color:var(--nav-ink-muted)}
-.seg button:hover{color:var(--nav-ink)}
-.seg button[aria-pressed="true"]{background:var(--nav-active-bg);color:var(--nav-active-ink);box-shadow:none}
+.top .icon-btn{color:var(--canvas-ink)}
+.top .icon-btn:hover{background:var(--canvas-hover)}
+.seg{display:inline-flex;background:var(--canvas-hover);border-radius:var(--r-pill);padding:4px;gap:4px}
+.seg button{min-height:40px;border:0;background:none;border-radius:var(--r-pill);padding:0 16px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:8px;color:var(--canvas-ink-muted)}
+.seg button:hover{color:var(--canvas-ink)}
+.seg button[aria-pressed="true"]{background:var(--nav-bg);color:var(--nav-ink);box-shadow:none}
 
 /* Shell */
-.shell{display:grid;grid-template-columns:232px minmax(0,1fr);min-height:calc(100dvh - 65px - env(safe-area-inset-top,0px))}
-/* Rail is always as tall as the screen under the top bar, even when the page is short, and stays put while the page scrolls. Green brand sidebar, same in light and dark mode. */
-.rail{position:sticky;top:calc(65px + env(safe-area-inset-top,0px));align-self:start;height:calc(100dvh - 65px - env(safe-area-inset-top,0px));overflow-y:auto;border-right:1px solid var(--chrome-border);background:var(--nav-bg);padding:12px 8px;display:flex;flex-direction:column;gap:2px}
+.shell{display:grid;grid-template-columns:232px minmax(0,1fr);min-height:calc(100dvh - env(safe-area-inset-top,0px))}
+/* Rail is always as tall as the screen, even when the page is short, and stays put while the page scrolls. Green brand sidebar with the logo at the top, same in light and dark mode. */
+.rail{position:sticky;top:env(safe-area-inset-top,0px);align-self:start;height:calc(100dvh - env(safe-area-inset-top,0px));overflow-y:auto;border-right:1px solid var(--nav-border);background:var(--nav-bg);padding:0 8px 12px;display:flex;flex-direction:column;gap:2px}
+/* 65px tall with its border, the same as the top bar, so the line under the logo meets the top bar's bottom border. */
+.rail-brand{display:flex;align-items:center;gap:10px;flex:none;min-height:65px;padding:0 18px;margin:0 -8px 12px;border-bottom:1px solid var(--nav-border);color:var(--nav-ink);font-size:19px;line-height:24px;font-weight:500}
+.rail-brand small{display:block;font-size:13px;line-height:18px;font-weight:400;color:var(--nav-ink-muted)}
 .nav{display:flex;align-items:center;gap:8px;min-height:40px;padding:0 10px;border-radius:var(--r-md);border:0;background:none;cursor:pointer;font-weight:500;color:var(--nav-ink-muted);text-align:left;width:100%;transition:background .15s}
 .nav:hover{background:var(--nav-hover);color:var(--nav-ink)}
 .nav[aria-current="page"]{background:var(--nav-active-bg);color:var(--nav-active-ink)}
 .nav .badge{margin-left:auto;min-width:20px;height:20px;padding:0 6px;font-size:12px;line-height:20px}
-.badge{min-width:24px;height:24px;padding:0 8px;border-radius:var(--r-pill);background:var(--brand);color:var(--on-brand);font-size:14px;line-height:24px;font-weight:500;text-align:center}
+.badge{min-width:24px;height:24px;padding:0 8px;border-radius:var(--r-pill);background:var(--brand-fill);color:var(--on-brand-fill);font-size:14px;line-height:24px;font-weight:500;text-align:center}
 .badge.soft{background:var(--surface-sunken);color:var(--ink)}
 .main{min-width:0;display:flex;flex-direction:column;padding-block:24px 0;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-/* The wrap is the same dark green as the main canvas, flat with no panel edge. Cards, columns and rows inside it keep their own surface color, so their text stays readable; loose text straight on the canvas (page titles, toolbar headings, the two notes below) is set to a light color explicitly. */
+/* The wrap sits flat on the canvas with no panel edge. Cards, columns and rows inside it keep their own surface color; loose text straight on the canvas (page titles, toolbar headings, the notes below) uses the canvas ink colors. */
 .wrap{width:100%;max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:24px;flex:1}
-.page-head h1{color:var(--nav-ink)}
-.page-head p{color:var(--nav-ink-muted)}
-.toolbar h2{color:var(--nav-ink)}
-.canvas-note{color:var(--nav-ink-muted)}
-.main > .foot{width:100%;max-width:1200px;margin:16px auto 0;padding:12px 0 16px;border-top:1px solid var(--chrome-border);display:flex;justify-content:space-between;gap:4px 16px;flex-wrap:wrap;font-size:14px;line-height:20px;color:var(--nav-ink-muted)}
+.page-head h1{color:var(--canvas-ink)}
+.page-head p{color:var(--canvas-ink-muted)}
+.toolbar h2{color:var(--canvas-ink)}
+.canvas-note{color:var(--canvas-ink-muted)}
+.main > .foot{width:100%;max-width:1200px;margin:16px auto 0;padding:12px 0 16px;border-top:1px solid var(--chrome-border);display:flex;justify-content:space-between;gap:4px 16px;flex-wrap:wrap;font-size:14px;line-height:20px;color:var(--canvas-ink-muted)}
 .page-head{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap}
 .page-head > div{flex:1;min-width:240px}
 .page-head p{margin-top:4px}
 @media (max-width:860px){
   .shell{grid-template-columns:minmax(0,1fr)}
-  .rail{height:auto;align-self:stretch;flex-direction:row;overflow-x:auto;border-right:0;border-bottom:1px solid var(--chrome-border);padding:8px max(16px,env(safe-area-inset-left,0px));position:sticky;top:calc(env(safe-area-inset-top,0px) + 65px);z-index:15}
+  .rail{height:auto;align-self:stretch;flex-direction:row;align-items:center;overflow-x:auto;border-right:0;border-bottom:1px solid var(--nav-border);padding:8px max(16px,env(safe-area-inset-left,0px));position:sticky;top:env(safe-area-inset-top,0px);z-index:15}
+  .rail-brand{flex:none;min-height:0;padding:0 12px 0 0;margin:0 4px 0 0;border-bottom:0;border-right:1px solid var(--nav-border)}
+  .rail-brand small{display:none}
+  .main > .top{position:static}
   .nav{width:auto;flex:none}
   h1{font-size:23px;line-height:30px}
 }
@@ -132,9 +146,9 @@ button,input,select,textarea{font:inherit;color:inherit}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:36px;padding:0 14px;border-radius:var(--r-md);border:1.5px solid transparent;font-weight:500;font-size:12px;line-height:18px;cursor:pointer;transition:background .15s,transform .08s;text-decoration:none;white-space:nowrap}
 .btn .ic{width:16px;height:16px}
 .btn:active:not(:disabled){transform:translateY(1px) scale(.98)}
-.btn-primary{background:var(--brand);color:var(--on-brand)}
-.btn-primary:hover{background:var(--brand-hover)}
-.btn-primary:active{background:var(--brand-active)}
+.btn-primary{background:var(--brand-fill);color:var(--on-brand-fill)}
+.btn-primary:hover{background:var(--brand-fill-hover)}
+.btn-primary:active{background:var(--brand-fill-active)}
 .btn-secondary{background:var(--secondary);color:var(--on-secondary)}
 .btn-secondary:hover{background:var(--secondary-hover)}
 .btn-secondary:active{background:var(--secondary-active)}
@@ -185,7 +199,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .bar-row{display:grid;grid-template-columns:24px minmax(0,1fr) auto;gap:4px 12px;align-items:center}
 .bar-row .rank{font-weight:500;color:var(--ink-muted)}
 .bar-track{grid-column:2/4;height:10px;border-radius:var(--r-pill);background:var(--surface-sunken);overflow:hidden}
-.bar-fill{height:100%;border-radius:var(--r-pill);background:var(--brand)}
+.bar-fill{height:100%;border-radius:var(--r-pill);background:var(--brand-fill)}
 .rows{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
 .rows li{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--hairline)}
 .rows li:first-child{border-top:0}
@@ -298,7 +312,7 @@ dialog::backdrop{background:rgba(22,19,15,.55)}
 .gcard .btn{margin-top:auto;align-self:flex-start}
 .flow{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;list-style:none;margin:0;padding:0}
 .flow li{background:var(--surface-sunken);border-radius:var(--r-md);padding:12px;display:flex;flex-direction:column;gap:4px}
-.flow .n{width:28px;height:28px;border-radius:var(--r-pill);background:var(--brand);color:var(--on-brand);display:grid;place-items:center;font-weight:500;font-size:14px}
+.flow .n{width:28px;height:28px;border-radius:var(--r-pill);background:var(--brand-fill);color:var(--on-brand-fill);display:grid;place-items:center;font-weight:500;font-size:14px}
 @media (max-width:1000px){.flow{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
 /* Tables floor plan */
@@ -445,7 +459,7 @@ body.solo .phone-wrap{display:flex;justify-content:center;height:100%}
 .track{display:flex;flex-direction:column;gap:12px}
 .prog{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
 .prog i{height:6px;border-radius:var(--r-pill);background:var(--surface-sunken)}
-.prog i.on{background:var(--brand)}
+.prog i.on{background:var(--brand-fill)}
 .steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
 .steps li{display:flex;gap:12px;align-items:center;min-height:36px;color:var(--ink-muted);position:relative}
 .steps .dot{width:24px;height:24px;border-radius:50%;border:2px solid var(--border-control);display:grid;place-items:center;flex:none;background:var(--surface-card)}
@@ -935,8 +949,8 @@ function staffShell(){
   const kq = S.orders.filter(o => KITCHEN.includes(o.status)).length;
   const badge = {kitchen:kq, tables:bills.length};
   const views = {dashboard:vDashboard, orders:vOrders, kitchen:vKitchen, foods:vFoods, tables:vTables, settings:vSettings, guide:vGuide};
-  return `<div class="shell"><nav class="rail" aria-label="Modules" data-keep="rail">${NAV.map(n => `<button class="nav" data-act="nav" data-v="${n.id}" ${S.view === n.id ? 'aria-current="page"' : ''}>${icon(n.ic, 18)}${n.label}${badge[n.id] ? `<span class="badge num" aria-label="${badge[n.id]} waiting">${badge[n.id]}</span>` : ''}</button>`).join('')}</nav>
-  <main class="main"><div class="wrap">
+  return `<div class="shell"><nav class="rail" aria-label="Modules" data-keep="rail"><div class="rail-brand">${LOGO}<span>FBS Serve<small>Restaurant manager</small></span></div>${NAV.map(n => `<button class="nav" data-act="nav" data-v="${n.id}" ${S.view === n.id ? 'aria-current="page"' : ''}>${icon(n.ic, 18)}${n.label}${badge[n.id] ? `<span class="badge num" aria-label="${badge[n.id]} waiting">${badge[n.id]}</span>` : ''}</button>`).join('')}</nav>
+  <main class="main">${topBar(false)}<div class="wrap">
     ${bills.map(t => `<div class="alert brand" role="alert">${icon('bell')}<p><b>${t.name} is asking for the bill.</b> Pays with ${esc(payName(t.bill.method))} · ${mins(t.bill.at)} min ago</p><button class="btn btn-primary" data-act="receive" data-id="${t.id}">Receive payment</button></div>`).join('')}
     ${views[S.view]()}
   </div><footer class="foot"><span>© 2026 Frontline Business Solutions</span><span>FBS Serve v1.0</span></footer></main></div>`;
@@ -1272,14 +1286,15 @@ ACT.theme = () => {
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { if (!theme) render(); });
 
 /* ---------- Render loop ---------- */
+// The top bar shows the brand only on the guest preview; staff screens have it at the top of the sidebar.
+const topBar = brand => `<header class="top"><div class="top-in">${brand ? `<span class="brand">${LOGO}FBS Serve <small>Restaurant manager</small></span>` : ''}<span class="spacer"></span>
+    <button class="icon-btn" data-act="theme" aria-label="${isDark() ? 'Switch to light mode' : 'Switch to dark mode'}" title="${isDark() ? 'Light mode' : 'Dark mode'}">${icon(isDark() ? 'sun' : 'moon')}</button>
+    <div class="seg" role="group" aria-label="View as"><button data-act="mode" data-v="staff" aria-pressed="${S.mode === 'staff'}">${icon('user', 20)}Staff</button><button data-act="mode" data-v="guest" aria-pressed="${S.mode === 'guest'}">${icon('phone', 20)}Guest phone</button></div></div></header>`;
 function render(){
   const a = document.activeElement, id = a?.id, sel = a?.selectionStart;
   const keep = {}; document.querySelectorAll('[data-keep]').forEach(el => keep[el.dataset.keep] = [el.scrollLeft, el.scrollTop]);
   document.body.classList.toggle('solo', !!S.guestOnly);
-  $('#app').innerHTML = `${S.guestOnly ? '' : `<header class="top"><div class="top-in"><span class="brand">${LOGO}FBS Serve <small>Restaurant manager</small></span><span class="spacer"></span>
-    <button class="icon-btn" data-act="theme" aria-label="${isDark() ? 'Switch to light mode' : 'Switch to dark mode'}" title="${isDark() ? 'Light mode' : 'Dark mode'}">${icon(isDark() ? 'sun' : 'moon')}</button>
-    <div class="seg" role="group" aria-label="View as"><button data-act="mode" data-v="staff" aria-pressed="${S.mode === 'staff'}">${icon('user', 20)}Staff</button><button data-act="mode" data-v="guest" aria-pressed="${S.mode === 'guest'}">${icon('phone', 20)}Guest phone</button></div></div></header>`}
-    ${S.mode === 'guest' ? guestShell() : staffShell()}`;
+  $('#app').innerHTML = S.mode === 'guest' ? `${S.guestOnly ? '' : topBar(true)}${guestShell()}` : staffShell();
   document.querySelectorAll('[data-keep]').forEach(el => { const k = keep[el.dataset.keep]; if (k) [el.scrollLeft, el.scrollTop] = k; });
   if (id && !dlg.contains(a)){ const n = document.getElementById(id); if (n){ n.focus(); if (sel != null) try { n.setSelectionRange(sel, sel); } catch {} } }
 }
