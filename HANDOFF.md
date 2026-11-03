@@ -48,6 +48,18 @@ The owner's six steps, plus one rule the owner added later: **step 0, activation
 Table statuses: `inactive → active → ordering → eating → billout → cleaning → inactive`.
 Order statuses: `queued → preparation → cooking → plating → completed → served → paid`.
 
+## Takeout (pay on pickup)
+
+Takeout orders have no table and never change a table's status. They are paid when the customer picks them up.
+
+- **Counter:** in **Orders**, tap **New takeout order**, enter the customer name (phone is optional) and add food. It goes straight to the kitchen.
+- **Self-order:** in **Orders**, tap **Takeout QR**. It encodes `<page url>#takeout`, which never expires. Customers order on their phone, enter their name and get a pickup number. The phone shows Menu, Plate and Orders only (no Bill tab), and tracks: Order received, Cooking, Ready for pickup, Picked up.
+- Every takeout order gets a pickup number (`TO-001`, `TO-002`, ...) and a **Takeout** tag in the kitchen and in Orders.
+- Takeout status: `queued → cooking → completed (Ready for pickup) → paid (Picked up)`. There is no "served" step.
+- Ready orders appear under **Ready for pickup** at the top of Orders, with a badge on the Orders menu item. **Collect payment** (there, on the kitchen card, or in the order detail) picks the method and discount and marks it paid.
+- Orders has an **All / Dine-in / Takeout** filter. The dashboard counts takeout orders and includes unpaid takeout in "still to collect".
+- Code: `order.type === 'takeout'` with `pickup`, `customer`, `phone` and `source` (`counter` or `qr`), `table: null`. Helpers `isTO`, `oMeta` (takeout labels from `TO_OSTAT`), `where`, `newTO`, `toReady`. The takeout plate is `S.plates.__takeout` (`TO`), and the phone's own orders are `S.toMine`. Views: `toPhone`, `toPlate`, `toTrack`; modals: `toCounterModal`, `toQrModal`, `pickupModal`.
+
 ## Modules
 
 The top bar switches between **Staff** and **Guest phone**. Guest phone is a phone-frame preview: you can pick any table and act as Guest 1, 2 or 3 to show the shared plate.
@@ -157,6 +169,7 @@ The app is plain JS with no framework. It re-renders the whole `#app` from state
 - Guest and staff screens are not synced across devices. They only appear linked inside one page.
 - The "only one guest sends the plate" rule is only a confirm modal. A real version needs a server-side lock on the table's plate.
 - There is no void or cancel order, no reservations, no printing or receipts, and no reports beyond the dashboard.
+- Takeout pickup numbers do not reset each day, and a takeout phone on another device does not see the kitchen's updates (same no-backend limit as table QRs).
 
 ## Suggested next step (when the backend starts)
 

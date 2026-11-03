@@ -16,7 +16,7 @@
   --surface-page:#F4F6F8;--surface-card:#FFFFFF;--surface-elevated:#FFFFFF;--surface-sunken:#EEF1F5;
   --ink:#16191F;--ink-muted:#525B69;--border-control:#6B7584;--hairline:#DCE1E7;
   --brand:#476818;--brand-hover:#385217;--brand-active:#233510;--on-brand:#FFFFFF;--brand-tint:#EAF6CC;
-  --brand-fill:#476818;--brand-fill-hover:#385217;--brand-fill-active:#233510;--on-brand-fill:#FFFFFF;
+  --brand-fill:#476818;--brand-fill-hover:#385217;--brand-fill-active:#233510;--on-brand-fill:#FFFFFF;--chip-on:#16191F;--on-chip-on:#FFFFFF;
   --secondary:#107236;--secondary-hover:#0C5A2A;--secondary-active:#08431F;--on-secondary:#FFFFFF;
   --accent:#C42A93;--accent-ink:#A51E7A;--accent-tint:#FADCEF;--on-accent:#FFFFFF;
   --disabled-bg:#EBEEF2;--disabled-ink:#5E6876;--focus:#C42A93;
@@ -44,7 +44,7 @@
   --shadow-card:0 1px 2px rgba(0,0,0,.5),0 4px 12px rgba(0,0,0,.35);
   --shadow-lift:0 2px 4px rgba(0,0,0,.6),0 10px 24px rgba(0,0,0,.5);
   --chrome-bg:#132A1C;--chrome-border:rgba(255,255,255,.12);--canvas-ink:#FFFFFF;--canvas-ink-muted:#D7ECDB;--canvas-hover:rgba(255,255,255,.14);
-  --brand-fill:#357A47;--brand-fill-hover:#2E6B3E;--brand-fill-active:#24563A;--on-brand-fill:#FFFFFF;--nav-active-bg:#163C22;--nav-active-ink:#FFFFFF;
+  --brand-fill:#357A47;--brand-fill-hover:#2E6B3E;--brand-fill-active:#24563A;--on-brand-fill:#FFFFFF;--chip-on:#357A47;--on-chip-on:#FFFFFF;--nav-active-bg:#163C22;--nav-active-ink:#FFFFFF;
   color-scheme:dark}}
 :root[data-theme="dark"]{
   --surface-page:#0F1115;--surface-card:#22452E;--surface-elevated:#284F35;--surface-sunken:#183522;
@@ -58,7 +58,7 @@
   --shadow-card:0 1px 2px rgba(0,0,0,.5),0 4px 12px rgba(0,0,0,.35);
   --shadow-lift:0 2px 4px rgba(0,0,0,.6),0 10px 24px rgba(0,0,0,.5);
   --chrome-bg:#132A1C;--chrome-border:rgba(255,255,255,.12);--canvas-ink:#FFFFFF;--canvas-ink-muted:#D7ECDB;--canvas-hover:rgba(255,255,255,.14);
-  --brand-fill:#357A47;--brand-fill-hover:#2E6B3E;--brand-fill-active:#24563A;--on-brand-fill:#FFFFFF;--nav-active-bg:#163C22;--nav-active-ink:#FFFFFF;
+  --brand-fill:#357A47;--brand-fill-hover:#2E6B3E;--brand-fill-active:#24563A;--on-brand-fill:#FFFFFF;--chip-on:#357A47;--on-chip-on:#FFFFFF;--nav-active-bg:#163C22;--nav-active-ink:#FFFFFF;
   color-scheme:dark}
 
 *{box-sizing:border-box}
@@ -181,7 +181,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .chips{display:flex;gap:8px;flex-wrap:wrap}
 .chip{min-height:40px;padding:0 16px;border-radius:var(--r-pill);border:1.5px solid var(--border-control);background:var(--surface-card);font-weight:500;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
 .chip:hover{background:var(--brand-tint)}
-.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--surface-card)}
+.chip[aria-pressed="true"]{background:var(--chip-on);border-color:var(--chip-on);color:var(--on-chip-on)}
 .tag{display:inline-block;padding:0 8px;border-radius:var(--r-sm);font-size:14px;line-height:22px;font-weight:500}
 .tag-new{background:var(--info-tint);color:var(--info)}
 .tag-must{background:var(--brand-tint);color:var(--brand)}
@@ -457,6 +457,15 @@ body.solo .phone-wrap{display:flex;justify-content:center;height:100%}
 .pline:first-child{border-top:0}
 .pline .grow{flex:1;min-width:0}
 .track{display:flex;flex-direction:column;gap:12px}
+/* Takeout */
+.g-tabs.three{grid-template-columns:repeat(3,1fr)}
+.pickup{display:flex;flex-direction:column;align-items:center;gap:2px;padding:12px;border-radius:var(--r-md);background:var(--brand-tint)}
+.pickup b{font-size:29px;line-height:36px;color:var(--brand)}
+.kcard .to-tag{align-self:flex-start;margin-top:6px}
+.to-cat{display:flex;flex-direction:column}
+.to-cat > .label{padding-top:8px}
+.to-foot{position:sticky;bottom:0;background:var(--surface-elevated);padding-top:16px;align-items:center}
+.to-foot .grow{flex:1;min-width:160px}
 .prog{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}
 .prog i{height:6px;border-radius:var(--r-pill);background:var(--surface-sunken)}
 .prog i.on{background:var(--brand-fill)}
@@ -528,6 +537,7 @@ const IC = {
   bowl:'<path d="M3 11h18a9 9 0 0 1-18 0z"/><path d="M8 7c0-1 1-2 2-2M13 7c0-2 2-3 3-3"/>',
   cake:'<path d="M4 20h16v-8H4z"/><path d="M4 15c2 1.5 4 1.5 6 0s4-1.5 6 0 3 1 4 0M12 12V8M12 5v0"/>',
   cash:'<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/>',
+  bag:'<path d="M5 8h14l-1 13H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>',
   image:'<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/>',
 };
 const LOGO = '<img class="logo" src="assets/fbs-serve-logo.png" alt="FBS Serve logo">';
@@ -561,11 +571,19 @@ const OSTAT = {
 };
 const GSTEPS = ['queued','cooking','completed','served'];
 const GSTEP_L = ['Order received','Cooking','Order out','Served'];
+// Takeout has no table and is paid on pickup, so it goes from Ready for pickup straight to Paid when staff hand it over.
+const TO = '__takeout';
+const TO_OSTAT = {
+  completed:{l:'Ready for pickup', c:'ok', g:'Ready for pickup', d:'Show your pickup number at the counter and pay there.'},
+  paid:{l:'Picked up', c:'neutral', g:'Picked up. Enjoy your meal!', d:'Thank you for ordering from FBS Serve.'},
+};
+const TO_STEPS = ['queued','cooking','completed','paid'];
+const TO_STEP_L = ['Order received','Cooking','Ready for pickup','Picked up'];
 const TAGS = {new:'New', must:'Must try', best:'Best seller'};
 
 const S = {
   mode:'staff', view:'dashboard', openTable:null, floor:'f1', layoutEdit:false,
-  orderRange:'today', orderQ:'', foodView:'card', foodCat:'all', setTab:'payments',
+  orderRange:'today', orderQ:'', orderType:'all', toSeq:0, toMine:[], toDraft:{}, toName:'', toPhone:'', foodView:'card', foodCat:'all', setTab:'payments',
   tableTimerOn:false, tableTimerMins:60,
   guestTable:'T3', guestName:'Guest 1', guestTab:'menu', guestCat:'all',
   categories:[
@@ -642,6 +660,21 @@ const subtotal = o => sum(o.items.map(i => i.price * i.qty));
 const total = o => r2(subtotal(o) * (1 - (o.discount?.pct || 0) / 100));
 const sessionOrders = t => t.token ? S.orders.filter(o => o.table === t.id && o.session === t.token) : [];
 const nextId = () => 'ORD-' + (++S.seq);
+const isTO = o => o.type === 'takeout';
+const oMeta = o => (isTO(o) && TO_OSTAT[o.status]) || OSTAT[o.status];
+const where = o => isTO(o) ? `Takeout ${o.pickup}` : tName(o.table);
+const nextPickup = () => 'TO-' + String(++S.toSeq).padStart(3, '0');
+const toReady = () => S.orders.filter(o => isTO(o) && o.status === 'completed');
+const toLink = () => location.href.split('#')[0] + '#takeout';
+// Merges plate lines (one per guest) into order items, one per food.
+function plateItems(p){
+  const items = []; p.forEach(l => { const f = food(l.foodId), e = items.find(i => i.foodId === f.id); e ? e.qty += l.qty : items.push({foodId:f.id, name:f.name, price:f.price, qty:l.qty}); });
+  return items;
+}
+function newTO(items, customer, phone, source){
+  const o = {id:nextId(), type:'takeout', table:null, pickup:nextPickup(), customer, phone, by:customer, source, items, status:'queued', createdAt:Date.now(), eta:orderEta(items)};
+  S.orders.push(o); return o;
+}
 
 console.assert(total({items:[{price:100, qty:2}, {price:65, qty:1}], discount:{pct:20}}) === 212, 'discount math');
 
@@ -672,6 +705,8 @@ console.assert(orderEta([{foodId:'f4'}, {foodId:'f9'}]) === 35, 'order eta is th
 function seed(){
   S.foods.forEach(f => f.photos = [0, 1, 2].map(v => samplePhoto(f, v)));
   const r = rng(11), pick = a => a[Math.floor(r() * a.length)];
+  const NAMES = ['Ana Cruz', 'Mark Lim', 'Joy Tan', 'Paolo Reyes', 'Bea Santos', 'Carlo Diaz'];
+  const asTO = (o, pickup) => { const c = pick(NAMES); Object.assign(o, {type:'takeout', table:null, pickup, customer:c, by:c, phone:'', source:pick(['counter','qr'])}); };
   const mk = (when, status, table, extra = {}) => {
     const items = [], n = 1 + Math.floor(r() * 4);
     while (items.length < n){
@@ -682,13 +717,16 @@ function seed(){
   };
   for (let d = 34; d >= 1; d--){
     const n = 8 + Math.floor(r() * 9);
+    let dn = 0;
     for (let i = 0; i < n; i++){
       const w = new Date(); w.setDate(w.getDate() - d); w.setHours(11 + Math.floor(r() * 10), Math.floor(r() * 60), 0, 0);
       mk(w, 'paid', 'T' + (1 + Math.floor(r() * 12)), {payment:pick(['cash','gcash','card']), discount:r() < .12 ? {name:'Senior citizen', pct:20} : null, paidAt:+w + 3e6});
+      if (r() < .2) asTO(S.orders.at(-1), 'TO-' + String(++dn).padStart(3, '0'));
     }
   }
   for (let i = 9; i >= 1; i--){
     mk(Date.now() - (60 + i * 22) * 60000, 'paid', 'T' + (1 + Math.floor(r() * 12)), {payment:pick(['cash','gcash','card']), discount:null, paidAt:Date.now() - i * 20 * 60000});
+    if (i % 4 === 0) asTO(S.orders.at(-1), nextPickup());
   }
   // Live floor
   const open = (id, status, minsAgo, orders = [], bill = null) => {
@@ -704,6 +742,9 @@ function seed(){
   open('T7', 'billout', 75, [['served', 62, 'Guest 1']], {method:'gcash', at:Date.now() - 2 * 60000});
   open('T8', 'cleaning', 90, [['paid', 80, 'Guest 1']]);
   open('T9', 'ordering', 20, [['cooking', 11, 'Guest 4']]);
+  // Live takeout: one ready for pickup, one cooking, one just placed from the Takeout QR (the guest preview's own order).
+  [['completed', 14], ['cooking', 8], ['queued', 3]].forEach(([st, ago]) => { mk(Date.now() - ago * 60000, st, null); asTO(S.orders.at(-1), nextPickup()); });
+  Object.assign(S.orders.at(-1), {source:'qr', phone:'0917 555 0199'}); S.toMine = [S.orders.at(-1).id];
   S.orders.filter(o => o.table === 'T8' && o.status === 'paid' && o.session !== 'old').forEach(o => { o.payment = 'cash'; o.discount = null; o.paidAt = Date.now() - 6 * 60000; });
   S.plates.T3 = [
     {id:uid(), foodId:'f6', qty:2, by:'Guest 1'},
@@ -725,7 +766,8 @@ const tableOverLimit = t => S.tableTimerOn && t.openedAt && !['inactive','cleani
 /* ---------- Shared pieces ---------- */
 const pill = (meta, withIcon = true) => `<span class="pill p-${meta.c}">${withIcon && meta.i ? icon(meta.i, 16) : ''}${esc(meta.l)}</span>`;
 const tPill = t => pill(TSTAT[t.status]);
-const oPill = o => pill(OSTAT[o.status], false);
+const oPill = o => pill(oMeta(o), false);
+const toTag = (extra = '') => `<span class="pill p-brand ${extra}">${icon('bag', 16)}Takeout</span>`;
 const tagHtml = tags => tags.map(t => `<span class="tag tag-${t}">${TAGS[t]}</span>`).join(' ');
 const foodImg = (f, size = 40) => f.photos[0] ? `<img src="${f.photos[0]}" alt="${esc(f.name)}">` : `<div class="ph cat-${catIdx(f.cat)}" role="img" aria-label="${esc(f.name)}, no photo yet">${icon(CAT_IC[f.cat] || 'plate', size)}</div>`;
 function aggregate(orders){
@@ -735,11 +777,11 @@ function aggregate(orders){
 }
 
 // Real QR code (qrcode-generator, MIT, assets/qrcode.js). Quiet zone of 2 modules, always dark-on-white so phones can read it.
-function qrSvg(text){
+function qrSvg(text, label = 'QR code for the table link'){
   const q = qrcode(0, 'M'); q.addData(text); q.make();
   const n = q.getModuleCount(); let d = '';
   for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) if (q.isDark(y, x)) d += `M${x} ${y}h1v1h-1z`;
-  return `<svg class="qr" viewBox="-2 -2 ${n + 4} ${n + 4}" shape-rendering="crispEdges" role="img" aria-label="QR code for the table link"><rect x="-2" y="-2" width="${n + 4}" height="${n + 4}" fill="#fff"/><path d="${d}" fill="#000"/></svg>`;
+  return `<svg class="qr" viewBox="-2 -2 ${n + 4} ${n + 4}" shape-rendering="crispEdges" role="img" aria-label="${label}"><rect x="-2" y="-2" width="${n + 4}" height="${n + 4}" fill="#fff"/><path d="${d}" fill="#000"/></svg>`;
 }
 // The QR opens this same page in guest mode for one table. shortcut: no backend yet, so the phone gets its own copy of the sample data.
 const guestLink = t => location.href.split('#')[0] + '#t=' + encodeURIComponent(t.id) + '&k=' + t.token;
@@ -748,7 +790,7 @@ const guestLink = t => location.href.split('#')[0] + '#t=' + encodeURIComponent(
 function vDashboard(){
   const today = S.orders.filter(o => sameDay(o.createdAt, Date.now()));
   const paid = today.filter(o => o.status === 'paid');
-  const pending = sum(S.tables.flatMap(sessionOrders).filter(o => o.status !== 'paid').map(total));
+  const pending = sum(S.tables.flatMap(sessionOrders).concat(S.orders.filter(isTO)).filter(o => o.status !== 'paid').map(total));
   const inUse = S.tables.filter(t => t.status !== 'inactive').length;
   const top = aggregate(today).sort((a, b) => b.qty - a.qty).slice(0, 5);
   const max = top[0]?.qty || 1;
@@ -757,7 +799,7 @@ function vDashboard(){
   return `<div class="page-head"><div><h1>Dashboard</h1><p class="muted">${new Date().toLocaleDateString('en-PH', {weekday:'long', month:'long', day:'numeric'})}</p></div></div>
   <div class="tiles">
     <div class="card tile">${icon('cash')}<span class="label muted">Income today</span><span class="val num">${peso(sum(paid.map(total)))}</span><span class="caption muted num">${peso(pending)} still to collect</span></div>
-    <div class="card tile">${icon('receipt')}<span class="label muted">Orders today</span><span class="val num">${today.length}</span><span class="caption muted">${paid.length} paid · ${today.length - paid.length} open</span></div>
+    <div class="card tile">${icon('receipt')}<span class="label muted">Orders today</span><span class="val num">${today.length}</span><span class="caption muted">${paid.length} paid · ${today.length - paid.length} open · ${today.filter(isTO).length} takeout</span></div>
     <div class="card tile">${icon('table')}<span class="label muted">Active tables</span><span class="val num">${inUse}</span><span class="caption muted">of ${S.tables.length} tables</span></div>
     <div class="card tile">${icon('moon')}<span class="label muted">Inactive tables</span><span class="val num">${S.tables.length - inUse}</span><span class="caption muted">Ready for new guests</span></div>
   </div>
@@ -766,7 +808,7 @@ function vDashboard(){
       ${top.length ? `<ol class="bars">${top.map((f, i) => `<li class="bar-row"><span class="rank num">${i + 1}</span><span>${esc(f.name)}</span><span class="num label">${f.qty} sold</span><div class="bar-track"><div class="bar-fill" style="width:${f.qty / max * 100}%"></div></div></li>`).join('')}</ol>` : `<div class="empty">No orders yet today.</div>`}
     </section>
     <section class="card"><div class="card-head"><h3>In the kitchen now</h3><button class="btn btn-outline" data-act="nav" data-v="kitchen">Open kitchen</button></div>
-      ${kq.length ? `<ul class="rows">${kq.slice(0, 6).map(o => `<li><div class="grow"><b class="num">${o.id}</b> <span class="muted">· ${esc(tName(o.table))}</span><div class="caption muted num">${mins(o.createdAt)} min ago</div></div>${oPill(o)}</li>`).join('')}</ul>` : `<div class="empty">The kitchen is clear.</div>`}
+      ${kq.length ? `<ul class="rows">${kq.slice(0, 6).map(o => `<li><div class="grow"><b class="num">${o.id}</b> <span class="muted">· ${esc(where(o))}</span><div class="caption muted num">${mins(o.createdAt)} min ago</div></div>${oPill(o)}</li>`).join('')}</ul>` : `<div class="empty">The kitchen is clear.</div>`}
     </section>
   </div>
   <section class="card"><div class="card-head"><h3>Tables at a glance</h3><button class="btn btn-outline" data-act="nav" data-v="tables">Open floor plan</button></div>
@@ -782,17 +824,22 @@ function inRange(d, r){
 }
 function vOrders(){
   const q = S.orderQ.trim().toUpperCase();
-  const list = S.orders.filter(o => q ? o.id.includes(q) : inRange(o.createdAt, S.orderRange)).sort((a, b) => b.createdAt - a.createdAt);
+  const list = S.orders.filter(o => (q ? o.id.includes(q) : inRange(o.createdAt, S.orderRange)) && (S.orderType === 'all' || (S.orderType === 'takeout') === isTO(o))).sort((a, b) => b.createdAt - a.createdAt);
   const ranges = [['today','Today'], ['week','This week'], ['month','This month']];
-  return `<div class="page-head"><div><h1>Orders</h1><p class="muted">Every order from every table, in any status.</p></div></div>
+  const types = [['all','All'], ['dinein','Dine-in'], ['takeout','Takeout']];
+  const ready = toReady().sort((a, b) => a.createdAt - b.createdAt);
+  return `<div class="page-head"><div><h1>Orders</h1><p class="muted">Every dine-in and takeout order, in any status.</p></div>
+    <button class="btn btn-outline" data-act="to-qr">${icon('qr', 20)}Takeout QR</button><button class="btn btn-primary" data-act="to-new">${icon('bag', 20)}New takeout order</button></div>
+  ${ready.length ? `<section class="card"><div class="card-head"><h3>Ready for pickup</h3><span class="badge num">${ready.length}</span></div><ul class="rows">${ready.map(o => `<li><div class="grow"><b class="num">${o.pickup}</b> <span class="muted">· ${esc(o.customer)}${o.phone ? ` · <span class="num">${esc(o.phone)}</span>` : ''}</span><div class="caption muted num">${o.id} · ${sum(o.items.map(i => i.qty))} items · pay on pickup</div></div><b class="num">${peso(total(o))}</b><button class="btn btn-primary" data-act="pickup" data-id="${o.id}">${icon('wallet', 20)}Collect payment</button></li>`).join('')}</ul></section>` : ''}
   <div class="toolbar">
     <div class="chips" role="group" aria-label="Date range">${ranges.map(([k, l]) => `<button class="chip" data-act="range" data-v="${k}" aria-pressed="${S.orderRange === k && !q}">${l}</button>`).join('')}</div>
+    <div class="chips" role="group" aria-label="Order type">${types.map(([k, l]) => `<button class="chip" data-act="otype" data-v="${k}" aria-pressed="${S.orderType === k}">${l}</button>`).join('')}</div>
     <div class="spacer"></div>
     <label class="search"><span class="sr" hidden>Search order ID</span>${icon('search')}<input id="order-q" class="input" data-input="orderQ" placeholder="Search order ID, e.g. 1042" value="${esc(S.orderQ)}" aria-label="Search order ID"></label>
   </div>
   ${q ? `<p class="caption canvas-note">Searching all dates for “${esc(S.orderQ)}”. Clear the search to use the date filter.</p>` : ''}
-  <div class="tbl-scroll"><table class="data"><thead><tr><th>Order ID</th><th>Table</th><th>Date and time</th><th>Items</th><th>Payment</th><th class="r">Total</th><th>Status</th></tr></thead><tbody>
-  ${list.slice(0, 200).map(o => `<tr class="click" data-act="order" data-id="${o.id}"><td><button class="link num" data-act="order" data-id="${o.id}">${o.id}</button></td><td>${esc(tName(o.table))}</td><td class="num">${dt(o.createdAt)}, ${tm(o.createdAt)}</td><td class="num">${sum(o.items.map(i => i.qty))} items</td><td>${o.payment ? esc(payName(o.payment)) : '<span class="muted">Not yet</span>'}</td><td class="r num"><b>${peso(total(o))}</b></td><td>${oPill(o)}</td></tr>`).join('') || `<tr><td colspan="7"><div class="empty">${icon('search', 32)}No orders match. Check the order ID or pick another date range.</div></td></tr>`}
+  <div class="tbl-scroll"><table class="data"><thead><tr><th>Order ID</th><th>Table or pickup</th><th>Date and time</th><th>Items</th><th>Payment</th><th class="r">Total</th><th>Status</th></tr></thead><tbody>
+  ${list.slice(0, 200).map(o => `<tr class="click" data-act="order" data-id="${o.id}"><td><button class="link num" data-act="order" data-id="${o.id}">${o.id}</button></td><td>${isTO(o) ? `${toTag()} <span class="num">${o.pickup}</span>` : esc(tName(o.table))}</td><td class="num">${dt(o.createdAt)}, ${tm(o.createdAt)}</td><td class="num">${sum(o.items.map(i => i.qty))} items</td><td>${o.payment ? esc(payName(o.payment)) : '<span class="muted">Not yet</span>'}</td><td class="r num"><b>${peso(total(o))}</b></td><td>${oPill(o)}</td></tr>`).join('') || `<tr><td colspan="7"><div class="empty">${icon('search', 32)}No orders match. Check the order ID or pick another date range.</div></td></tr>`}
   </tbody></table></div>
   <p class="caption canvas-note num">${list.length} orders · ${peso(sum(list.map(total)))}${list.length > 200 ? ' · showing the latest 200' : ''}</p>`;
 }
@@ -803,9 +850,10 @@ function vKitchen(){
     const list = S.orders.filter(o => o.status === st).sort((a, b) => a.createdAt - b.createdAt);
     return `<section class="col" aria-label="${OSTAT[st].l}"><div class="col-head"><h3>${OSTAT[st].l}</h3><span class="badge soft num">${list.length}</span></div>
     ${list.map(o => { const m = mins(o.createdAt); const late = m > (o.eta || 20); return `<article class="kcard${late ? ' overdue' : ''}">
-      <div class="kcard-top"><div><b class="num">${o.id}</b><div class="caption muted">${esc(tName(o.table))} · ${esc(o.by)}</div></div><span class="caption num ${late ? 'late label' : 'muted'}" title="Target ${o.eta || 20} min">${icon('clock', 16)} ${m} / ${o.eta || 20} min</span></div>
+      <div class="kcard-top"><div><b class="num">${o.id}</b><div class="caption muted">${esc(isTO(o) ? o.pickup : tName(o.table))} · ${esc(o.by)}</div>${isTO(o) ? toTag('to-tag') : ''}</div><span class="caption num ${late ? 'late label' : 'muted'}" title="Target ${o.eta || 20} min">${icon('clock', 16)} ${m} / ${o.eta || 20} min</span></div>
       <ul>${o.items.map(i => `<li><b class="num">${i.qty}×</b><span>${esc(i.name)}</span></li>`).join('')}</ul>
-      <button class="btn ${st === 'completed' ? 'btn-secondary' : 'btn-outline'} block" data-act="${st === 'completed' ? 'serve' : 'knext'}" data-id="${o.id}">${OSTAT[st].next}${st === 'completed' ? '' : icon('arrow', 20)}</button>
+      ${isTO(o) && st !== 'completed' ? '<p class="caption muted">Pack to go.</p>' : ''}
+      <button class="btn ${st === 'completed' ? 'btn-secondary' : 'btn-outline'} block" data-act="${st !== 'completed' ? 'knext' : isTO(o) ? 'pickup' : 'serve'}" data-id="${o.id}">${st !== 'completed' ? OSTAT[st].next + icon('arrow', 20) : isTO(o) ? 'Collect payment at pickup' : OSTAT[st].next}</button>
     </article>`; }).join('') || `<p class="col-empty">No orders here.</p>`}</section>`;
   }).join('')}</div>`;
 }
@@ -931,6 +979,7 @@ const GUIDE = [
   {v:'tables', ic:'table', t:'Tables', d:'Seat guests, collect payment and reset tables.', s:['When guests sit at an inactive table, select it and tap Activate table. This always comes first.', 'Show the QR to the guests. Every guest at the table scans the same code.', 'When a table shows Bill out, go to it and tap Receive payment.', 'After cleaning, tap Mark as clean. The old QR stops working.', 'Tap Arrange tables and drag each table to where it sits in your restaurant.']},
   {v:'kitchen', ic:'pot', t:'Kitchen', d:'Cook orders in the order they arrived.', s:['New orders appear in Queued, oldest at the top.', 'Tap the button on a card to move it: Cooking, Order out.', 'Guests see every change on their phone right away.', 'Waiters tap Mark as served after bringing the food to the table.']},
   {v:'orders', ic:'receipt', t:'Orders', d:'Find any order, in any status.', s:['Pick Today, This week or This month.', 'Type an order ID in the search box to find it on any date.', 'Select a row to see its items, payment and discount.']},
+  {v:'orders', ic:'bag', t:'Takeout', d:'Orders to go, paid on pickup.', s:['At the counter: in Orders, tap New takeout order, enter the name and add food. It goes straight to the kitchen.', 'Self-order: put the Takeout QR (in Orders) at the counter. Customers order on their phone and get a pickup number.', 'Kitchen cards for takeout are tagged Takeout. Pack them to go.', 'Ready orders appear under Ready for pickup in Orders. Collect payment as you hand the food over.']},
   {v:'foods', ic:'utensils', t:'Foods', d:'Keep the menu up to date.', s:['Tap Add food and fill in the name, category, price and description.', 'Add photos for the gallery, the prep time guests see as the estimated wait, and tags: New, Must try or Best seller.', 'Set a food to Not available when it runs out. Guests cannot order it.', 'Switch between Cards and Table view.']},
   {v:'settings', ic:'sliders', t:'Settings', d:'Set up how the restaurant runs.', s:['Payment methods: choose what guests can pick when they ask for the bill.', 'Discounts: set the percent off and what the guest must show.', 'Users and roles: decide who can open each module.', 'Categories: group foods on the menu.', 'Tables and floor levels: add, rename or remove tables, set their seats, and add a 2nd floor.']},
 ];
@@ -947,7 +996,7 @@ function vGuide(){
 function staffShell(){
   const bills = S.tables.filter(t => t.status === 'billout');
   const kq = S.orders.filter(o => KITCHEN.includes(o.status)).length;
-  const badge = {kitchen:kq, tables:bills.length};
+  const badge = {kitchen:kq, tables:bills.length, orders:toReady().length};
   const views = {dashboard:vDashboard, orders:vOrders, kitchen:vKitchen, foods:vFoods, tables:vTables, settings:vSettings, guide:vGuide};
   return `<div class="shell"><nav class="rail" aria-label="Modules" data-keep="rail"><div class="rail-brand">${LOGO}<span>FBS Serve<small>Restaurant manager</small></span></div>${NAV.map(n => `<button class="nav" data-act="nav" data-v="${n.id}" ${S.view === n.id ? 'aria-current="page"' : ''}>${icon(n.ic, 18)}${n.label}${badge[n.id] ? `<span class="badge num" aria-label="${badge[n.id]} waiting">${badge[n.id]}</span>` : ''}</button>`).join('')}</nav>
   <main class="main">${topBar(false)}<div class="wrap">
@@ -958,29 +1007,64 @@ function staffShell(){
 
 /* ---------- Guest view ---------- */
 function guestShell(){
-  const t = tableOf(S.guestTable);
-  if (!t) return S.guestOnly ? `<main class="phone-wrap"><div class="phone"><div class="g-scroll"><div class="center"><div class="big-ic">${icon('qr', 32)}</div><h3>We can't find this table</h3><p class="muted">Ask your waiter for a new QR code.</p></div></div></div></main>` : `<main class="main"><div class="wrap"><div class="card empty">Add a table in Settings to preview the guest view.</div></div></main>`;
+  const takeout = S.guestTable === TO, t = takeout ? null : tableOf(S.guestTable);
+  if (!takeout && !t) return S.guestOnly ? `<main class="phone-wrap"><div class="phone"><div class="g-scroll"><div class="center"><div class="big-ic">${icon('qr', 32)}</div><h3>We can't find this table</h3><p class="muted">Ask your waiter for a new QR code.</p></div></div></div></main>` : `<main class="main"><div class="wrap"><div class="card empty">Add a table in Settings to preview the guest view.</div></div></main>`;
+  const phone = takeout ? toPhone() : tablePhone(t);
+  if (S.guestOnly) return `<main class="phone-wrap">${phone}</main>`;
+  return `<main class="main"><div class="wrap"><div class="guest-layout">
+    <aside class="side card">
+      <h2>Guest view</h2>
+      <p class="muted">${takeout ? 'This is what customers see after scanning the Takeout QR. They order, get a pickup number, and pay when they pick up.' : 'This is what guests see on their phone after scanning the table QR.'}</p>
+      <label class="field"><span>QR code</span><select id="g-table" class="input" data-change="gTable">${S.tables.map(x => `<option value="${x.id}" ${x.id === t?.id ? 'selected' : ''}>${x.name} · ${TSTAT[x.status].l}</option>`).join('')}<option value="${TO}" ${takeout ? 'selected' : ''}>Takeout QR</option></select></label>
+      ${takeout ? '' : `<div class="field"><span>You are</span><div class="gsel" role="group" aria-label="Guest">${['Guest 1','Guest 2','Guest 3'].map(g => `<button class="chip" data-act="g-who" data-v="${g}" aria-pressed="${S.guestName === g}">${icon('user', 16)}${g}</button>`).join('')}</div>
+      <span class="hint">Many guests share one QR. Switch guests to see the shared plate.</span></div>`}
+      <button class="btn btn-outline" data-act="mode" data-v="staff">Back to staff view</button>
+    </aside>
+${phone}
+  </div></div></main>`;
+}
+function tablePhone(t){
   const plate = (S.plates[t.id] || []);
   const n = sum(plate.map(l => l.qty));
   const live = t.token && !['inactive','cleaning'].includes(t.status);
-  const phone = `<div class="phone" aria-label="Guest phone preview">
+  return `<div class="phone" aria-label="Guest phone preview">
       <div class="g-top">${LOGO}<div class="grow"><b>FBS Serve</b><div class="caption muted">${t.name} · ${esc(S.guestName)}</div></div>${live ? tPill(t) : ''}</div>
       ${!live ? `<div class="g-scroll">${gClosed(t)}</div>` : `<div class="g-scroll" data-keep="gscroll">${({menu:gMenu, plate:gPlate, orders:gOrders, bill:gBill})[S.guestTab](t)}</div>
       ${S.guestTab === 'plate' && n ? `<div class="g-foot"><button class="btn btn-primary block" data-act="g-send">Send to kitchen · ${peso(sum(plate.map(l => food(l.foodId).price * l.qty)))}</button></div>` : ''}
       <nav class="g-tabs" aria-label="Guest menu">${[['menu','Menu','utensils'], ['plate','Plate','plate'], ['orders','Orders','clock'], ['bill','Bill','wallet']].map(([k, l, ic]) => `<button class="g-tab" data-act="g-tab" data-v="${k}" ${S.guestTab === k ? 'aria-current="page"' : ''}>${icon(ic)}${l}${k === 'plate' && n ? `<span class="badge num">${n}</span>` : ''}</button>`).join('')}</nav>`}
 </div>`;
-  if (S.guestOnly) return `<main class="phone-wrap">${phone}</main>`;
-  return `<main class="main"><div class="wrap"><div class="guest-layout">
-    <aside class="side card">
-      <h2>Guest view</h2>
-      <p class="muted">This is what guests see on their phone after scanning the table QR.</p>
-      <label class="field"><span>Table QR</span><select id="g-table" class="input" data-change="gTable">${S.tables.map(x => `<option value="${x.id}" ${x.id === t.id ? 'selected' : ''}>${x.name} · ${TSTAT[x.status].l}</option>`).join('')}</select></label>
-      <div class="field"><span>You are</span><div class="gsel" role="group" aria-label="Guest">${['Guest 1','Guest 2','Guest 3'].map(g => `<button class="chip" data-act="g-who" data-v="${g}" aria-pressed="${S.guestName === g}">${icon('user', 16)}${g}</button>`).join('')}</div>
-      <span class="hint">Many guests share one QR. Switch guests to see the shared plate.</span></div>
-      <button class="btn btn-outline" data-act="mode" data-v="staff">Back to staff view</button>
-    </aside>
-${phone}
-  </div></div></main>`;
+}
+// Takeout QR phone: menu, plate and order tracker. No bill tab, since takeout is paid at the counter on pickup.
+function toPhone(){
+  const plate = S.plates[TO] || [], n = sum(plate.map(l => l.qty));
+  const tab = S.guestTab === 'bill' ? 'menu' : S.guestTab;
+  return `<div class="phone" aria-label="Takeout phone preview">
+      <div class="g-top">${LOGO}<div class="grow"><b>FBS Serve</b><div class="caption muted">Takeout · pay when you pick up</div></div>${toTag()}</div>
+      <div class="g-scroll" data-keep="gscroll">${tab === 'menu' ? gMenu() : tab === 'plate' ? toPlate(plate) : toTrack()}</div>
+      ${tab === 'plate' && n ? `<div class="g-foot"><button class="btn btn-primary block" data-act="to-send">Place takeout order · ${peso(sum(plate.map(l => food(l.foodId).price * l.qty)))}</button></div>` : ''}
+      <nav class="g-tabs three" aria-label="Takeout menu">${[['menu','Menu','utensils'], ['plate','Plate','plate'], ['orders','Orders','clock']].map(([k, l, ic]) => `<button class="g-tab" data-act="g-tab" data-v="${k}" ${tab === k ? 'aria-current="page"' : ''}>${icon(ic)}${l}${k === 'plate' && n ? `<span class="badge num">${n}</span>` : ''}</button>`).join('')}</nav>
+</div>`;
+}
+function toPlate(plate){
+  if (!plate.length) return `<div class="center"><div class="big-ic">${icon('bag', 32)}</div><h3>Your plate is empty</h3><p class="muted">Pick food from the menu, then place your takeout order.</p><button class="btn btn-primary" data-act="g-tab" data-v="menu">Browse menu</button></div>`;
+  return `<div><h3>Your plate</h3><p class="caption muted">Packed to go. You pay at the counter when you pick it up.</p></div>
+  <div class="alert info">${icon('clock')}<p><b>Ready in about ${orderEta(plate)} min</b><br><span class="caption">The kitchen starts cooking as soon as you place the order.</span></p></div>
+  <div class="card" style="padding:4px 16px">${plate.map(l => { const f = food(l.foodId); return `<div class="pline"><div class="grow"><b>${esc(f.name)}</b><div class="caption muted"><span class="num">${peso(f.price * l.qty)}</span> · <span class="num">${f.eta} min</span></div></div>
+    <div class="stepper"><button data-act="g-qty" data-id="${l.id}" data-v="-1" aria-label="Remove one ${esc(f.name)}">${icon(l.qty > 1 ? 'minus' : 'trash', 20)}</button><span class="num">${l.qty}</span><button data-act="g-qty" data-id="${l.id}" data-v="1" aria-label="Add one ${esc(f.name)}">${icon('plus', 20)}</button></div></div>`; }).join('')}</div>`;
+}
+function toTrack(){
+  const os = S.orders.filter(o => S.toMine.includes(o.id)).sort((a, b) => b.createdAt - a.createdAt);
+  if (!os.length) return `<div class="center"><div class="big-ic">${icon('clock', 32)}</div><h3>No takeout orders yet</h3><p class="muted">Place an order from your plate. You can follow it here.</p></div>`;
+  return os.map(o => { const k = TO_STEPS.indexOf(o.status), m = oMeta(o), done = o.status === 'paid'; return `<section class="card track" style="padding:16px">
+    <span class="caption muted num">${o.id} · ${tm(o.createdAt)} · ${esc(o.customer)}</span>
+    <div class="pickup"><span class="caption muted">Pickup number</span><b class="num">${o.pickup}</b></div>
+    <h3>${m.g}</h3><p class="caption muted">${m.d}</p>
+    ${['queued','cooking'].includes(o.status) ? (left => `<span class="pill p-info" style="align-self:flex-start">${icon('clock', 16)}${left > 0 ? `Ready in about ${left} min` : 'Almost ready'}</span>`)((o.eta || orderEta(o.items)) - mins(o.createdAt)) : ''}
+    <div class="prog" aria-hidden="true">${TO_STEPS.map((_, i) => `<i class="${i <= k ? 'on' : ''}"></i>`).join('')}</div>
+    <ol class="steps">${TO_STEP_L.map((l, i) => `<li class="${i < k || done ? 'done' : i === k ? 'now' : ''}"><span class="dot">${i < k || done ? icon('check') : ''}</span>${l}</li>`).join('')}</ol>
+    <ul class="items">${o.items.map(i => `<li><b class="num">${i.qty}×</b><span>${esc(i.name)}</span><span class="num">${peso(i.qty * i.price)}</span></li>`).join('')}</ul>
+    <div class="sum"><div class="total"><span>${done ? 'Paid' : 'Pay at pickup'}</span><span class="num">${peso(total(o))}</span></div></div>
+  </section>`; }).join('');
 }
 function gClosed(t){
   if (t.status === 'cleaning') return `<div class="center"><div class="big-ic">${icon('check', 32)}</div><h3>Payment received</h3><p class="muted">Thank you for dining at FBS Serve. This table QR is now closed.</p></div>`;
@@ -1039,11 +1123,11 @@ function qrModal(t){
     `<div class="m-foot"><button class="btn btn-outline" data-act="close">Done</button><button class="btn btn-outline" data-act="copy-link" data-id="${t.id}">Copy link</button><button class="btn btn-primary" data-act="open-guest" data-id="${t.id}">${icon('phone', 20)}Open guest view</button></div>`);
 }
 function orderModal(o){
-  modal(o.id, `<div class="m-body"><dl class="kv"><dt>Status</dt><dd>${oPill(o)}</dd><dt>Table</dt><dd>${esc(tName(o.table))}</dd><dt>Ordered</dt><dd class="num">${dt(o.createdAt)}, ${tm(o.createdAt)}</dd><dt>Sent by</dt><dd>${esc(o.by)}</dd>
+  modal(o.id, `<div class="m-body"><dl class="kv"><dt>Status</dt><dd>${oPill(o)}</dd>${isTO(o) ? `<dt>Type</dt><dd>Takeout, ${o.source === 'qr' ? 'from the Takeout QR' : 'at the counter'}</dd><dt>Pickup number</dt><dd class="num">${o.pickup}</dd><dt>Customer</dt><dd>${esc(o.customer)}${o.phone ? ` · <span class="num">${esc(o.phone)}</span>` : ''}</dd>` : `<dt>Table</dt><dd>${esc(tName(o.table))}</dd>`}<dt>Ordered</dt><dd class="num">${dt(o.createdAt)}, ${tm(o.createdAt)}</dd>${isTO(o) ? '' : `<dt>Sent by</dt><dd>${esc(o.by)}</dd>`}
     ${o.payment ? `<dt>Payment</dt><dd>${esc(payName(o.payment))}</dd>` : ''}${o.discount ? `<dt>Discount</dt><dd>${esc(o.discount.name)} (${o.discount.pct}%)</dd>` : ''}</dl>
     <ul class="items">${o.items.map(i => `<li><b class="num">${i.qty}×</b><span>${esc(i.name)}</span><span class="num">${peso(i.qty * i.price)}</span></li>`).join('')}</ul>
     <div class="sum"><div><span class="muted">Subtotal</span><span class="num">${peso(subtotal(o))}</span></div>${o.discount ? `<div><span class="muted">Discount</span><span class="num">−${peso(subtotal(o) - total(o))}</span></div>` : ''}<div class="total"><span>Total</span><span class="num">${peso(total(o))}</span></div></div></div>`,
-    `<div class="m-foot"><button class="btn btn-outline" data-act="close">Close</button></div>`);
+    `<div class="m-foot"><button class="btn btn-outline" data-act="close">Close</button>${isTO(o) && o.status === 'completed' ? `<button class="btn btn-primary" data-act="pickup" data-id="${o.id}">${icon('wallet', 20)}Collect payment</button>` : ''}</div>`);
 }
 function payModal(t){
   const os = sessionOrders(t).filter(o => o.status !== 'paid');
@@ -1056,6 +1140,35 @@ function payModal(t){
     <div class="sum" id="pay-sum"></div></div>
     <div class="m-foot"><button type="button" class="btn btn-outline" data-act="close">Cancel</button><button class="btn btn-primary">${icon('check', 20)}Payment received</button></div></form>`);
   CHANGE.payCalc();
+}
+// Pay on pickup: one takeout order, handed over and paid at the counter.
+function pickupModal(o){
+  modal(`Collect payment · ${o.pickup}`, `<form id="pay-form" data-form="pickup" data-id="${o.id}"><div class="m-body">
+    <p><b>${esc(o.customer)}</b>${o.phone ? ` · <span class="num">${esc(o.phone)}</span>` : ''}<br><span class="caption muted num">${o.id} · takeout, paid on pickup</span></p>
+    <ul class="items">${o.items.map(i => `<li><b class="num">${i.qty}×</b><span>${esc(i.name)}</span><span class="num">${peso(i.qty * i.price)}</span></li>`).join('')}</ul>
+    <div class="form-grid">
+      <label class="field"><span>Payment method</span><select id="pay-method" name="method" class="input">${S.payments.filter(p => p.active).map(p => `<option value="${p.id}">${esc(p.name)}</option>`).join('')}</select></label>
+      <label class="field"><span>Discount</span><select id="pay-disc" name="disc" class="input" data-change="payCalc"><option value="">No discount</option>${S.discounts.filter(d => d.active).map(d => `<option value="${d.id}">${esc(d.name)} (${d.pct}%)</option>`).join('')}</select><span class="hint" id="pay-note">Check the guest’s ID before applying a discount.</span></label>
+    </div>
+    <div class="sum" id="pay-sum"></div></div>
+    <div class="m-foot"><button type="button" class="btn btn-outline" data-act="close">Cancel</button><button class="btn btn-primary">${icon('check', 20)}Paid and picked up</button></div></form>`);
+  CHANGE.payCalc();
+}
+function toQrModal(){
+  modal('Takeout QR code', `<div class="m-body"><div class="qr-box">${qrSvg(toLink(), 'QR code for takeout orders')}<b>Scan to order takeout</b><span class="caption muted" style="word-break:break-all;user-select:all">${esc(toLink())}</span></div>
+    <p class="caption muted">Print this and put it at the counter or the entrance. Customers order on their phone, get a pickup number, and pay when they pick up. This code does not expire.</p></div>`,
+    `<div class="m-foot"><button class="btn btn-outline" data-act="close">Done</button><button class="btn btn-outline" data-act="copy-to-link">Copy link</button><button class="btn btn-primary" data-act="open-to">${icon('phone', 20)}Open guest view</button></div>`);
+}
+// Counter takeout: staff enter the name and pick food. Rebuilt on every quantity change; the name and phone live in S so they survive.
+function toCounterModal(){
+  const d = S.toDraft, items = Object.entries(d).filter(([, q]) => q > 0).map(([id, qty]) => ({foodId:id, qty, price:food(id).price}));
+  const n = sum(items.map(i => i.qty)), tot = sum(items.map(i => i.price * i.qty));
+  modal('New takeout order', `<div class="m-body">
+    <div class="form-grid"><label class="field"><span>Customer name</span><input id="to-name" class="input" data-input="toName" value="${esc(S.toName)}" autocomplete="off" maxlength="40"></label>
+    <label class="field"><span>Phone (optional)</span><input id="to-phone" class="input num" data-input="toPhone" value="${esc(S.toPhone)}" inputmode="tel" autocomplete="off" maxlength="20"><span class="hint">To call or text when it’s ready.</span></label></div>
+    ${S.categories.map(c => { const fs = S.foods.filter(f => f.cat === c.id && f.status === 'available'); return fs.length ? `<div class="to-cat"><span class="label muted">${esc(c.name)}</span>${fs.map(f => `<div class="pline"><div class="grow"><b>${esc(f.name)}</b><div class="caption muted num">${peso(f.price)} · ${f.eta} min</div></div><div class="stepper">${d[f.id] ? `<button type="button" data-act="to-qty" data-id="${f.id}" data-v="-1" aria-label="Remove one ${esc(f.name)}">${icon('minus', 20)}</button><span class="num">${d[f.id]}</span>` : ''}<button type="button" data-act="to-qty" data-id="${f.id}" data-v="1" aria-label="Add one ${esc(f.name)}">${icon('plus', 20)}</button></div></div>`).join('')}</div>` : ''; }).join('')}
+  </div>`,
+  `<div class="m-foot to-foot"><span class="grow caption muted num">${n ? `${n} items · ready in about ${orderEta(items)} min · pay on pickup` : 'Add food to start the order.'}</span><button class="btn btn-outline" data-act="close">Cancel</button><button class="btn btn-primary" data-act="to-place" ${n ? '' : 'disabled'}>Send to kitchen${n ? ' · ' + peso(tot) : ''}</button></div>`);
 }
 function confirmModal(title, text, act, id, label){
   modal(title, `<div class="m-body"><p>${text}</p></div>`, `<div class="m-foot"><button class="btn btn-outline" data-act="close">Cancel</button><button class="btn btn-danger" data-act="${act}" data-id="${id}">${icon('trash', 20)}${label}</button></div>`);
@@ -1156,12 +1269,36 @@ const ACT = {
   'copy-link':d => { navigator.clipboard?.writeText(guestLink(tableOf(d.id))).then(() => toast('Link copied'), () => toast('Select the link above and copy it')) ?? toast('Select the link above and copy it'); },
   'show-qr':d => qrModal(tableOf(d.id)),
   'open-guest':d => { S.mode = 'guest'; S.guestTable = d.id; S.guestTab = 'menu'; dlg.close(); scrollTo(0, 0); },
-  knext:d => { const o = S.orders.find(x => x.id === d.id); o.status = KITCHEN[KITCHEN.indexOf(o.status) + 1]; toast(`${o.id} moved to ${OSTAT[o.status].l}`); },
+  knext:d => { const o = S.orders.find(x => x.id === d.id); o.status = KITCHEN[KITCHEN.indexOf(o.status) + 1]; toast(isTO(o) && o.status === 'completed' ? `${o.pickup} is ready for pickup` : `${o.id} moved to ${OSTAT[o.status].l}`); },
   serve:d => { const o = S.orders.find(x => x.id === d.id); o.status = 'served'; o.servedAt = Date.now(); syncTable(tableOf(o.table)); toast(`${o.id} served to ${tName(o.table)}`); },
   receive:d => payModal(tableOf(d.id)),
   clean:d => { const t = tableOf(d.id); Object.assign(t, {status:'inactive', token:null, openedAt:null, bill:null, guests:null}); S.plates[t.id] = []; toast(`${t.name} is ready for new guests. The old QR no longer works.`); },
   order:d => orderModal(S.orders.find(o => o.id === d.id)),
   range:d => { S.orderRange = d.v; S.orderQ = ''; },
+  otype:d => { S.orderType = d.v; },
+  // takeout
+  pickup:d => pickupModal(S.orders.find(o => o.id === d.id)),
+  'to-qr':() => toQrModal(),
+  'copy-to-link':() => { navigator.clipboard?.writeText(toLink()).then(() => toast('Link copied'), () => toast('Select the link above and copy it')) ?? toast('Select the link above and copy it'); },
+  'open-to':() => { S.mode = 'guest'; S.guestTable = TO; S.guestTab = 'menu'; dlg.close(); scrollTo(0, 0); },
+  'to-new':() => { S.toDraft = {}; S.toName = ''; S.toPhone = ''; toCounterModal(); },
+  'to-qty':d => { const y = dlg.scrollTop; S.toDraft[d.id] = Math.max(0, (S.toDraft[d.id] || 0) + +d.v); toCounterModal(); dlg.scrollTop = y; },
+  'to-place':() => {
+    if (!S.toName.trim()){ toast('Enter the customer name first'); $('#to-name')?.focus(); return; }
+    const items = Object.entries(S.toDraft).filter(([, q]) => q > 0).map(([id, qty]) => { const f = food(id); return {foodId:id, name:f.name, price:f.price, qty}; });
+    const o = newTO(items, S.toName.trim(), S.toPhone.trim(), 'counter');
+    dlg.close(); toast(`${o.pickup} sent to the kitchen. Pay on pickup.`);
+  },
+  'to-send':() => {
+    const p = S.plates[TO];
+    modal('Place takeout order?', `<form id="to-form" data-form="toSend"><div class="m-body"><p>The kitchen starts cooking right away. <b>You pay at the counter when you pick it up.</b></p>
+      <label class="field"><span>Your name</span><input id="tos-name" name="name" class="input" required autocomplete="name" maxlength="40"><span class="hint">We call this name with your pickup number.</span></label>
+      <label class="field"><span>Phone (optional)</span><input id="tos-phone" name="phone" class="input num" inputmode="tel" autocomplete="tel" maxlength="20"></label>
+      <p><b>Ready in about ${orderEta(p)} min</b></p>
+      <ul class="items">${p.map(l => `<li><b class="num">${l.qty}×</b><span>${esc(food(l.foodId).name)}</span><span class="num">${peso(food(l.foodId).price * l.qty)}</span></li>`).join('')}</ul>
+      <div class="sum"><div class="total"><span>Pay at pickup</span><span class="num">${peso(sum(p.map(l => food(l.foodId).price * l.qty)))}</span></div></div></div>
+      <div class="m-foot"><button type="button" class="btn btn-outline" data-act="close">Not yet</button><button class="btn btn-primary">${icon('bag', 20)}Place order</button></div></form>`);
+  },
   'food-view':d => { S.foodView = d.v; },
   'food-cat':d => { S.foodCat = d.v; },
   'food-add':() => foodModal(null),
@@ -1214,7 +1351,7 @@ const ACT = {
   },
   'g-send-ok':() => {
     const t = tableOf(S.guestTable), p = S.plates[t.id];
-    const items = []; p.forEach(l => { const f = food(l.foodId), e = items.find(i => i.foodId === f.id); e ? e.qty += l.qty : items.push({foodId:f.id, name:f.name, price:f.price, qty:l.qty}); });
+    const items = plateItems(p);
     const o = {id:nextId(), table:t.id, session:t.token, items, status:'queued', createdAt:Date.now(), by:S.guestName, eta:orderEta(items)};
     S.orders.push(o); S.plates[t.id] = []; syncTable(t); S.guestTab = 'orders'; dlg.close(); toast(`${o.id} sent to the kitchen`);
   },
@@ -1237,6 +1374,16 @@ const FORMS = {
     sessionOrders(t).filter(o => o.status !== 'paid').forEach(o => Object.assign(o, {status:'paid', payment:fd.get('method'), discount:disc ? {name:disc.name, pct:disc.pct} : null, paidAt:Date.now()}));
     Object.assign(t, {status:'cleaning', bill:null}); S.openTable = t.id; dlg.close(); toast(`${t.name} paid. Clean the table, then mark it clean.`);
   },
+  pickup:(fd, f) => {
+    const o = S.orders.find(x => x.id === f.dataset.id), disc = S.discounts.find(d => d.id === fd.get('disc'));
+    Object.assign(o, {status:'paid', payment:fd.get('method'), discount:disc ? {name:disc.name, pct:disc.pct} : null, paidAt:Date.now()});
+    dlg.close(); toast(`${o.pickup} paid and picked up`);
+  },
+  toSend:fd => {
+    const name = String(fd.get('name')).trim(); if (!name) return;
+    const o = newTO(plateItems(S.plates[TO]), name, String(fd.get('phone')).trim(), 'qr');
+    S.toMine.push(o.id); S.plates[TO] = []; S.guestTab = 'orders'; dlg.close(); toast(`Order placed. Your pickup number is ${o.pickup}`);
+  },
   bill:fd => { const t = tableOf(S.guestTable); t.status = 'billout'; t.bill = {method:fd.get('method'), at:Date.now()}; dlg.close(); toast('Your waiter has been called'); },
   food:(fd, f) => {
     const v = {name:fd.get('name').trim(), cat:fd.get('cat'), price:r2(+fd.get('price')), eta:Math.round(+fd.get('eta')), desc:fd.get('desc').trim(), status:fd.get('status'), tags:fd.getAll('tags'), photos:[...draftPhotos]};
@@ -1257,7 +1404,7 @@ const CHANGE = {
   gTable:el => { S.guestTable = el.value; S.guestTab = 'menu'; },
   payCalc:() => {
     const f = $('#pay-form'); if (!f) return;
-    const t = tableOf(f.dataset.id), os = sessionOrders(t).filter(o => o.status !== 'paid');
+    const os = f.dataset.form === 'pickup' ? [S.orders.find(o => o.id === f.dataset.id)] : sessionOrders(tableOf(f.dataset.id)).filter(o => o.status !== 'paid');
     const sub = sum(os.map(subtotal)), d = S.discounts.find(x => x.id === $('#pay-disc').value);
     const off = d ? r2(sub * d.pct / 100) : 0;
     $('#pay-sum').innerHTML = `<div><span class="muted">Subtotal</span><span class="num">${peso(sub)}</span></div>${d ? `<div><span class="muted">${esc(d.name)} (${d.pct}%)</span><span class="num">−${peso(off)}</span></div>` : ''}<div class="total"><span>Amount to collect</span><span class="num">${peso(sub - off)}</span></div>`;
@@ -1340,6 +1487,9 @@ setInterval(() => { if (!dlg.open && document.activeElement?.tagName !== 'INPUT'
     Object.assign(S, {guestOnly:true, mode:'guest', guestTable:qt, guestName:'Guest ' + (10 + Math.floor(Math.random() * 90))});
     const t = tableOf(qt);
     if (t){ Object.assign(t, {status:'active', token:qk, openedAt:Date.now(), bill:null}); S.plates[t.id] = []; }
+  } else if (q.has('takeout')){
+    // Opened from the Takeout QR: no table, the phone only sees its own takeout orders.
+    Object.assign(S, {guestOnly:true, mode:'guest', guestTable:TO, guestTab:'menu', toMine:[]});
   }
 }
 render();
