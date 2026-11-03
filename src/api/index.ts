@@ -1,5 +1,6 @@
 import { catalog } from './catalog';
 import { orders } from './orders';
+import { kitchen } from './kitchen';
 import { tables } from './tables';
 import { reservations } from './reservations';
 import { admin } from './admin';
@@ -10,5 +11,5 @@ import { guest } from './guest';
  * Today each module is an in-memory mock (see ./db.ts); swap a module for fetch calls to move to a real API
  * without touching the screens.
  */
-export const api = { catalog, orders, tables, reservations, admin, guest };
+export const api = { catalog, orders, kitchen, tables, reservations, admin, guest };
 export { ApiError } from './core';

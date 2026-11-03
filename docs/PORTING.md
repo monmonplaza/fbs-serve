@@ -13,7 +13,7 @@ src/api/        the backend boundary. The UI only talks to `api.<module>.<method
   types.ts      domain types (what the backend returns)
   db.ts         in-memory database (mock backend). seed.ts / seedData.ts build the sample data.
   core.ts       server-side rules shared by the mocks: syncTable, settleOrders, newTakeout, sessionOrders, ApiError, out()
-  catalog.ts orders.ts tables.ts reservations.ts admin.ts guest.ts    one mock module per area; add methods here
+  catalog.ts orders.ts kitchen.ts tables.ts reservations.ts admin.ts guest.ts    one mock module per area; add methods here
   queries.ts    React Query read hooks (useOrders, useTables, ...) and useInvalidate()
 src/store/      UI-only state (zustand): ui.ts (mode, view, bell, guest preview), modal.ts (openModal/closeModal), toast.ts (toast())
 src/components/ shared UI: Icon, Pill, Pager/usePaged, RowActions, QrCode, ModalHost, Toast
