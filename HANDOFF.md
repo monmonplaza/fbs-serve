@@ -53,12 +53,12 @@ Order statuses: `queued → preparation → cooking → plating → completed �
 Takeout orders have no table and never change a table's status. They are paid when the customer picks them up.
 
 - **Counter:** in **Orders**, tap **New takeout order**, enter the customer name (phone is optional) and add food. It goes straight to the kitchen.
-- **Self-order:** in **Orders**, tap **Takeout QR**. It encodes `<page url>#takeout`, which never expires. Customers order on their phone, enter their name and get a pickup number. The phone shows Menu, Plate and Orders only (no Bill tab), and tracks: Order received, Cooking, Ready for pickup, Picked up.
+- **Self-order:** in **Orders**, tap **Takeout QR**. It encodes `<page url>#takeout`, which never expires. Customers order on their phone, enter their name and get a pickup number. The phone shows Menu, Plate and Orders only (no Bill tab), and tracks: Order received, Cooking, Packing, Ready for pickup, Picked up.
 - Every takeout order gets a pickup number (`TO-001`, `TO-002`, ...) and a **Takeout** tag in the kitchen and in Orders.
-- Takeout status: `queued → cooking → completed (Ready for pickup) → paid (Picked up)`. There is no "served" step.
-- Ready orders appear under **Ready for pickup** at the top of Orders, with a badge on the Orders menu item. **Collect payment** (there, on the kitchen card, or in the order detail) picks the method and discount and marks it paid.
+- Takeout status: `queued → cooking → completed (Order out) → ready (Ready for pickup) → paid (Picked up)`. In the kitchen a takeout card moves like dine-in; in Order out the kitchen packs it and taps **Ready for pickup**, and the card leaves the kitchen (the takeout version of Mark as served). The kitchen never takes payment.
+- Ready orders appear under **Ready for pickup** at the top of Orders, with a badge on the Orders menu item. Paid and picked up is marked only in Orders: **Collect payment** (in that list or in the order detail) picks the method and discount and marks it paid.
 - Orders has an **All / Dine-in / Takeout** filter. The dashboard counts takeout orders and includes unpaid takeout in "still to collect".
-- Code: `order.type === 'takeout'` with `pickup`, `customer`, `phone` and `source` (`counter` or `qr`), `table: null`. Helpers `isTO`, `oMeta` (takeout labels from `TO_OSTAT`), `where`, `newTO`, `toReady`. The takeout plate is `S.plates.__takeout` (`TO`), and the phone's own orders are `S.toMine`. Views: `toPhone`, `toPlate`, `toTrack`; modals: `toCounterModal`, `toQrModal`, `pickupModal`.
+- Code: `order.type === 'takeout'` with `pickup`, `customer`, `phone` and `source` (`counter` or `qr`), `table: null`. Helpers `isTO`, `oMeta` (takeout labels from `TO_OSTAT`), `where`, `newTO`, `toReady`; action `to-ready` moves Order out to Ready for pickup. The takeout plate is `S.plates.__takeout` (`TO`), and the phone's own orders are `S.toMine`. Views: `toPhone`, `toPlate`, `toTrack`; modals: `toCounterModal`, `toQrModal`, `pickupModal`.
 
 ## Modules
 
