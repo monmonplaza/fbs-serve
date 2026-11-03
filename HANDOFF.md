@@ -39,14 +39,35 @@ The owner's six steps, plus one rule the owner added later: **step 0, activation
 
 0. Guests sit at an **inactive** table. The waiter selects it in **Tables** and taps **Activate table**, then enters the number of guests. The table becomes **Active**, and only then is its QR code shown. A guest who scans an inactive table sees "Table N is not active yet. Ask your waiter to activate this table."
 1. Every guest at the table scans the **same QR**. They all add items to one shared **plate**. Never call it a "cart"; the owner asked for "plate". **One guest** taps **Send to kitchen**, and a confirm modal explains that only one person sends it. The table becomes **Ordering**.
-2. The **Kitchen** kanban shows the oldest order first: Queued → Preparation → Cooking → Plating → Completed. The guest's phone shows a Foodpanda-style tracker: Order received, Preparation, Cooking, **Plating your food** (the owner's chosen wording), Ready, Served.
+2. The **Kitchen** kanban shows the oldest order first, in four columns: Queued → Cooking → **Plating** → Order out. The guest's phone shows a Foodpanda-style tracker: Order received, Cooking, **Plating** ("Plating your food", the owner's chosen wording), Order out, Served.
 3. Every order also appears in **Orders**. Order status drives table status (see `syncTable`).
 4. The waiter brings the food and taps **Mark as served** (in Kitchen or in the table dropdown). When every order is served, the table becomes **Eating**.
 5. The guest taps **Bill out** and picks an active payment method. The table becomes **Bill out**: a magenta alert banner appears for staff and the table pulses on the floor plan. The waiter opens **Receive payment**, can apply a discount, and confirms. The orders become **Paid** and the table becomes **Cleaning**.
 6. After cleaning, the waiter taps **Mark as clean**. The table becomes **Inactive** and the old QR token is invalidated.
 
 Table statuses: `inactive → active → ordering → eating → billout → cleaning → inactive`.
-Order statuses: `queued → preparation → cooking → plating → completed → served → paid`.
+Order statuses: `queued → cooking → plating → completed (Order out) → served → paid`.
+
+## Reservations
+
+Staff book tables ahead on a calendar. There is no guest self-booking.
+
+- **Screens:** Month (default, with a day agenda on the right), Week, and List (filters, search, pagination). Arrows, Today and a date jump move around. `S.resView`, `S.resDay`.
+- **Reservation:** `{id, name, phone, pax, at (timestamp), tableId|null, note, status, order|null, history[], dismissed?, cancelReason?}`. Status is `booked`, `arrived`, `cancelled` or `noshow`. Booking length for table conflicts is `RES_MIN` (90 min). A table must have enough seats and no overlapping booking (`resProblem`).
+- **Cancel** keeps the record (reason optional) and can be restored. **Reschedule** is a modal (with live table check) or dragging a booked reservation onto another day (`moveResToDay`). Both write to `history`.
+- **Advance order** (optional switch in the form, picker modal with category tabs and variants): items are stored on the reservation and paid at the table as usual. **Seat now** (`seatReservation`) activates the table, puts the items on its plate as lines by `Pre-order`, marks the reservation Arrived and shows the QR. It does not send them to the kitchen; one guest reviews and sends.
+- **Reminder:** from 20 minutes before the time until 15 minutes after (`REMIND_BEFORE`, `REMIND_AFTER`), while the reservation is booked and not dismissed, a banner shows on every staff screen with Seat now, Open and Got it, and the Reservations menu item gets a badge (`dueRes`). A 10 second check re-renders when the set changes.
+- **Tables:** from 60 minutes before to 30 minutes after a booking (`SHOW_BEFORE`, `SHOW_AFTER`), an inactive table shows **Reserved** with the time, in its own color (`--reserved`, a cyan used nowhere else). A table that is in use shows a small Reserved time badge instead. The table pop-up has Seat (name).
+- Sample data is created relative to now in `seedReservations()`, so one reservation is always about 18 minutes away.
+
+## Payment and split bill
+
+Every payment form (a table's Receive payment, a served order's modal in Orders, and takeout Collect payment) has a **Split the bill** option.
+
+- Turn it on, pick the number of payers (2 to 12), and each payer gets an amount and a payment method. The amounts start as equal shares to the cent (the last payer takes the extra cent) and can be edited. **Split equally** resets them. Changing the discount recalculates the shares.
+- The payment button stays disabled until the amounts add up exactly to the amount to collect. A line under the rows shows what is still to assign.
+- Saved on each order as `payments: [{method, amount}]`, with `payment: 'split'` when there is more than one payer. When a table pays several orders at once, each payer's amount is shared across the orders in proportion to their totals, so every order's `payments` add up to its own total. `payName('split')` reads Split bill, and the order detail lists the breakdown. Code: `splitHtml`, `equalRows`, `collectPayments`, `settleOrders`; state in `S.split` and `S.payDue`.
+- Paying a served order from Orders (`FORMS.orderPay`) moves its table to Cleaning once nothing on the table is unpaid.
 
 ## Takeout (pay on pickup)
 
@@ -55,9 +76,12 @@ Takeout orders have no table and never change a table's status. They are paid wh
 - **Counter:** in **Orders**, tap **New takeout order**, enter the customer name (phone is optional) and add food. It goes straight to the kitchen.
 - **Self-order:** in **Orders**, tap **Takeout QR**. It encodes `<page url>#takeout`, which never expires. Customers order on their phone, enter their name and get a pickup number. The phone shows Menu, Plate and Orders only (no Bill tab), and tracks: Order received, Cooking, Packing, Ready for pickup, Picked up.
 - Every takeout order gets a pickup number (`TO-001`, `TO-002`, ...) and a **Takeout** tag in the kitchen and in Orders.
-- Takeout status: `queued → cooking → completed (Order out) → ready (Ready for pickup) → paid (Picked up)`. In the kitchen a takeout card moves like dine-in; in Order out the kitchen packs it and taps **Ready for pickup**, and the card leaves the kitchen (the takeout version of Mark as served). The kitchen never takes payment.
+- Takeout status: `queued → cooking → plating → completed (Order out) → ready (Ready for pickup) → paid (Picked up)`. In the kitchen a takeout card moves like dine-in; in Order out the kitchen packs it and taps **Ready for pickup**, and the card leaves the kitchen (the takeout version of Mark as served). The kitchen never takes payment.
 - Ready orders appear under **Ready for pickup** at the top of Orders, with a badge on the Orders menu item. Paid and picked up is marked only in Orders: **Collect payment** (in that list or in the order detail) picks the method and discount and marks it paid.
 - Orders has an **All / Dine-in / Takeout** filter. The dashboard counts takeout orders and includes unpaid takeout in "still to collect".
+- **Channel:** every takeout order has `channel`: `walkin`, `grab` (GrabFood) or `panda` (Foodpanda), shown as a neutral **Takeout · <channel>** tag with a colored dot (`chTag`) in the kitchen, Orders, Ready for pickup and the order detail. Staff pick it in **New takeout order** (Order from, plus an optional platform order number in `ref`). Takeout QR orders are always Walk-in. The Orders column filter for Table or pickup lists the three channels.
+- **GrabFood and Foodpanda orders are paid in their apps.** The counter does not collect payment: the button is **Hand to rider** (`handoverModal`), which marks the order Picked up with `payment: 'grab'` or `'panda'` (shown as "GrabFood (paid in app)"). Walk-in still uses Collect payment, with split bill.
+- Foods with variants work in takeout too: on the phone the guest picks one in a modal; in the counter modal each variant is its own card (draft keys are `foodId|variantId`).
 - Code: `order.type === 'takeout'` with `pickup`, `customer`, `phone` and `source` (`counter` or `qr`), `table: null`. Helpers `isTO`, `oMeta` (takeout labels from `TO_OSTAT`), `where`, `newTO`, `toReady`; action `to-ready` moves Order out to Ready for pickup. The takeout plate is `S.plates.__takeout` (`TO`), and the phone's own orders are `S.toMine`. Views: `toPhone`, `toPlate`, `toTrack`; modals: `toCounterModal`, `toQrModal`, `pickupModal`.
 
 ## Modules
@@ -82,6 +106,9 @@ The top bar switches between **Staff** and **Guest phone**. Guest phone is a pho
 - **Foods**:
   - Card or table view, filter by category
   - Add and edit in one modal: name, category, price, **prep time in minutes** (shown to guests as the estimated wait), description, **several photos** (FileReader data URLs, memory only; the first is the cover), status (available or not available), tags (New, Must try, Best seller)
+  - **Variants** (sizes or portions, such as pizza Small/Medium/Large or a Regular/Large drink): in the food modal, **Add variant** gives each one a name and its own price. `food.variants = [{id, name, price}]`, and `food.price` is kept as the lowest variant price (shown as "From ₱..."; the price field is locked while variants exist). Variant names must be different.
+  - Cards show 4 per row on wide screens (3, 2, 1 as it narrows)
+  - Card view lazy-loads 8 cards at a time as you scroll (an IntersectionObserver on a spinner row, `watchFoods()`); there is no Load more button unless the browser lacks IntersectionObserver. Table view uses pagination
   - Tapping a food photo opens the **lightbox gallery**
   - Delete with a confirm modal
 - **Tables**:
@@ -168,7 +195,7 @@ The app is plain JS with no framework. It re-renders the whole `#app` from state
 - The QR is **real** (`assets/qrcode.js`, qrcode-generator, MIT) and encodes `<page url>#t=<tableId>&k=<token>`. Opening that link shows only the guest phone screen for that table (the `guestOnly` mode, see the boot block at the end of `index.html`). But with no backend the phone gets its **own copy** of the sample data, so the kitchen and waiter on another device do not see its orders.
 - Guest and staff screens are not synced across devices. They only appear linked inside one page.
 - The "only one guest sends the plate" rule is only a confirm modal. A real version needs a server-side lock on the table's plate.
-- There is no void or cancel order, no reservations, no printing or receipts, and no reports beyond the dashboard.
+- There is no void or cancel order, no printing or receipts, and no reports beyond the dashboard. Reservations are in-memory like everything else, with no real notifications (only the in-app banner).
 - Takeout pickup numbers do not reset each day, and a takeout phone on another device does not see the kitchen's updates (same no-backend limit as table QRs).
 
 ## Suggested next step (when the backend starts)
@@ -187,3 +214,7 @@ These collections map one to one to `S`:
 - `roles`
 
 Guests and the kitchen need realtime updates, through websockets or a realtime DB. Guests also need **public, unauthenticated access scoped by the table token**, while staff routes need auth and role checks.
+
+## Variants in orders
+
+A plate line is `{id, foodId, variantId?, qty, by}` and an order item is `{foodId, variantId?, name, price, qty}`, where `name` already reads "Classic Pizza (Large)" and `price` is the variant's price at the time of the order. Helpers: `hasV`, `unitPrice(f, vid)`, `itemName(f, vid)`, `lineName(l)`, `linePrice(l)`; `pickSheet()` is the guest picker: a bottom sheet drawn inside the phone frame (state `S.pick` and `S.pickV`), not a page-level dialog. Reports and the dashboard group by item name, so each variant counts separately.

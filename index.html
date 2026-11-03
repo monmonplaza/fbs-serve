@@ -22,6 +22,7 @@
   --disabled-bg:#EBEEF2;--disabled-ink:#5E6876;--focus:#C42A93;
   --success:#107236;--success-tint:#DCF5E5;--warning:#A7530A;--warning-tint:#FEF0D7;--error:#C11E38;--error-tint:#FDE2E6;
   --info:#1D5BD8;--info-tint:#DBE8FF;--purple:#6D33D9;--purple-tint:#ECE4FF;
+  --reserved:#0B7285;--reserved-tint:#D6F2F6;--on-reserved:#FFFFFF;
   --shadow-card:0 1px 2px #3f1f140f;
   --shadow-lift:0 2px 4px rgba(22,25,31,.10),0 10px 24px rgba(22,25,31,.12);
   --font:"Instrument Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
@@ -34,31 +35,33 @@
   --chrome-bg:#F3F8F0;--chrome-border:#D5E2D0;--canvas-ink:#16191F;--canvas-ink-muted:#4A5A4F;--canvas-hover:rgba(22,25,31,.06);
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --surface-page:#0F1115;--surface-card:#0D4746;--surface-elevated:#12514F;--surface-sunken:#093837;
-  --ink:#EDF0F4;--ink-muted:#A9B2BF;--border-control:#808A98;--hairline:#1B5F5D;
+  --surface-page:#0F1115;--surface-card:#16291D;--surface-elevated:#1C3325;--surface-sunken:#102016;
+  --ink:#EDF0F4;--ink-muted:#A9B2BF;--border-control:#808A98;--hairline:#28442F;
   --brand:#B8DF63;--brand-hover:#D4EC9C;--brand-active:#EAF6CC;--on-brand:#16191F;--brand-tint:#24301A;
   --secondary:#357A47;--secondary-hover:#2E6B3E;--secondary-active:#24563A;--on-secondary:#FFFFFF;
   --accent:#E35BBF;--accent-ink:#E35BBF;--accent-tint:#3A1530;--on-accent:#16191F;
   --disabled-bg:#272C35;--disabled-ink:#A9B2BF;--focus:#E35BBF;
   --success:#5EE08F;--success-tint:#12301F;--warning:#FDBA4D;--warning-tint:#3A2810;--error:#FF8F8F;--error-tint:#3D161D;
   --info:#7DB0FF;--info-tint:#172A4A;--purple:#BCA4FF;--purple-tint:#2A1F4A;
+  --reserved:#5BD3E8;--reserved-tint:#0E3B45;--on-reserved:#06222A;
   --shadow-card:0 1px 2px #3f1f140f;
   --shadow-lift:0 2px 4px rgba(0,0,0,.6),0 10px 24px rgba(0,0,0,.5);
-  --chrome-bg:#022B2B;--chrome-border:rgba(255,255,255,.12);--canvas-ink:#FFFFFF;--canvas-ink-muted:#D7ECDB;--canvas-hover:rgba(255,255,255,.14);
+  --chrome-bg:#0C1A12;--chrome-border:rgba(255,255,255,.12);--canvas-ink:#FFFFFF;--canvas-ink-muted:#D7ECDB;--canvas-hover:rgba(255,255,255,.14);
   --brand-fill:#357A47;--brand-fill-hover:#2E6B3E;--brand-fill-active:#24563A;--on-brand-fill:#FFFFFF;--chip-on:#357A47;--on-chip-on:#FFFFFF;--tip-bg:#163C22;--nav-active-bg:#163C22;--nav-active-ink:#FFFFFF;
   color-scheme:dark}}
 :root[data-theme="dark"]{
-  --surface-page:#0F1115;--surface-card:#0D4746;--surface-elevated:#12514F;--surface-sunken:#093837;
-  --ink:#EDF0F4;--ink-muted:#A9B2BF;--border-control:#808A98;--hairline:#1B5F5D;
+  --surface-page:#0F1115;--surface-card:#16291D;--surface-elevated:#1C3325;--surface-sunken:#102016;
+  --ink:#EDF0F4;--ink-muted:#A9B2BF;--border-control:#808A98;--hairline:#28442F;
   --brand:#B8DF63;--brand-hover:#D4EC9C;--brand-active:#EAF6CC;--on-brand:#16191F;--brand-tint:#24301A;
   --secondary:#357A47;--secondary-hover:#2E6B3E;--secondary-active:#24563A;--on-secondary:#FFFFFF;
   --accent:#E35BBF;--accent-ink:#E35BBF;--accent-tint:#3A1530;--on-accent:#16191F;
   --disabled-bg:#272C35;--disabled-ink:#A9B2BF;--focus:#E35BBF;
   --success:#5EE08F;--success-tint:#12301F;--warning:#FDBA4D;--warning-tint:#3A2810;--error:#FF8F8F;--error-tint:#3D161D;
   --info:#7DB0FF;--info-tint:#172A4A;--purple:#BCA4FF;--purple-tint:#2A1F4A;
+  --reserved:#5BD3E8;--reserved-tint:#0E3B45;--on-reserved:#06222A;
   --shadow-card:0 1px 2px #3f1f140f;
   --shadow-lift:0 2px 4px rgba(0,0,0,.6),0 10px 24px rgba(0,0,0,.5);
-  --chrome-bg:#022B2B;--chrome-border:rgba(255,255,255,.12);--canvas-ink:#FFFFFF;--canvas-ink-muted:#D7ECDB;--canvas-hover:rgba(255,255,255,.14);
+  --chrome-bg:#0C1A12;--chrome-border:rgba(255,255,255,.12);--canvas-ink:#FFFFFF;--canvas-ink-muted:#D7ECDB;--canvas-hover:rgba(255,255,255,.14);
   --brand-fill:#357A47;--brand-fill-hover:#2E6B3E;--brand-fill-active:#24563A;--on-brand-fill:#FFFFFF;--chip-on:#357A47;--on-chip-on:#FFFFFF;--tip-bg:#163C22;--nav-active-bg:#163C22;--nav-active-ink:#FFFFFF;
   color-scheme:dark}
 
@@ -223,8 +226,14 @@ table.data{width:100%;border-collapse:collapse;min-width:720px}
 .data td{padding:12px 16px;border-bottom:1px solid var(--hairline);vertical-align:middle}
 .data td .link{min-height:0}
 /* Pagination under tables: 15 rows per page. */
+.loadmore{display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 0}
+.spin{width:22px;height:22px;border-radius:50%;border:2.5px solid var(--canvas-ink-muted);border-top-color:transparent;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 .pager{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .pager-btns{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.pager-right{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.pp{display:flex;align-items:center;gap:8px;color:var(--canvas-ink-muted);white-space:nowrap}
+.pp select.input{width:auto;min-height:36px;padding:4px 8px;border-radius:8px;border:1px solid var(--hairline);font-weight:500;color:var(--ink)}
 .pg{min-width:36px;height:36px;padding:0 8px;border-radius:8px;border:1px solid var(--hairline);background:var(--surface-card);color:var(--ink);cursor:pointer;display:inline-grid;place-items:center;font-weight:500}
 .pg:hover:not(:disabled){background:var(--brand-tint)}
 .pg[aria-current="page"]{background:var(--chip-on);border-color:var(--chip-on);color:var(--on-chip-on)}
@@ -301,7 +310,7 @@ dialog::backdrop{background:rgba(22,19,15,.55)}
 #toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--surface-card);padding:12px 20px;border-radius:var(--r-md);font-weight:500;box-shadow:var(--shadow-lift);z-index:50;display:flex;gap:8px;align-items:center;max-width:calc(100% - 32px)}
 
 /* Kitchen kanban */
-.kanban{display:grid;grid-template-columns:repeat(3,minmax(240px,1fr));gap:16px;overflow-x:auto;padding-bottom:8px;align-items:start}
+.kanban{display:grid;grid-template-columns:repeat(4,minmax(220px,1fr));gap:16px;overflow-x:auto;padding-bottom:8px;align-items:start}
 .col{background:var(--surface-sunken);border-radius:var(--r-lg);padding:12px;display:flex;flex-direction:column;gap:12px;min-height:240px}
 .col-head{display:flex;align-items:center;gap:8px;padding:4px 4px 0}
 .col-head h3{font-size:18px;line-height:28px;flex:1}
@@ -315,7 +324,8 @@ dialog::backdrop{background:rgba(22,19,15,.55)}
 .col-empty{color:var(--ink-muted);text-align:center;padding:24px 8px;font-size:14px}
 
 /* Foods */
-.food-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.food-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+@media (max-width:1279px){.food-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (max-width:1023px){.food-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:639px){.food-grid{grid-template-columns:minmax(0,1fr)}}
 .fcard{background:var(--surface-card);border-radius:var(--r-lg);box-shadow:var(--shadow-card);overflow:hidden;display:flex;flex-direction:column;transition:box-shadow .2s}
@@ -330,8 +340,98 @@ dialog::backdrop{background:rgba(22,19,15,.55)}
 .cat-4{background:var(--purple-tint);color:var(--purple)}
 .fimg .pill{position:absolute;top:12px;left:12px}
 .fbody{padding:16px;display:flex;flex-direction:column;gap:8px;flex:1}
-.fbody .row{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.fbody .row{display:flex;flex-direction:column;align-items:flex-start;gap:2px}
 .price{font-size:20px;line-height:28px;font-weight:500}
+.price .from{font-size:12px;line-height:16px;font-weight:400;color:var(--ink-muted);margin-right:4px}
+/* Reservations: calendar, day agenda, and the unique Reserved color (teal-cyan, used nowhere else). */
+.p-reserved{background:var(--reserved-tint);color:var(--reserved)}
+.alert.rsv{background:var(--reserved-tint);color:var(--ink);gap:8px;padding:8px 12px;font-size:12px;line-height:18px}
+.alert.rsv .btn{min-height:32px;padding:0 12px;font-size:12px;line-height:18px}
+.alert.rsv > .ic{color:var(--reserved);width:18px;height:18px}
+.alert.rsv .icon-btn{width:32px;height:32px}
+/* Takeout channel tag: neutral pill with a colored dot (brand color, GrabFood green, Foodpanda pink). */
+.chan{display:inline-flex;align-items:center;gap:6px;padding:2px 10px 2px 8px;border-radius:var(--r-pill);background:var(--surface-sunken);color:var(--ink);font-size:14px;line-height:20px;font-weight:500;white-space:nowrap}
+.chan i{width:8px;height:8px;border-radius:50%;flex:none}
+.data .chan{font-size:12px;line-height:16px;padding:2px 8px 2px 6px}
+/* Split bill: payers with an amount and a payment method each. */
+.split{display:flex;flex-direction:column;gap:12px}
+.split-head{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap}
+.split-rows{display:flex;flex-direction:column;gap:8px}
+.split-row{display:grid;grid-template-columns:64px minmax(0,1fr) minmax(0,1.2fr);gap:8px;align-items:center}
+.split-left{font-weight:500;color:var(--success)}
+.split-left.bad{color:var(--error)}
+.btn-outline.danger{color:var(--error);border-color:var(--error)}
+.hint.bad{color:var(--error)}
+.res-bar{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.res-nav{display:flex;gap:4px}
+.res-title{font-size:19px;line-height:26px;font-weight:500;color:var(--canvas-ink);background:none;border:0;padding:4px 8px;border-radius:8px;cursor:pointer}
+.res-title:hover{background:var(--canvas-hover)}
+.res-layout{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:16px;align-items:start}
+@media (max-width:1100px){.res-layout{grid-template-columns:minmax(0,1fr)}}
+.cal{background:var(--surface-card);border-radius:10px;box-shadow:var(--shadow-card);overflow:hidden}
+.cal-dows,.cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}
+.cal-dows div{padding:10px 8px;font-size:13px;font-weight:500;text-align:center;background:var(--nav-bg);color:var(--nav-ink)}
+.cal-cell{position:relative;min-height:116px;padding:6px;border-top:1px solid var(--hairline);border-left:1px solid var(--hairline);display:flex;flex-direction:column;gap:3px;min-width:0;cursor:pointer}
+.cal-cell:nth-child(7n+1){border-left:0}
+.cal-cell.out{background:var(--surface-sunken)}
+.cal-cell.out .cal-num{color:var(--ink-muted)}
+.cal-cell.sel{box-shadow:inset 0 0 0 2px var(--brand)}
+.cal-cell.over{background:var(--reserved-tint)}
+.cal-num{align-self:flex-start;min-width:28px;height:28px;padding:0 6px;border:0;border-radius:14px;background:none;font-weight:500;color:var(--ink);cursor:pointer}
+.cal-num:hover{background:var(--brand-tint)}
+.cal-cell.today .cal-num{background:var(--brand-fill);color:var(--on-brand-fill)}
+.cal-add{position:absolute;top:6px;right:6px;width:28px;height:28px;border:0;border-radius:8px;background:none;color:var(--ink-muted);display:grid;place-items:center;cursor:pointer;opacity:0}
+.cal-cell:hover .cal-add,.cal-add:focus-visible{opacity:1}
+.cal-add:hover{background:var(--brand-tint);color:var(--ink)}
+.cal-chip{display:flex;align-items:center;gap:4px;width:100%;min-width:0;border:0;border-radius:6px;padding:2px 6px;font-size:12px;line-height:18px;text-align:left;cursor:pointer;background:var(--reserved-tint);color:var(--reserved)}
+.cal-chip .tt{font-weight:500;white-space:nowrap}
+.cal-chip .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink)}
+.cal-chip .ic{width:12px;height:12px;flex:none}
+.cal-chip.st-arrived{background:var(--success-tint);color:var(--success)}
+.cal-chip.st-cancelled{background:var(--disabled-bg);color:var(--disabled-ink);text-decoration:line-through}
+.cal-chip.st-noshow{background:var(--error-tint);color:var(--error)}
+.cal-chip[draggable="true"]{cursor:grab}
+.cal-more{border:0;background:none;padding:0 6px;font-size:12px;color:var(--ink-muted);text-align:left;cursor:pointer}
+.cal-more:hover{text-decoration:underline}
+@media (max-width:720px){.cal-chip .nm{display:none}.cal-cell{min-height:84px;padding:4px}}
+.agenda{display:flex;flex-direction:column;gap:12px}
+.agenda ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.agenda li + li{border-top:1px solid var(--hairline)}
+.ag-item{display:flex;gap:12px;align-items:flex-start;width:100%;border:0;background:none;padding:12px 0;text-align:left;cursor:pointer;color:inherit}
+.ag-item .tt{min-width:64px;font-weight:500}
+.ag-item .grow{flex:1;min-width:0}
+.wk{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
+@media (max-width:1100px){.wk{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.wk{grid-template-columns:minmax(0,1fr)}}
+.wk-day{background:var(--surface-card);border-radius:10px;box-shadow:var(--shadow-card);min-height:200px;padding:8px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.wk-day.today{box-shadow:inset 0 0 0 2px var(--brand-fill),var(--shadow-card)}
+.wk-day.over{background:var(--reserved-tint)}
+.wk-head{display:flex;justify-content:space-between;align-items:center;gap:4px;border:0;background:none;padding:4px;border-radius:6px;cursor:pointer;color:var(--ink);font-weight:500}
+.wk-card{display:flex;flex-direction:column;gap:2px;width:100%;border:1px solid var(--hairline);border-left:4px solid var(--reserved);border-radius:6px;background:var(--surface-card);padding:6px 8px;text-align:left;cursor:pointer;color:var(--ink);font-size:13px;line-height:18px}
+.wk-card.st-arrived{border-left-color:var(--success)}
+.wk-card.st-cancelled{border-left-color:var(--disabled-ink);opacity:.7}
+.wk-card.st-noshow{border-left-color:var(--error)}
+.wk-card .t{font-weight:500}
+.wk-card[draggable="true"]{cursor:grab}
+/* Reserved on the floor plan: its own color, an icon and the time. */
+.tbl.t-reserved{border-color:var(--reserved);background:var(--reserved-tint)}
+.tbl.t-reserved .st{color:var(--reserved)}
+.tbl .rsv-time{font-size:12px;line-height:16px;font-weight:500;color:var(--reserved)}
+.rsv-badge{position:absolute;top:-8px;left:-8px;height:24px;padding:0 7px;border-radius:12px;background:var(--reserved);color:var(--on-reserved);display:inline-flex;align-items:center;gap:3px;z-index:2;font-size:11px;line-height:24px;font-weight:500;box-shadow:0 0 0 2px var(--surface-card)}
+.rsv-badge .ic{width:13px;height:13px}
+/* Variants (sizes, portions): chips on cards, and the editor in the food modal. */
+.vchips{display:flex;flex-wrap:wrap;gap:4px}
+.vchip{display:inline-flex;gap:4px;align-items:baseline;padding:1px 8px;border-radius:var(--r-pill);background:var(--surface-sunken);font-size:12px;line-height:18px;color:var(--ink-muted);white-space:nowrap}
+.vchip b{color:var(--ink);font-weight:500}
+.ff-variants{display:flex;flex-direction:column;gap:8px;align-items:flex-start}
+/* Variant picker: a bottom sheet that stays inside the guest phone. */
+.g-sheet-wrap{position:absolute;inset:0;z-index:30;display:flex;align-items:flex-end;animation:fade-in .15s ease-out}
+.g-scrim{position:absolute;inset:0;border:0;padding:0;background:rgba(0,0,0,.55);cursor:default}
+.g-sheet{position:relative;width:100%;max-height:88%;overflow:auto;display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:20px 20px 0 0;background:var(--surface-elevated);color:var(--ink);box-shadow:var(--shadow-lift);animation:sheet-up .2s ease-out}
+.g-sheet-head{display:flex;align-items:flex-start;gap:8px}
+.g-sheet-head .grow{flex:1;min-width:0}
+@keyframes sheet-up{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
+.ff-var{display:grid;grid-template-columns:minmax(0,1fr) 140px 48px;gap:8px;align-items:center;width:100%}
 .factions{display:flex;gap:8px;padding:0 16px 16px;margin-top:auto}
 .factions .btn{flex:1}
 .thumb{width:56px;height:40px;border-radius:var(--r-sm);overflow:hidden;flex:none}
@@ -429,7 +529,7 @@ body.solo .phone{width:100%;max-width:520px;height:100dvh;min-height:0;border:0;
 body.solo .phone-wrap{display:flex;justify-content:center;height:100%}
 .guest-layout{display:grid;grid-template-columns:minmax(0,320px) auto;gap:32px;justify-content:center;align-items:start}
 @media (max-width:820px){.guest-layout{grid-template-columns:minmax(0,1fr)}}
-.phone{width:min(400px,100%);height:min(800px,calc(100dvh - 120px));min-height:600px;border:10px solid var(--ink);border-radius:40px;background:var(--surface-page);display:flex;flex-direction:column;overflow:hidden;box-shadow:var(--shadow-lift);margin:0 auto}
+.phone{position:relative;width:min(400px,100%);height:min(800px,calc(100dvh - 120px));min-height:600px;border:10px solid var(--ink);border-radius:40px;background:var(--surface-page);display:flex;flex-direction:column;overflow:hidden;box-shadow:var(--shadow-lift);margin:0 auto}
 @media (max-width:480px){.phone{border-width:6px;border-radius:28px}}
 .g-top{background:var(--surface-card);padding:16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--hairline)}
 .g-top .grow{flex:1;min-width:0}
@@ -592,6 +692,7 @@ const IC = {
   left:'<path d="M15 6l-6 6 6 6"/>', right:'<path d="M9 6l6 6-6 6"/>',
   filter:'<path d="M4 5h16l-6 7.5V18l-4 2v-7.5z"/>',
   dots:'<circle cx="5" cy="12" r="1.25"/><circle cx="12" cy="12" r="1.25"/><circle cx="19" cy="12" r="1.25"/>',
+  calendar:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/>',
   bag:'<path d="M5 8h14l-1 13H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>',
   image:'<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/>',
 };
@@ -604,19 +705,35 @@ function rowActions(list){
   MENUS.push(list);
   return `<div class="row-acts"><button class="icon-btn sm tip" data-act="row-menu" data-v="${MENUS.length - 1}" aria-label="More actions" aria-haspopup="menu" data-tip="More actions">${icon('dots', 20)}</button></div>`;
 }
-// Table pagination, 15 rows per page. sig is the table's current filter; when it changes the table goes back to page 1.
-const PER_PAGE = 15;
+// Table pagination. Rows per page is chosen from a dropdown per table (default 15). sig is the table's current filter; when it changes the table goes back to page 1.
+// Foods card view lazy-loads FOOD_STEP cards at a time: a spinner row under the grid loads the next batch as it scrolls near the screen.
+// Without IntersectionObserver the spinner row is a Load more button instead.
+const FOOD_STEP = 8;
+let foodLoading = false;
+const foodIO = 'IntersectionObserver' in window ? new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) loadMoreFoods(); }, {rootMargin:'200px 0px'}) : null;
+function loadMoreFoods(){
+  if (foodLoading) return;
+  foodLoading = true;
+  // A short pause so the spinner shows, like a feed fetching the next page.
+  setTimeout(() => { foodLoading = false; if (document.getElementById('food-sentinel')){ S.foodShown += FOOD_STEP; render(); } }, 350);
+}
+function watchFoods(){ foodIO?.disconnect(); const el = document.getElementById('food-sentinel'); if (el) foodIO.observe(el); }
+const PER_PAGE = 15, PER_OPTS = [10, 15, 25, 50, 100];
 function paged(key, list, sig = ''){
   if (S.pageSig[key] !== sig){ S.pageSig[key] = sig; S.pages[key] = 1; }
-  const pages = Math.max(1, Math.ceil(list.length / PER_PAGE)), p = S.pages[key] = Math.min(pages, Math.max(1, S.pages[key] || 1));
-  const from = (p - 1) * PER_PAGE, rows = list.slice(from, from + PER_PAGE);
-  if (pages === 1) return {rows, bar:''};
+  const per = PER_OPTS.includes(S.perPage[key]) ? S.perPage[key] : PER_PAGE;
+  const pages = Math.max(1, Math.ceil(list.length / per)), p = S.pages[key] = Math.min(pages, Math.max(1, S.pages[key] || 1));
+  const from = (p - 1) * per, rows = list.slice(from, from + per);
+  // Shorter than the smallest page size: nothing to page or resize.
+  if (list.length <= PER_OPTS[0]) return {rows, bar:''};
   const nums = [...new Set([1, p - 1, p, p + 1, pages])].filter(n => n >= 1 && n <= pages).sort((a, b) => a - b);
   const btn = (n, label, inner, off) => `<button class="pg num" data-act="page" data-k="${key}" data-v="${n}" aria-label="${label}" ${off ? 'disabled' : ''} ${n === p && !off && !inner.includes('<svg') ? 'aria-current="page"' : ''}>${inner}</button>`;
-  return {rows, bar:`<nav class="pager" aria-label="Pages"><span class="caption canvas-note num">Showing ${from + 1}–${from + rows.length} of ${list.length}</span><div class="pager-btns">
+  return {rows, bar:`<nav class="pager" aria-label="Pages"><span class="caption canvas-note num">Showing ${list.length ? from + 1 : 0}–${from + rows.length} of ${list.length}</span><div class="pager-right">
+    <label class="pp caption">Rows per page<select id="pp-${key}" class="input" data-change="perPage" data-k="${key}">${PER_OPTS.map(n => `<option value="${n}" ${n === per ? 'selected' : ''}>${n}</option>`).join('')}</select></label>
+    ${pages > 1 ? `<div class="pager-btns">
     ${btn(p - 1, 'Previous page', icon('left', 18), p === 1)}
     ${nums.map((n, i) => (i && n - nums[i - 1] > 1 ? '<span class="pg-gap" aria-hidden="true">…</span>' : '') + btn(n, `Page ${n}`, String(n), false)).join('')}
-    ${btn(p + 1, 'Next page', icon('right', 18), p === pages)}</div></nav>`};
+    ${btn(p + 1, 'Next page', icon('right', 18), p === pages)}</div>` : ''}</div></nav>`};
 }
 const icon = (n, s = 24) => `<svg class="ic" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[n] || IC.plate}</svg>`;
 
@@ -624,6 +741,7 @@ const icon = (n, s = 24) => `<svg class="ic" width="${s}" height="${s}" viewBox=
 const NAV = [
   {id:'dashboard', label:'Dashboard', ic:'dash'},
   {id:'orders', label:'Orders', ic:'receipt'},
+  {id:'reservations', label:'Reservations', ic:'calendar'},
   {id:'kitchen', label:'Kitchen', ic:'pot'},
   {id:'foods', label:'Foods', ic:'utensils'},
   {id:'tables', label:'Tables', ic:'table'},
@@ -638,16 +756,17 @@ const TSTAT = {
   billout:{l:'Bill out', c:'accent', i:'bell'},
   cleaning:{l:'Cleaning', c:'purple', i:'sparkle'},
 };
-const KITCHEN = ['queued','cooking','completed'];
+const KITCHEN = ['queued','cooking','plating','completed'];
 const OSTAT = {
   queued:{l:'Queued', c:'info', g:'Order received', d:'Your order is in the kitchen queue.', next:'Start cooking'},
-  cooking:{l:'Cooking', c:'warn', g:'Cooking your food', d:'Your food is on the stove.', next:'Order out'},
+  cooking:{l:'Cooking', c:'warn', g:'Cooking your food', d:'Your food is on the stove.', next:'Start plating'},
+  plating:{l:'Plating', c:'accent', g:'Plating your food', d:'Your dish is being plated.', next:'Order out'},
   completed:{l:'Order out', c:'ok', g:'Your order is out', d:'A waiter is bringing it to your table.', next:'Mark as served'},
   served:{l:'Served', c:'purple', g:'Served. Enjoy your meal!', d:'Tap Bill when you are ready to pay.'},
   paid:{l:'Paid', c:'neutral', g:'Paid', d:'Thank you for dining with us.'},
 };
-const GSTEPS = ['queued','cooking','completed','served'];
-const GSTEP_L = ['Order received','Cooking','Order out','Served'];
+const GSTEPS = ['queued','cooking','plating','completed','served'];
+const GSTEP_L = ['Order received','Cooking','Plating','Order out','Served'];
 // Takeout has no table. It goes through the kitchen like dine-in; from Order out the kitchen sends it to the counter (Ready for pickup),
 // and the counter marks it Paid (Picked up) in Orders when the customer pays and takes it.
 const TO = '__takeout';
@@ -656,13 +775,13 @@ const TO_OSTAT = {
   ready:{l:'Ready for pickup', c:'ok', g:'Ready for pickup', d:'Show your pickup number at the counter and pay there.'},
   paid:{l:'Picked up', c:'neutral', g:'Picked up. Enjoy your meal!', d:'Thank you for ordering from FBS Serve.'},
 };
-const TO_STEPS = ['queued','cooking','completed','ready','paid'];
-const TO_STEP_L = ['Order received','Cooking','Packing','Ready for pickup','Picked up'];
+const TO_STEPS = ['queued','cooking','plating','completed','ready','paid'];
+const TO_STEP_L = ['Order received','Cooking','Plating','Packing','Ready for pickup','Picked up'];
 const TAGS = {new:'New', must:'Must try', best:'Best seller'};
 
 const S = {
   mode:'staff', view:'dashboard', openTable:null, floor:'f1', layoutEdit:false,
-  orderRange:'today', orderQ:'', orderType:'all', toCat:'all', pages:{}, pageSig:{}, toSeq:0, toMine:[], toDraft:{}, toName:'', toPhone:'', foodView:'card', foodCat:'all', setTab:'payments',
+  orderRange:'today', orderQ:'', orderType:'all', toCat:'all', pages:{}, pageSig:{}, perPage:{}, foodShown:8, pick:null, pickV:null, toSeq:0, toMine:[], toDraft:{}, toName:'', toPhone:'', foodView:'card', foodCat:'all', setTab:'payments',
   tableTimerOn:false, tableTimerMins:60,
   guestTable:'T3', guestName:'Guest 1', guestTab:'menu', guestCat:'all',
   categories:[
@@ -684,12 +803,16 @@ const S = {
     {id:'f9', cat:'sidedish', name:'Garlic Rice', price:65, desc:'Rice fried with toasted garlic.', status:'available', tags:[], eta:5, photos:[]},
     {id:'f10', cat:'sidedish', name:'Ensaladang Talong', price:95, desc:'Grilled eggplant, tomato, onion, salted egg.', status:'available', tags:[], eta:8, photos:[]},
     {id:'f11', cat:'sidedish', name:'Java Rice', price:75, desc:'Annatto butter rice.', status:'available', tags:['new'], eta:5, photos:[]},
-    {id:'f12', cat:'drinks', name:'Calamansi Juice', price:85, desc:'Fresh calamansi, honey, ice.', status:'available', tags:[], eta:3, photos:[]},
+    {id:'f12', cat:'drinks', name:'Calamansi Juice', price:85, desc:'Fresh calamansi, honey, ice.', status:'available', tags:[], eta:3, photos:[], variants:[{id:'reg', name:'Regular', price:85}, {id:'lg', name:'Large', price:120}]},
     {id:'f13', cat:'drinks', name:'Iced Tea Pitcher', price:180, desc:'House-brewed black tea with lemon. Serves 4.', status:'available', tags:[], eta:5, photos:[]},
-    {id:'f14', cat:'drinks', name:'Buko Shake', price:120, desc:'Young coconut, milk, crushed ice.', status:'available', tags:['new'], eta:5, photos:[]},
+    {id:'f14', cat:'drinks', name:'Buko Shake', price:120, desc:'Young coconut, milk, crushed ice.', status:'available', tags:['new'], eta:5, photos:[], variants:[{id:'reg', name:'Regular', price:120}, {id:'lg', name:'Large', price:160}]},
     {id:'f15', cat:'dessert', name:'Halo-Halo', price:165, desc:'Shaved ice, ube, leche flan, sweet beans, milk.', status:'available', tags:['best'], eta:8, photos:[]},
     {id:'f16', cat:'dessert', name:'Leche Flan', price:120, desc:'Egg custard, burnt caramel.', status:'available', tags:['must'], eta:5, photos:[]},
     {id:'f17', cat:'dessert', name:'Turon à la Mode', price:140, desc:'Banana and jackfruit roll, vanilla ice cream.', status:'unavailable', tags:['new'], eta:10, photos:[]},
+    {id:'f18', cat:'main', name:'Classic Pizza', price:250, desc:'Tomato, mozzarella and basil on a thin crust.', status:'available', tags:['new', 'best'], eta:20, photos:[], variants:[{id:'sm', name:'Small', price:250}, {id:'md', name:'Medium', price:380}, {id:'lg', name:'Large', price:520}]},
+    {id:'f19', cat:'main', name:'Sizzling Sisig', price:285, desc:'Chopped pork cheek and liver on a hot plate, calamansi, egg.', status:'available', tags:['best'], eta:18, photos:[], variants:[{id:'solo', name:'Solo', price:285}, {id:'duo', name:'Good for 2', price:520}, {id:'plt', name:'Platter', price:950}]},
+    {id:'f20', cat:'drinks', name:'Iced Coffee', price:95, desc:'Cold-brewed coffee, milk, brown sugar syrup, ice.', status:'available', tags:['new'], eta:4, photos:[], variants:[{id:'s12', name:'12 oz', price:95}, {id:'m16', name:'16 oz', price:120}, {id:'l22', name:'22 oz', price:145}]},
+    {id:'f21', cat:'dessert', name:'Ube Cake', price:95, desc:'Soft ube chiffon, cream cheese frosting, toasted coconut.', status:'available', tags:['must'], eta:6, photos:[], variants:[{id:'sl', name:'Slice', price:95}, {id:'hf', name:'Half cake', price:380}, {id:'wh', name:'Whole cake', price:680}]},
   ],
   payments:[
     {id:'cash', name:'Cash', details:'Pay the waiter at the table', active:true},
@@ -704,10 +827,10 @@ const S = {
   ],
   roles:[
     {id:'admin', name:'Admin', modules:NAV.map(n => n.id)},
-    {id:'manager', name:'Manager', modules:['dashboard','orders','foods','tables','guide']},
-    {id:'waiter', name:'Waiter', modules:['orders','kitchen','tables','guide']},
+    {id:'manager', name:'Manager', modules:['dashboard','orders','reservations','foods','tables','guide']},
+    {id:'waiter', name:'Waiter', modules:['orders','reservations','kitchen','tables','guide']},
     {id:'kitchen', name:'Kitchen staff', modules:['kitchen','guide']},
-    {id:'cashier', name:'Cashier', modules:['dashboard','orders','tables','guide']},
+    {id:'cashier', name:'Cashier', modules:['dashboard','orders','reservations','tables','guide']},
   ],
   users:[
     {id:'u1', name:'Maria Santos', username:'maria', role:'admin', active:true},
@@ -729,9 +852,64 @@ const S = {
 };
 
 const food = id => S.foods.find(f => f.id === id);
+// Variants: a food can have sizes or portions, each with its own price (f.variants = [{id, name, price}]). f.price is then the lowest variant price.
+const hasV = f => !!f?.variants?.length;
+const vOf = (f, id) => f.variants.find(v => v.id === id) || f.variants[0];
+const unitPrice = (f, vid) => hasV(f) ? vOf(f, vid).price : f.price;
+const itemName = (f, vid) => hasV(f) ? `${f.name} (${vOf(f, vid).name})` : f.name;
+const lineName = l => itemName(food(l.foodId), l.variantId);
+const linePrice = l => unitPrice(food(l.foodId), l.variantId);
+const priceHtml = f => `<span class="price num">${hasV(f) ? '<span class="from">From</span>' : ''}${peso(f.price)}</span>`;
 const tableOf = id => S.tables.find(t => t.id === id);
 const tName = id => tableOf(id)?.name || 'Deleted table';
-const payName = id => S.payments.find(p => p.id === id)?.name || id;
+const payName = id => id === 'split' ? 'Split bill' : id === 'grab' ? 'GrabFood (paid in app)' : id === 'panda' ? 'Foodpanda (paid in app)' : S.payments.find(p => p.id === id)?.name || id;
+const payBreakdown = o => o.payments?.length > 1 ? o.payments.map(p => `${esc(payName(p.method))} ${peso(p.amount)}`).join('<br>') : '';
+// ---- Split bill. S.split is the form state; S.payDue is the amount to collect after the discount.
+const payMethods = () => { const a = S.payments.filter(x => x.active); return a.length ? a : S.payments; };
+const resetSplit = () => { S.split = {on:false, n:2, rows:[]}; S.payDue = 0; };
+resetSplit();
+const splitHtml = () => `<div class="split"><label class="check"><input type="checkbox" name="split" data-change="splitToggle">Split the bill</label><div id="pay-split" class="split" hidden></div></div>`;
+// n equal shares of due, in cents; the last payer takes the leftover cent(s). Methods are kept for payers that already had one.
+function equalRows(n, due, old = []){
+  const base = Math.floor(due * 100 / n) / 100, def = $('#pay-method')?.value || payMethods()[0]?.id;
+  const rows = Array.from({length:n}, (_, i) => ({amt:base, method:old[i]?.method || def}));
+  rows[n - 1].amt = r2(due - base * (n - 1)); return rows;
+}
+const splitLeft = () => r2(S.payDue - sum(S.split.rows.map(r => +r.amt || 0)));
+const splitOk = () => !S.split.on || (splitLeft() === 0 && S.split.rows.every(r => +r.amt > 0));
+function splitStatus(){
+  const el = $('#split-left'), left = splitLeft();
+  if (el){ el.textContent = left === 0 ? `Adds up to ${peso(S.payDue)}` : left > 0 ? `${peso(left)} still to assign` : `${peso(-left)} over the total`; el.classList.toggle('bad', left !== 0); }
+  const b = $('#pay-form .m-foot .btn-primary'); if (b) b.disabled = !splitOk();
+}
+function splitRender(){
+  const box = $('#pay-split'); if (!box) return;
+  const sp = S.split, label = $('#pay-method')?.closest('label');
+  box.hidden = !sp.on; if (label) label.hidden = sp.on;
+  if (!sp.on){ box.innerHTML = ''; return splitStatus(); }
+  box.innerHTML = `<div class="split-head"><label class="field" style="width:150px"><span>Number of payers</span><input class="input num" type="number" min="2" max="12" inputmode="numeric" value="${sp.n}" data-change="splitN"></label><button type="button" class="btn btn-outline" data-act="split-equal">Split equally</button></div>
+    <div class="split-rows">${sp.rows.map((r, i) => `<div class="split-row"><b>Payer ${i + 1}</b><input class="input num" type="number" min="0.01" step="0.01" inputmode="decimal" value="${r.amt}" data-change="splitRow" data-k="amt" data-i="${i}" aria-label="Payer ${i + 1} amount"><select class="input" data-change="splitRow" data-k="method" data-i="${i}" aria-label="Payer ${i + 1} payment method">${payMethods().map(m => `<option value="${m.id}" ${m.id === r.method ? 'selected' : ''}>${esc(m.name)}</option>`).join('')}</select></div>`).join('')}</div>
+    <div id="split-left" class="split-left" role="status"></div>`;
+  splitStatus();
+}
+// The payments for a form: one method, or the split rows. Returns null (with a message) if a split does not add up.
+function collectPayments(fd, due){
+  if (!S.split.on) return [{method:fd.get('method'), amount:due}];
+  const rows = S.split.rows.map(r => ({method:r.method, amount:r2(+r.amt || 0)}));
+  if (rows.some(r => !(r.amount > 0)) || r2(sum(rows.map(r => r.amount)) - due) !== 0){ toast(`The payments must add up to ${peso(due)}`); return null; }
+  return rows;
+}
+// Marks the orders paid. With a split, every order gets its share of each payer's payment (the last order takes the rounding).
+function settleOrders(orders, pays, dObj){
+  const pct = dObj?.pct || 0, totals = orders.map(o => r2(subtotal(o) * (1 - pct / 100))), grand = r2(sum(totals)) || 1, left = pays.map(x => x.amount);
+  orders.forEach((o, i) => {
+    let parts;
+    if (pays.length === 1) parts = [{method:pays[0].method, amount:totals[i]}];
+    else if (i === orders.length - 1) parts = pays.map((x, j) => ({method:x.method, amount:r2(left[j])}));
+    else { let rest = totals[i]; parts = pays.map((x, j) => { const a = j === pays.length - 1 ? r2(rest) : r2(x.amount * totals[i] / grand); rest = r2(rest - a); left[j] = r2(left[j] - a); return {method:x.method, amount:a}; }); }
+    Object.assign(o, {status:'paid', discount:dObj, paidAt:Date.now(), payments:parts, payment:pays.length > 1 ? 'split' : pays[0].method});
+  });
+}
 const catName = id => S.categories.find(c => c.id === id)?.name || 'Uncategorized';
 const catIdx = id => Math.max(0, S.categories.findIndex(c => c.id === id)) % 5;
 const CAT_IC = {appetizer:'bowl', main:'utensils', drinks:'cup', dessert:'cake', sidedish:'plate'};
@@ -747,11 +925,11 @@ const toReady = () => S.orders.filter(o => isTO(o) && o.status === 'ready');
 const toLink = () => location.href.split('#')[0] + '#takeout';
 // Merges plate lines (one per guest) into order items, one per food.
 function plateItems(p){
-  const items = []; p.forEach(l => { const f = food(l.foodId), e = items.find(i => i.foodId === f.id); e ? e.qty += l.qty : items.push({foodId:f.id, name:f.name, price:f.price, qty:l.qty}); });
+  const items = []; p.forEach(l => { const f = food(l.foodId), e = items.find(i => i.foodId === f.id && i.variantId === l.variantId); e ? e.qty += l.qty : items.push({foodId:f.id, variantId:l.variantId, name:itemName(f, l.variantId), price:unitPrice(f, l.variantId), qty:l.qty}); });
   return items;
 }
-function newTO(items, customer, phone, source){
-  const o = {id:nextId(), type:'takeout', table:null, pickup:nextPickup(), customer, phone, by:customer, source, items, status:'queued', createdAt:Date.now(), eta:orderEta(items)};
+function newTO(items, customer, phone, source, channel = 'walkin', ref = ''){
+  const o = {id:nextId(), type:'takeout', table:null, pickup:nextPickup(), customer, phone, by:customer, source, channel, ref, items, status:'queued', createdAt:Date.now(), eta:orderEta(items)};
   S.orders.push(o); return o;
 }
 
@@ -785,12 +963,12 @@ function seed(){
   S.foods.forEach(f => f.photos = [0, 1, 2].map(v => samplePhoto(f, v)));
   const r = rng(11), pick = a => a[Math.floor(r() * a.length)];
   const NAMES = ['Ana Cruz', 'Mark Lim', 'Joy Tan', 'Paolo Reyes', 'Bea Santos', 'Carlo Diaz'];
-  const asTO = (o, pickup) => { const c = pick(NAMES); Object.assign(o, {type:'takeout', table:null, pickup, customer:c, by:c, phone:'', source:pick(['counter','qr'])}); };
+  const asTO = (o, pickup) => { const c = pick(NAMES), ch = pick(['walkin', 'walkin', 'grab', 'panda']); Object.assign(o, {type:'takeout', table:null, pickup, customer:c, by:c, phone:'', source:ch === 'walkin' ? pick(['counter', 'qr']) : 'counter', channel:ch, ref:ch === 'walkin' ? '' : (ch === 'grab' ? 'GF-' : 'FP-') + (1000 + Math.floor(r() * 9000))}); if (ch !== 'walkin' && o.status === 'paid') o.payment = ch; };
   const mk = (when, status, table, extra = {}) => {
     const items = [], n = 1 + Math.floor(r() * 4);
     while (items.length < n){
       const f = pick(S.foods);
-      if (!items.some(i => i.foodId === f.id)) items.push({foodId:f.id, name:f.name, price:f.price, qty:1 + Math.floor(r() * 2)});
+      if (!items.some(i => i.foodId === f.id)){ const v = hasV(f) ? pick(f.variants) : null; items.push({foodId:f.id, variantId:v?.id, name:itemName(f, v?.id), price:unitPrice(f, v?.id), qty:1 + Math.floor(r() * 2)}); }
     }
     S.orders.push({id:nextId(), table, session:'old', items, status, createdAt:+when, by:'Guest 1', eta:orderEta(items), ...extra});
   };
@@ -820,15 +998,15 @@ function seed(){
   open('T6', 'ordering', 14, [['cooking', 6, 'Guest 2']]);
   open('T7', 'billout', 75, [['served', 62, 'Guest 1']], {method:'gcash', at:Date.now() - 2 * 60000});
   open('T8', 'cleaning', 90, [['paid', 80, 'Guest 1']]);
-  open('T9', 'ordering', 20, [['cooking', 11, 'Guest 4']]);
+  open('T9', 'ordering', 20, [['plating', 11, 'Guest 4']]);
   // Live takeout: one ready for pickup at the counter, one in Order out, one cooking, one just placed from the Takeout QR (the guest preview's own order).
-  [['ready', 18], ['completed', 14], ['cooking', 8], ['queued', 3]].forEach(([st, ago]) => { mk(Date.now() - ago * 60000, st, null); asTO(S.orders.at(-1), nextPickup()); });
+  [['ready', 18], ['completed', 14], ['cooking', 8], ['queued', 3]].forEach(([st, ago], i) => { mk(Date.now() - ago * 60000, st, null); asTO(S.orders.at(-1), nextPickup()); const ch = ['grab', 'panda', 'walkin', 'walkin'][i]; Object.assign(S.orders.at(-1), {channel:ch, source:'counter', ref:ch === 'grab' ? 'GF-4821' : ch === 'panda' ? 'FP-7305' : ''}); });
   Object.assign(S.orders.at(-1), {source:'qr', phone:'0917 555 0199'}); S.toMine = [S.orders.at(-1).id];
   S.orders.filter(o => o.table === 'T8' && o.status === 'paid' && o.session !== 'old').forEach(o => { o.payment = 'cash'; o.discount = null; o.paidAt = Date.now() - 6 * 60000; });
   S.plates.T3 = [
     {id:uid(), foodId:'f6', qty:2, by:'Guest 1'},
     {id:uid(), foodId:'f9', qty:2, by:'Guest 1'},
-    {id:uid(), foodId:'f14', qty:1, by:'Guest 2'},
+    {id:uid(), foodId:'f14', variantId:'reg', qty:1, by:'Guest 2'},
   ];
 }
 seed();
@@ -846,6 +1024,12 @@ const tableOverLimit = t => S.tableTimerOn && t.openedAt && !['inactive','cleani
 const pill = (meta, withIcon = true) => `<span class="pill p-${meta.c}">${withIcon && meta.i ? icon(meta.i, 16) : ''}${esc(meta.l)}</span>`;
 const tPill = t => pill(TSTAT[t.status]);
 const oPill = o => pill(oMeta(o), false);
+// Where a takeout order comes from. Walk-in is paid at the counter; GrabFood and Foodpanda orders are paid in their apps.
+const CHAN = {walkin:{l:'Walk-in', c:'var(--brand)'}, grab:{l:'GrabFood', c:'#00B14F'}, panda:{l:'Foodpanda', c:'#D70F64'}};
+Object.assign(S, {toChannel:'walkin', toRef:''});
+const chanOf = o => CHAN[o.channel] || CHAN.walkin;
+const isPlatform = o => o.channel === 'grab' || o.channel === 'panda';
+const chTag = (o, extra = '') => `<span class="chan ${extra}"><i style="background:${chanOf(o).c}"></i>Takeout · ${chanOf(o).l}</span>`;
 const toTag = (extra = '') => `<span class="pill p-brand ${extra}">${icon('bag', 16)}Takeout</span>`;
 const tagHtml = tags => tags.map(t => `<span class="tag tag-${t}">${TAGS[t]}</span>`).join(' ');
 const foodImg = (f, size = 40) => f.photos[0] ? `<img src="${f.photos[0]}" alt="${esc(f.name)}">` : `<div class="ph cat-${catIdx(f.cat)}" role="img" aria-label="${esc(f.name)}, no photo yet">${icon(CAT_IC[f.cat] || 'plate', size)}</div>`;
@@ -910,7 +1094,7 @@ function ordersBase(){
 const OCOLS = [
   {k:'id', l:'Order ID', t:'text', v:o => o.id},
   {k:'status', l:'Status', t:'list', v:o => oMeta(o).l},
-  {k:'table', l:'Table or pickup', t:'list', v:o => isTO(o) ? 'Takeout' : tName(o.table)},
+  {k:'table', l:'Table or pickup', t:'list', v:o => isTO(o) ? `Takeout · ${chanOf(o).l}` : tName(o.table)},
   {k:'day', l:'Date and time', t:'list', v:o => dt(o.createdAt)},
   {k:'items', l:'Items', t:'range', v:o => sum(o.items.map(i => i.qty))},
   {k:'pay', l:'Payment', t:'list', v:o => o.payment ? payName(o.payment) : 'Not yet'},
@@ -947,7 +1131,7 @@ function vOrders(){
   const pg = paged('orders', list, `${S.orderRange}|${S.orderType}|${q}|${JSON.stringify(S.colF)}`);
   return `<div class="page-head"><div><h1>Orders</h1><p class="muted">Every dine-in and takeout order, in any status.</p></div>
     <button class="btn btn-outline" data-act="to-qr">${icon('qr', 20)}Takeout QR</button><button class="btn btn-primary" data-act="to-new">${icon('bag', 20)}New takeout order</button></div>
-  ${ready.length ? `<section class="card"><div class="card-head"><h3>Ready for pickup</h3><span class="badge num">${ready.length}</span></div><ul class="rows">${ready.map(o => `<li><div class="grow"><b class="num">${o.pickup}</b> <span class="muted">· ${esc(o.customer)}${o.phone ? ` · <span class="num">${esc(o.phone)}</span>` : ''}</span><div class="caption muted num">${o.id} · ${sum(o.items.map(i => i.qty))} items · pay on pickup</div></div><b class="num">${peso(total(o))}</b><button class="btn btn-primary" data-act="pickup" data-id="${o.id}">${icon('wallet', 20)}Collect payment</button></li>`).join('')}</ul></section>` : ''}
+  ${ready.length ? `<section class="card"><div class="card-head"><h3>Ready for pickup</h3><span class="badge num">${ready.length}</span></div><ul class="rows">${ready.map(o => `<li><div class="grow"><b class="num">${o.pickup}</b> ${chTag(o)} <span class="muted">· ${esc(o.customer)}${o.phone ? ` · <span class="num">${esc(o.phone)}</span>` : ''}</span><div class="caption muted num">${o.id} · ${sum(o.items.map(i => i.qty))} items · ${isPlatform(o) ? `paid in the ${chanOf(o).l} app${o.ref ? ' · ' + esc(o.ref) : ''}` : 'pay on pickup'}</div></div><b class="num">${peso(total(o))}</b><button class="btn btn-primary" data-act="pickup" data-id="${o.id}">${icon(isPlatform(o) ? 'bag' : 'wallet', 20)}${isPlatform(o) ? 'Hand to rider' : 'Collect payment'}</button></li>`).join('')}</ul></section>` : ''}
   <div class="toolbar">
     <div class="chips" role="group" aria-label="Date range">${ranges.map(([k, l]) => `<button class="chip" data-act="range" data-v="${k}" aria-pressed="${S.orderRange === k && !q}">${l}</button>`).join('')}</div>
     <div class="chips" role="group" aria-label="Order type">${types.map(([k, l]) => `<button class="chip" data-act="otype" data-v="${k}" aria-pressed="${S.orderType === k}">${l}</button>`).join('')}</div>
@@ -957,10 +1141,230 @@ function vOrders(){
   </div>
   ${q ? `<p class="caption canvas-note">Searching all dates for “${esc(S.orderQ)}”. Clear the search to use the date filter.</p>` : ''}
   <div class="tbl-scroll"><table class="data"><thead><tr>${OCOLS.map(c => `<th class="${c.r ? 'r' : ''}"><div class="th-f"><span>${c.l}</span><button class="th-btn ${cfOn(c) ? 'on' : ''}" data-act="col-filter" data-v="${c.k}" aria-haspopup="dialog" aria-label="Filter ${c.l}${cfOn(c) ? ', filter on' : ''}">${icon('filter', 16)}</button></div></th>`).join('')}</tr></thead><tbody>
-  ${pg.rows.map(o => `<tr class="click" data-act="order" data-id="${o.id}"><td><button class="link num" data-act="order" data-id="${o.id}">${o.id}</button></td><td>${oPill(o)}</td><td>${isTO(o) ? `${toTag()} <span class="num">${o.pickup}</span>` : esc(tName(o.table))}</td><td class="num">${dt(o.createdAt)}, ${tm(o.createdAt)}</td><td class="num">${sum(o.items.map(i => i.qty))} items</td><td>${o.payment ? esc(payName(o.payment)) : '<span class="muted">Not yet</span>'}</td><td class="r num"><b>${peso(total(o))}</b></td></tr>`).join('') || `<tr><td colspan="7"><div class="empty">${icon('search', 32)}No orders match. Check the filters or pick another date range.</div></td></tr>`}
+  ${pg.rows.map(o => `<tr class="click" data-act="order" data-id="${o.id}"><td><button class="link num" data-act="order" data-id="${o.id}">${o.id}</button></td><td>${oPill(o)}</td><td>${isTO(o) ? `${chTag(o)} <span class="num">${o.pickup}</span>` : esc(tName(o.table))}</td><td class="num">${dt(o.createdAt)}, ${tm(o.createdAt)}</td><td class="num">${sum(o.items.map(i => i.qty))} items</td><td>${o.payment ? esc(payName(o.payment)) : '<span class="muted">Not yet</span>'}</td><td class="r num"><b>${peso(total(o))}</b></td></tr>`).join('') || `<tr><td colspan="7"><div class="empty">${icon('search', 32)}No orders match. Check the filters or pick another date range.</div></td></tr>`}
   </tbody></table></div>
   ${pg.bar}
   <p class="caption canvas-note num">${list.length} orders · ${peso(sum(list.map(total)))}</p>`;
+}
+
+/* ---------- Reservations ---------- */
+// Staff book, move and cancel reservations on a calendar. A reservation can carry an advance order, which goes on the table's plate
+// when the guests are seated. A banner reminds staff REMIND_BEFORE minutes before the booked time.
+const RES_MIN = 90, REMIND_BEFORE = 20, REMIND_AFTER = 15, SHOW_BEFORE = 60, SHOW_AFTER = 30;
+Object.assign(S, {reservations:[], resView:'month', resDay:0, resStatus:'all', resRange:'upcoming', resQ:'', resDraft:null, roDraft:{}, roCat:'all'});
+let lastDue = '';
+const sod = ts => { const d = new Date(ts); d.setHours(0, 0, 0, 0); return +d; };
+S.resDay = sod(Date.now());
+const pad2 = n => String(n).padStart(2, '0');
+const ymd = ts => { const d = new Date(ts); return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`; };
+const hm = ts => { const d = new Date(ts); return `${pad2(d.getHours())}:${pad2(d.getMinutes())}`; };
+const parseAt = (date, time) => date && time ? +new Date(date + 'T' + time) : NaN;
+const addDays = (ts, n) => { const d = new Date(ts); d.setDate(d.getDate() + n); return +d; };
+const weekStart = ts => addDays(sod(ts), -((new Date(ts).getDay() + 6) % 7));
+const fullDay = ts => new Date(ts).toLocaleDateString('en-PH', {weekday:'long', month:'long', day:'numeric'});
+const tmc = ts => tm(ts).replace(' AM', 'a').replace(' PM', 'p');
+const whenText = ts => `${new Date(ts).toLocaleDateString('en-PH', {weekday:'short', month:'short', day:'numeric'})}, ${tm(ts)}`;
+const RSTAT = {booked:{l:'Booked', c:'reserved', i:'calendar'}, arrived:{l:'Arrived', c:'ok', i:'check'}, cancelled:{l:'Cancelled', c:'neutral', i:'x'}, noshow:{l:'No-show', c:'error', i:'user'}};
+const RESERVED = {l:'Reserved', c:'reserved', i:'calendar'};
+const resOf = id => S.reservations.find(r => r.id === id);
+const resLive = r => r.status === 'booked' || r.status === 'arrived';
+const resTotal = r => sum((r.order || []).map(i => i.price * i.qty));
+const draftKey = i => i.variantId ? i.foodId + '|' + i.variantId : i.foodId;
+// Table problems for a booking: not enough seats, or another booking on the same table within RES_MIN minutes.
+function resProblem(tableId, pax, at, ignoreId){
+  const t = tableOf(tableId); if (!t) return '';
+  if (t.seats < pax) return `${t.name} seats only ${t.seats}.`;
+  const c = S.reservations.find(x => x.id !== ignoreId && x.tableId === tableId && resLive(x) && at < x.at + RES_MIN * 60000 && x.at < at + RES_MIN * 60000);
+  return c ? `${t.name} is already reserved by ${c.name} at ${tm(c.at)}.` : '';
+}
+// A table shows as Reserved from SHOW_BEFORE minutes before its booking until SHOW_AFTER minutes after it.
+const tableRes = t => { const n = Date.now(); return S.reservations.filter(r => r.tableId === t.id && r.status === 'booked' && n >= r.at - SHOW_BEFORE * 60000 && n <= r.at + SHOW_AFTER * 60000).sort((a, b) => a.at - b.at)[0]; };
+// The reminder: from REMIND_BEFORE minutes before the time until REMIND_AFTER minutes after, while still booked and not dismissed.
+const dueRes = () => { const n = Date.now(); return S.reservations.filter(r => r.status === 'booked' && !r.dismissed && n >= r.at - REMIND_BEFORE * 60000 && n <= r.at + REMIND_AFTER * 60000).sort((a, b) => a.at - b.at); };
+const dueText = r => { const m = Math.round((r.at - Date.now()) / 60000); return m > 0 ? `in ${m} min` : m === 0 ? 'now' : `${-m} min late`; };
+const tableOptions = sel => `<option value="">Not assigned yet</option>${S.floors.map(fl => `<optgroup label="${esc(fl.name)}">${S.tables.filter(t => t.floor === fl.id).map(t => `<option value="${t.id}" ${t.id === sel ? 'selected' : ''}>${esc(t.name)} · ${t.seats} seats</option>`).join('')}</optgroup>`).join('')}`;
+
+function seedReservations(){
+  const now = Date.now(), min = n => now + n * 60000;
+  const at = (dayOff, h, m = 0) => { const d = new Date(now); d.setDate(d.getDate() + dayOff); d.setHours(h, m, 0, 0); return +d; };
+  const ord = (...rows) => rows.map(([fid, vid, qty]) => { const f = food(fid); return {foodId:fid, variantId:vid, name:itemName(f, vid), price:unitPrice(f, vid), qty}; });
+  const mk = (name, phone, pax, when, tableId, extra = {}) => S.reservations.push({id:uid(), name, phone, pax, at:when, tableId, note:'', status:'booked', order:null, history:[{at:now - 2 * 86400000, text:'Booked'}], ...extra});
+  mk('Santos family', '0917 555 0142', 4, min(18), 'T15', {note:'Birthday. Bring a candle.', order:ord(['f18', 'lg', 1], ['f6', undefined, 2], ['f12', 'lg', 2])});
+  mk('Reyes', '0918 555 0177', 2, min(50), 'T11');
+  mk('Garcia', '0920 555 0108', 2, min(-190), 'T9', {status:'arrived'});
+  mk('Lim', '0917 555 0123', 6, at(1, 19), 'T8', {order:ord(['f4', undefined, 1], ['f5', undefined, 1], ['f9', undefined, 4])});
+  mk('Ramos', '0919 555 0166', 5, at(1, 12), 'T9');
+  mk('Dela Cruz', '0921 555 0190', 8, at(2, 12, 30), 'T14', {note:'Company lunch. Needs a receipt.'});
+  mk('Tan', '0922 555 0135', 3, at(3, 18, 30), null);
+  mk('Bautista', '0917 555 0188', 2, at(5, 20), null, {status:'cancelled', cancelReason:'Changed plans'});
+  mk('Aquino', '0916 555 0172', 6, at(7, 11, 30), 'T8');
+  mk('Villanueva', '0915 555 0120', 10, at(9, 18), 'T13', {note:'Anniversary dinner.', order:ord(['f19', 'plt', 2], ['f18', 'md', 2], ['f13', undefined, 2])});
+  mk('Mendoza', '0916 555 0150', 4, at(-1, 19), 'T5', {status:'noshow'});
+  mk('Torres', '0917 555 0111', 2, at(-4, 13), 'T1', {status:'arrived'});
+}
+seedReservations();
+
+// Seats a booked reservation: activates the table, puts the advance order on its plate, and shows the QR.
+function seatReservation(r, tableId){
+  const t = tableOf(tableId); if (!t || t.status !== 'inactive') return toast('That table is in use');
+  Object.assign(t, {status:'active', token:uid(), openedAt:Date.now(), bill:null, guests:r.pax});
+  S.plates[t.id] = (r.order || []).map(i => ({id:uid(), foodId:i.foodId, variantId:i.variantId, qty:i.qty, by:'Pre-order'}));
+  Object.assign(r, {status:'arrived', tableId:t.id, arrivedAt:Date.now()});
+  r.history.push({at:Date.now(), text:`Seated at ${t.name}`});
+  qrModal(t); toast(`${r.name} seated at ${t.name}${r.order?.length ? '. Advance order is on the plate.' : ''}`);
+}
+function moveResToDay(r, day){
+  if (r.status !== 'booked') return toast('Only booked reservations can be moved');
+  if (sod(r.at) === day) return;
+  const nd = new Date(day), od = new Date(r.at); nd.setHours(od.getHours(), od.getMinutes(), 0, 0);
+  const problem = resProblem(r.tableId, r.pax, +nd, r.id); if (problem) return toast(problem);
+  r.history.push({at:Date.now(), text:`Rescheduled from ${whenText(r.at)} (dragged on the calendar)`});
+  r.at = +nd; r.dismissed = false; S.resDay = day; toast(`${r.name} moved to ${whenText(r.at)}`);
+}
+function resActions(r){
+  const n = r.name;
+  if (r.status === 'booked') return [{ic:'qr', label:'Seat now', aria:`Seat ${n}`, act:'res-seat', id:r.id}, {ic:'clock', label:'Reschedule', aria:`Reschedule ${n}`, act:'res-move', id:r.id}, {ic:'edit', label:'Edit', aria:`Edit ${n}`, act:'res-edit', id:r.id}, {ic:'user', label:'Mark no-show', aria:`Mark ${n} as no-show`, act:'res-noshow', id:r.id}, {ic:'x', label:'Cancel', aria:`Cancel ${n}`, act:'res-cancel', id:r.id, danger:true}];
+  if (r.status === 'arrived') return [{ic:'search', label:'View', aria:`View ${n}`, act:'res-open', id:r.id}];
+  return [{ic:'check', label:'Restore', aria:`Restore ${n}`, act:'res-restore', id:r.id}, {ic:'search', label:'View', aria:`View ${n}`, act:'res-open', id:r.id}];
+}
+
+/* ----- Calendar screens ----- */
+function vReservations(){
+  const v = S.resView, byDay = new Map();
+  S.reservations.slice().sort((a, b) => a.at - b.at).forEach(r => { const k = sod(r.at); byDay.set(k, [...(byDay.get(k) || []), r]); });
+  const ws = weekStart(S.resDay), we = addDays(ws, 6), today = sod(Date.now());
+  const title = v === 'week' ? `${dt(ws)} – ${dt(we)}, ${new Date(we).getFullYear()}` : new Date(S.resDay).toLocaleDateString('en-PH', {month:'long', year:'numeric'});
+  const views = [['month', 'Month', 'calendar'], ['week', 'Week', 'grid'], ['list', 'List', 'list']];
+  const chip = r => `<button class="cal-chip st-${r.status}" data-act="res-open" data-id="${r.id}" ${r.status === 'booked' ? `draggable="true" data-rdrag="${r.id}"` : ''} aria-label="${esc(`${tm(r.at)}, ${r.name}, ${r.pax} guests, ${RSTAT[r.status].l}`)}"><span class="tt num">${tmc(r.at)}</span><span class="nm">${esc(r.name)}</span>${r.order?.length ? icon('receipt', 12) : ''}</button>`;
+  let body = '';
+  if (v === 'month'){
+    const first = new Date(S.resDay); first.setDate(1);
+    const start = weekStart(+first), month = first.getMonth(), last = new Date(first.getFullYear(), month + 1, 0).getTime();
+    const rows = Math.max(4, Math.min(6, Math.ceil(((last - start) / 86400000 + 1) / 7)));
+    const cells = Array.from({length:rows * 7}, (_, i) => addDays(start, i));
+    const cell = ts => { const rs = byDay.get(ts) || [], d = new Date(ts);
+      return `<div class="cal-cell ${d.getMonth() !== month ? 'out' : ''} ${ts === today ? 'today' : ''} ${ts === S.resDay ? 'sel' : ''}" data-act="res-day" data-v="${ts}" data-rdrop="${ts}">
+        <button class="cal-num num" data-act="res-day" data-v="${ts}" aria-label="${esc(fullDay(ts))}, ${rs.length} reservations" ${ts === S.resDay ? 'aria-current="date"' : ''}>${d.getDate()}</button>
+        <button class="cal-add" data-act="res-new" data-date="${ts}" aria-label="New reservation on ${esc(fullDay(ts))}">${icon('plus', 16)}</button>
+        ${rs.slice(0, 3).map(chip).join('')}${rs.length > 3 ? `<button class="cal-more" data-act="res-day" data-v="${ts}">+${rs.length - 3} more</button>` : ''}</div>`; };
+    const day = byDay.get(S.resDay) || [];
+    body = `<div class="res-layout"><div class="cal"><div class="cal-dows">${['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(x => `<div>${x}</div>`).join('')}</div><div class="cal-grid">${cells.map(cell).join('')}</div></div>
+      <section class="card agenda" aria-label="Reservations on ${esc(fullDay(S.resDay))}"><div class="card-head" style="margin:0"><h3>${esc(fullDay(S.resDay))}</h3><span class="badge soft num">${day.length}</span></div>
+        ${day.length ? `<ul>${day.map(r => `<li><button class="ag-item" data-act="res-open" data-id="${r.id}"><span class="tt num">${tm(r.at)}</span><span class="grow"><b>${esc(r.name)}</b><div class="caption muted">${r.pax} guests · ${r.tableId ? esc(tName(r.tableId)) : 'No table yet'}</div>${r.order?.length ? `<span class="pill p-brand" style="margin-top:4px">${icon('receipt', 14)}Pre-order</span>` : ''}</span>${pill(RSTAT[r.status], false)}</button></li>`).join('')}</ul>` : `<p class="caption muted">No reservations on this day.</p>`}
+        <button class="btn btn-outline" data-act="res-new" data-date="${S.resDay}">${icon('plus', 20)}Add on this day</button></section></div>`;
+  } else if (v === 'week'){
+    body = `<div class="wk">${Array.from({length:7}, (_, i) => addDays(ws, i)).map(ts => { const rs = byDay.get(ts) || [];
+      return `<section class="wk-day ${ts === today ? 'today' : ''}" data-rdrop="${ts}" aria-label="${esc(fullDay(ts))}"><button class="wk-head" data-act="res-new" data-date="${ts}" aria-label="New reservation on ${esc(fullDay(ts))}"><span>${new Date(ts).toLocaleDateString('en-PH', {weekday:'short', day:'numeric'})}</span><span class="caption muted">${rs.length || ''}${icon('plus', 14)}</span></button>
+        ${rs.map(r => `<button class="wk-card st-${r.status}" data-act="res-open" data-id="${r.id}" ${r.status === 'booked' ? `draggable="true" data-rdrag="${r.id}"` : ''}><span class="t num">${tm(r.at)}${r.order?.length ? ' · Pre-order' : ''}</span><span>${esc(r.name)}</span><span class="caption muted">${r.pax} guests · ${r.tableId ? esc(tName(r.tableId)) : 'No table'}</span></button>`).join('') || '<span class="caption muted">Free</span>'}</section>`; }).join('')}</div>`;
+  } else {
+    const q = S.resQ.trim().toLowerCase(), n = Date.now();
+    const ended = r => r.at + RES_MIN * 60000 < n;
+    const list = S.reservations.filter(r => (S.resStatus === 'all' || r.status === S.resStatus) && (S.resRange === 'all' || (S.resRange === 'past') === ended(r)) && (!q || r.name.toLowerCase().includes(q) || (r.phone || '').includes(q))).sort((a, b) => S.resRange === 'past' ? b.at - a.at : a.at - b.at);
+    const pg = paged('res', list, `${S.resStatus}|${S.resRange}|${q}`);
+    body = `<div class="toolbar"><div class="chips" role="group" aria-label="When">${[['upcoming', 'Upcoming'], ['past', 'Past'], ['all', 'All']].map(([k, l]) => `<button class="chip" data-act="res-range" data-v="${k}" aria-pressed="${S.resRange === k}">${l}</button>`).join('')}</div>
+      <div class="chips" role="group" aria-label="Status">${[['all', 'All'], ...Object.entries(RSTAT).map(([k, m]) => [k, m.l])].map(([k, l]) => `<button class="chip" data-act="res-status" data-v="${k}" aria-pressed="${S.resStatus === k}">${l}</button>`).join('')}</div>
+      <div class="spacer"></div><label class="search"><span class="sr" hidden>Search reservations</span>${icon('search')}<input id="res-q" class="input" data-input="resQ" placeholder="Search name or phone" value="${esc(S.resQ)}" aria-label="Search reservations"></label></div>
+      <div class="tbl-scroll"><table class="data"><thead><tr><th>When</th><th>Guest</th><th class="r">Guests</th><th>Table</th><th>Advance order</th><th>Status</th><th class="r">Actions</th></tr></thead><tbody>
+      ${pg.rows.map(r => `<tr class="click" data-act="res-open" data-id="${r.id}"><td class="num" style="white-space:nowrap">${whenText(r.at)}</td><td><b>${esc(r.name)}</b>${r.phone ? `<div class="caption muted num">${esc(r.phone)}</div>` : ''}</td><td class="r num">${r.pax}</td><td>${r.tableId ? esc(tName(r.tableId)) : '<span class="muted">Not assigned</span>'}</td><td>${r.order?.length ? `<span class="pill p-brand">${icon('receipt', 14)}Pre-order</span> <span class="caption muted num">${peso(resTotal(r))}</span>` : '<span class="muted">None</span>'}</td><td>${pill(RSTAT[r.status], false)}</td><td class="r" style="white-space:nowrap">${rowActions(resActions(r))}</td></tr>`).join('') || `<tr><td colspan="7"><div class="empty">${icon('calendar', 32)}No reservations match.</div></td></tr>`}
+      </tbody></table></div>${pg.bar}`;
+  }
+  return `<div class="page-head"><div><h1>Reservations</h1><p class="muted">Book, move and cancel reservations. Staff get a reminder ${REMIND_BEFORE} minutes before each one.</p></div><button class="btn btn-primary" data-act="res-new" data-date="${S.resDay}">${icon('plus', 20)}New reservation</button></div>
+  <div class="res-bar">${v !== 'list' ? `<div class="res-nav"><button class="icon-btn" data-act="res-nav" data-v="-1" aria-label="Previous ${v}">${icon('left')}</button><button class="icon-btn" data-act="res-nav" data-v="1" aria-label="Next ${v}">${icon('right')}</button></div><button class="res-title" data-act="res-jump" aria-label="Go to a date. Showing ${esc(title)}">${esc(title)}</button><button class="btn btn-outline" data-act="res-today">Today</button>` : ''}
+    <div class="spacer"></div>${v !== 'list' ? `<div class="legend" aria-label="Status colors">${Object.values(RSTAT).map(m => pill(m)).join('')}</div>` : ''}
+    <div class="seg" role="group" aria-label="Calendar view">${views.map(([k, l, ic]) => `<button data-act="res-view" data-v="${k}" aria-pressed="${v === k}">${icon(ic, 20)}${l}</button>`).join('')}</div></div>
+  ${body}`;
+}
+
+/* ----- Reservation modals ----- */
+function resModal(r){
+  const t = tableOf(r.tableId), o = r.order || [], m = RSTAT[r.status];
+  dlg.classList.remove('wide');
+  modal(esc(r.name), `<div class="m-body"><dl class="kv"><dt>Status</dt><dd>${pill(m)}</dd><dt>When</dt><dd class="num">${whenText(r.at)}</dd><dt>Guests</dt><dd class="num">${r.pax}</dd><dt>Table</dt><dd>${t ? `${esc(t.name)} · ${t.seats} seats` : 'Not assigned yet'}</dd>${r.phone ? `<dt>Phone</dt><dd class="num">${esc(r.phone)}</dd>` : ''}${r.note ? `<dt>Note</dt><dd>${esc(r.note)}</dd>` : ''}${r.cancelReason ? `<dt>Reason</dt><dd>${esc(r.cancelReason)}</dd>` : ''}</dl>
+    ${o.length ? `<div><b>Advance order</b><ul class="items" style="margin-top:8px">${o.map(i => `<li><b class="num">${i.qty}×</b><span>${esc(i.name)}</span><span class="num">${peso(i.qty * i.price)}</span></li>`).join('')}</ul><div class="sum" style="margin-top:8px"><div class="total"><span>Total</span><span class="num">${peso(resTotal(r))}</span></div></div><p class="caption muted" style="margin-top:8px">Paid at the table. It goes on the table’s plate when the guests are seated.</p></div>` : ''}
+    <div><b>History</b><ul class="items caption muted" style="margin-top:8px">${r.history.slice().reverse().map(h => `<li><span class="num">${dt(h.at)}, ${tm(h.at)}</span><span>${esc(h.text)}</span></li>`).join('')}</ul></div></div>`,
+    `<div class="m-foot"><button class="btn btn-outline" data-act="close">Close</button>${r.status === 'booked' ? `<button class="btn btn-outline danger" data-act="res-cancel" data-id="${r.id}">${icon('x', 20)}Cancel</button><button class="btn btn-outline" data-act="res-edit" data-id="${r.id}">${icon('edit', 20)}Edit</button><button class="btn btn-outline" data-act="res-move" data-id="${r.id}">${icon('clock', 20)}Reschedule</button><button class="btn btn-primary" data-act="res-seat" data-id="${r.id}">${icon('qr', 20)}Seat now</button>` : r.status === 'arrived' ? '' : `<button class="btn btn-primary" data-act="res-restore" data-id="${r.id}">${icon('check', 20)}Restore</button>`}</div>`);
+}
+const advSummary = () => { const items = draftItems(S.roDraft);
+  return `${items.length ? `<ul class="items">${items.map(i => `<li><b class="num">${i.qty}×</b><span>${esc(i.name)}</span><span class="num">${peso(i.price * i.qty)}</span></li>`).join('')}</ul><div class="sum" style="margin-top:8px"><div class="total"><span>Total</span><span class="num">${peso(sum(items.map(i => i.price * i.qty)))}</span></div></div>` : '<p class="caption muted">No food picked yet.</p>'}
+  <button type="button" class="btn btn-outline" data-act="res-order" style="margin-top:8px">${icon('plus', 20)}${items.length ? 'Change food' : 'Pick food'}</button>`; };
+function openResForm(r, dayTs){
+  S.roCat = 'all';
+  if (r){
+    S.resDraft = {id:r.id, name:r.name, phone:r.phone || '', pax:r.pax, date:ymd(r.at), time:hm(r.at), tableId:r.tableId || '', note:r.note || '', adv:!!r.order?.length};
+    S.roDraft = {}; (r.order || []).forEach(i => S.roDraft[draftKey(i)] = i.qty);
+  } else {
+    const day = dayTs ? sod(+dayTs) : sod(Date.now()), step = 30 * 60000;
+    S.resDraft = {id:'', name:'', phone:'', pax:2, date:ymd(day), time:day === sod(Date.now()) ? hm(Math.ceil((Date.now() + step) / step) * step) : '19:00', tableId:'', note:'', adv:false};
+    S.roDraft = {};
+  }
+  resFormModal();
+}
+function readResForm(){
+  const f = $('#res-form'); if (!f) return;
+  const fd = new FormData(f);
+  Object.assign(S.resDraft, {name:fd.get('name'), phone:fd.get('phone'), pax:fd.get('pax'), date:fd.get('date'), time:fd.get('time'), tableId:fd.get('table') || '', note:fd.get('note'), adv:fd.has('adv')});
+}
+function resFormModal(){
+  const d = S.resDraft, edit = !!d.id;
+  dlg.classList.remove('wide');
+  modal(edit ? 'Edit reservation' : 'New reservation', `<form id="res-form" data-form="res" data-id="${d.id}"><div class="m-body"><div class="form-grid">
+    <label class="field full"><span>Guest name</span><input id="rf-name" name="name" class="input" required maxlength="50" autocomplete="off" value="${esc(d.name)}"></label>
+    <label class="field"><span>Phone</span><input name="phone" class="input num" inputmode="tel" maxlength="20" autocomplete="off" value="${esc(d.phone)}"></label>
+    <label class="field"><span>Number of guests</span><input name="pax" class="input num" type="number" min="1" max="40" inputmode="numeric" required value="${esc(d.pax)}" data-change="resCheck"></label>
+    <label class="field"><span>Date</span><input name="date" class="input" type="date" required ${edit ? '' : `min="${ymd(Date.now())}"`} value="${esc(d.date)}" data-change="resCheck"></label>
+    <label class="field"><span>Time</span><input name="time" class="input" type="time" required value="${esc(d.time)}" data-change="resCheck"></label>
+    <label class="field full"><span>Table (optional)</span><select name="table" class="input" data-change="resCheck">${tableOptions(d.tableId)}</select><span class="hint" id="res-hint"></span></label>
+    <label class="field full"><span>Note</span><textarea name="note" class="input" maxlength="200" placeholder="Birthday, high chair, allergy">${esc(d.note)}</textarea></label>
+    <div class="field full"><label class="radio-card"><input type="checkbox" name="adv" data-change="resAdv" ${d.adv ? 'checked' : ''}><span class="grow"><b>Advance order</b><br><span class="caption muted">The guests pre-order food. It goes on their table’s plate when they are seated.</span></span></label>
+      <div id="res-adv" ${d.adv ? '' : 'hidden'} style="margin-top:8px">${advSummary()}</div></div>
+  </div></div><div class="m-foot"><button type="button" class="btn btn-outline" data-act="close">Cancel</button><button class="btn btn-primary">${edit ? 'Save changes' : 'Book reservation'}</button></div></form>`);
+  CHANGE.resCheck();
+}
+function resOrderModal(){
+  const d = S.roDraft, items = draftItems(d), n = sum(items.map(i => i.qty)), tot = sum(items.map(i => i.price * i.qty));
+  const cats = S.categories.filter(c => S.foods.some(f => f.cat === c.id && f.status === 'available'));
+  const card = (f, v) => { const k = v ? f.id + '|' + v.id : f.id, nm = v ? `${f.name} (${v.name})` : f.name; return `<div class="to-food ${d[k] ? 'on' : ''}"><div><b>${esc(f.name)}</b>${v ? `<span class="vchip" style="margin-left:6px">${esc(v.name)}</span>` : ''}<div class="caption muted num">${peso(v ? v.price : f.price)} · ${f.eta} min</div></div>
+    ${d[k] ? `<div class="stepper" style="align-self:flex-start"><button type="button" data-act="ro-qty" data-id="${esc(k)}" data-v="-1" aria-label="Remove one ${esc(nm)}">${icon(d[k] > 1 ? 'minus' : 'trash', 18)}</button><span class="num">${d[k]}</span><button type="button" data-act="ro-qty" data-id="${esc(k)}" data-v="1" aria-label="Add one ${esc(nm)}">${icon('plus', 18)}</button></div>`
+      : `<button type="button" class="btn btn-outline" data-act="ro-qty" data-id="${esc(k)}" data-v="1" aria-label="Add ${esc(nm)}">${icon('plus', 18)}Add</button>`}</div>`; };
+  const cards = f => hasV(f) ? f.variants.map(v => card(f, v)).join('') : card(f);
+  const avail = c => S.foods.filter(f => f.cat === c && f.status === 'available');
+  modal(`Advance order · ${esc(S.resDraft.name || 'reservation')}`, `<div class="m-body">
+    <div class="tabs to-tabs" role="tablist" aria-label="Food category">${[['all', 'All']].concat(cats.map(c => [c.id, c.name])).map(([k, l]) => `<button type="button" class="tab" role="tab" data-act="ro-cat" data-v="${k}" aria-selected="${S.roCat === k}">${esc(l)}</button>`).join('')}</div>
+    <div class="to-grid"><div class="to-foods">${S.roCat === 'all' ? cats.map(c => `<span class="label muted to-cat">${esc(c.name)}</span>${avail(c.id).map(cards).join('')}`).join('') : avail(S.roCat).map(cards).join('')}</div>
+    <aside class="to-side"><b>Advance order</b>${n ? `<ul class="items">${items.map(i => `<li><b class="num">${i.qty}×</b><span>${esc(i.name)}</span><span class="num">${peso(i.price * i.qty)}</span></li>`).join('')}</ul><div class="sum"><div class="total"><span>Total</span><span class="num">${peso(tot)}</span></div></div><span class="caption muted">Paid at the table when they bill out.</span>` : `<p class="caption muted">No food yet. Pick from the tabs.</p>`}</aside></div></div>`,
+    `<div class="m-foot to-foot"><span class="grow caption muted num">${n ? `${n} items · ${peso(tot)}` : 'Nothing picked yet.'}</span><button class="btn btn-primary" data-act="ro-done">Done${n ? ' · ' + peso(tot) : ''}</button></div>`);
+  dlg.classList.add('wide');
+}
+function resMoveModal(r){
+  const t = tableOf(r.tableId);
+  dlg.classList.remove('wide');
+  modal(`Reschedule ${esc(r.name)}`, `<form id="move-form" data-form="resMove" data-id="${r.id}" data-pax="${r.pax}"><div class="m-body">
+    <p class="caption muted">Now: <b class="num">${whenText(r.at)}</b> · ${r.pax} guests${t ? ' · ' + esc(t.name) : ''}</p>
+    <div class="form-grid"><label class="field"><span>New date</span><input name="date" class="input" type="date" required min="${ymd(Date.now())}" value="${ymd(r.at)}" data-change="resCheck"></label>
+    <label class="field"><span>New time</span><input name="time" class="input" type="time" required value="${hm(r.at)}" data-change="resCheck"></label>
+    <label class="field full"><span>Table</span><select name="table" class="input" data-change="resCheck">${tableOptions(r.tableId)}</select><span class="hint" id="res-hint"></span></label>
+    <label class="field full"><span>Reason (optional)</span><input name="reason" class="input" maxlength="120" autocomplete="off" placeholder="Guest asked to move"></label></div></div>
+    <div class="m-foot"><button type="button" class="btn btn-outline" data-act="close">Back</button><button class="btn btn-primary">${icon('clock', 20)}Reschedule</button></div></form>`);
+  CHANGE.resCheck();
+}
+function resCancelModal(r){
+  dlg.classList.remove('wide');
+  modal(`Cancel ${esc(r.name)}?`, `<form id="cancel-form" data-form="resCancel" data-id="${r.id}"><div class="m-body"><p>${whenText(r.at)} · ${r.pax} guests${r.tableId ? ' · ' + esc(tName(r.tableId)) : ''}. The table is freed. You can restore the reservation later.</p>
+    <label class="field"><span>Reason (optional)</span><input name="reason" class="input" maxlength="120" autocomplete="off" placeholder="Guest called to cancel"></label></div>
+    <div class="m-foot"><button type="button" class="btn btn-outline" data-act="close">Keep reservation</button><button class="btn btn-danger">${icon('x', 20)}Cancel reservation</button></div></form>`);
+}
+function seatModal(r, msg = ''){
+  const opts = S.tables.filter(t => t.status === 'inactive' && t.seats >= r.pax);
+  dlg.classList.remove('wide');
+  modal(`Seat ${esc(r.name)}`, `<form id="seat-form" data-form="resSeat" data-id="${r.id}"><div class="m-body">${msg ? `<div class="alert warn">${icon('alert')}<p>${esc(msg)}</p></div>` : ''}
+    <p>${r.pax} guests. Pick a free table. Its QR code appears next${r.order?.length ? ', and the advance order goes on its plate' : ''}.</p>
+    ${opts.length ? `<label class="field"><span>Table</span><select name="table" class="input">${opts.map(t => `<option value="${t.id}">${esc(t.name)} · ${t.seats} seats · ${esc(S.floors.find(f => f.id === t.floor)?.name || '')}</option>`).join('')}</select></label>` : `<div class="alert warn">${icon('alert')}<p>No free table with ${r.pax} or more seats right now.</p></div>`}</div>
+    <div class="m-foot"><button type="button" class="btn btn-outline" data-act="close">Cancel</button>${opts.length ? `<button class="btn btn-primary">${icon('qr', 20)}Seat and show QR</button>` : ''}</div></form>`);
+}
+function resJumpModal(){
+  dlg.classList.remove('wide');
+  modal('Go to a date', `<form id="jump-form" data-form="resJump"><div class="m-body"><label class="field"><span>Date</span><input name="date" class="input" type="date" required value="${ymd(S.resDay)}"></label></div>
+    <div class="m-foot"><button type="button" class="btn btn-outline" data-act="close">Cancel</button><button class="btn btn-primary">Go</button></div></form>`);
 }
 
 function vKitchen(){
@@ -969,7 +1373,7 @@ function vKitchen(){
     const list = S.orders.filter(o => o.status === st).sort((a, b) => a.createdAt - b.createdAt);
     return `<section class="col" aria-label="${OSTAT[st].l}"><div class="col-head"><h3>${OSTAT[st].l}</h3><span class="badge soft num">${list.length}</span></div>
     ${list.map(o => { const m = mins(o.createdAt); const late = m > (o.eta || 20); return `<article class="kcard${late ? ' overdue' : ''}">
-      <div class="kcard-top"><div><b class="num">${o.id}</b><div class="caption muted">${esc(isTO(o) ? o.pickup : tName(o.table))} · ${esc(o.by)}</div>${isTO(o) ? toTag('to-tag') : ''}</div><span class="caption num ${late ? 'late label' : 'muted'}" title="Target ${o.eta || 20} min">${icon('clock', 16)} ${m} / ${o.eta || 20} min</span></div>
+      <div class="kcard-top"><div><b class="num">${o.id}</b><div class="caption muted">${esc(isTO(o) ? o.pickup : tName(o.table))} · ${esc(o.by)}</div>${isTO(o) ? chTag(o, 'to-tag') : ''}</div><span class="caption num ${late ? 'late label' : 'muted'}" title="Target ${o.eta || 20} min">${icon('clock', 16)} ${m} / ${o.eta || 20} min</span></div>
       <ul>${o.items.map(i => `<li><b class="num">${i.qty}×</b><span>${esc(i.name)}</span></li>`).join('')}</ul>
       ${isTO(o) ? '<p class="caption muted">Pack to go.</p>' : ''}
       <button class="btn ${st === 'completed' ? 'btn-secondary' : 'btn-outline'} block" data-act="${st !== 'completed' ? 'knext' : isTO(o) ? 'to-ready' : 'serve'}" data-id="${o.id}">${st !== 'completed' ? OSTAT[st].next + icon('arrow', 20) : isTO(o) ? 'Ready for pickup' : OSTAT[st].next}</button>
@@ -980,6 +1384,8 @@ function vKitchen(){
 function vFoods(){
   const list = S.foods.filter(f => S.foodCat === 'all' || f.cat === S.foodCat);
   const pg = paged('foods', list, S.foodCat);
+  // Card view loads FOOD_STEP cards at first and FOOD_STEP more each time Load more is pressed.
+  const shown = list.slice(0, S.foodShown);
   return `<div class="page-head"><div><h1>Foods</h1><p class="muted">The menu guests see when they scan a table QR.</p></div><button class="btn btn-primary" data-act="food-add">${icon('plus', 20)}Add food</button></div>
   <div class="toolbar">
     <div class="chips" role="group" aria-label="Category">${[['all','All']].concat(S.categories.map(c => [c.id, c.name])).map(([k, l]) => `<button class="chip" data-act="food-cat" data-v="${k}" aria-pressed="${S.foodCat === k}">${esc(l)}</button>`).join('')}</div>
@@ -987,13 +1393,15 @@ function vFoods(){
     <div class="seg" role="group" aria-label="View"><button data-act="food-view" data-v="card" aria-pressed="${S.foodView === 'card'}">${icon('grid', 20)}Cards</button><button data-act="food-view" data-v="table" aria-pressed="${S.foodView === 'table'}">${icon('list', 20)}Table</button></div>
   </div>
   ${!list.length ? `<div class="card empty">${icon('utensils', 32)}No foods in this category yet.<button class="btn btn-primary" data-act="food-add">Add food</button></div>`
-  : S.foodView === 'card' ? `<div class="food-grid">${list.map(f => `<article class="fcard ${f.status !== 'available' ? 'unavail' : ''}">
+  : S.foodView === 'card' ? `<div class="food-grid">${shown.map(f => `<article class="fcard ${f.status !== 'available' ? 'unavail' : ''}">
       <div class="fimg"><button class="photo-btn" data-act="gallery" data-id="${f.id}" aria-label="View photos of ${esc(f.name)}">${foodImg(f, 48)}${f.photos.length > 1 ? `<span class="pcount">${icon('image', 14)}${f.photos.length}</span>` : ''}</button><span class="pill ${f.status === 'available' ? 'p-ok' : 'p-error'}">${icon(f.status === 'available' ? 'check' : 'x', 16)}${f.status === 'available' ? 'Available' : 'Not available'}</span></div>
-      <div class="fbody"><span class="label muted">${esc(catName(f.cat))}</span><div class="row"><h3>${esc(f.name)}</h3><span class="price num">${peso(f.price)}</span></div><p class="muted">${esc(f.desc)}</p>${etaHtml(f)}<div>${tagHtml(f.tags)}</div></div>
-      <div class="factions"><button class="btn btn-outline" data-act="food-edit" data-id="${f.id}">${icon('edit', 20)}Edit</button><button class="icon-btn danger" data-act="food-del" data-id="${f.id}" aria-label="Delete ${esc(f.name)}">${icon('trash')}</button></div>
-    </article>`).join('')}</div>`
+      <div class="fbody"><span class="label muted">${esc(catName(f.cat))}</span><div class="row"><h3>${esc(f.name)}</h3>${priceHtml(f)}</div><p class="muted">${esc(f.desc)}</p>${etaHtml(f)}${hasV(f) ? `<div class="vchips" aria-label="Variants">${f.variants.map(v => `<span class="vchip">${esc(v.name)} <b class="num">${peso(v.price)}</b></span>`).join('')}</div>` : ''}<div>${tagHtml(f.tags)}</div></div>
+      <div class="factions"><button id="fe-${f.id}" class="btn btn-outline" data-act="food-edit" data-id="${f.id}">${icon('edit', 20)}Edit</button><button class="icon-btn danger" data-act="food-del" data-id="${f.id}" aria-label="Delete ${esc(f.name)}">${icon('trash')}</button></div>
+    </article>`).join('')}</div>
+    ${list.length > shown.length ? (foodIO ? `<div id="food-sentinel" class="loadmore" role="status"><span class="spin" aria-hidden="true"></span><span class="caption canvas-note">Loading more foods…</span></div>` : `<div class="loadmore"><button id="food-more" class="btn btn-outline" data-act="food-more">${icon('plus', 20)}Load more</button></div>`)
+      : list.length > FOOD_STEP ? `<div class="loadmore"><span class="caption canvas-note num" role="status">That’s all ${list.length} foods</span></div>` : ''}`
   : `<div class="tbl-scroll"><table class="data"><thead><tr><th>Food</th><th>Category</th><th>Description</th><th>Prep time</th><th>Tags</th><th>Status</th><th class="r">Price</th><th class="r">Actions</th></tr></thead><tbody>
-    ${pg.rows.map(f => `<tr><td><div style="display:flex;gap:12px;align-items:center"><div class="thumb">${foodImg(f, 20)}</div><b>${esc(f.name)}</b></div></td><td>${esc(catName(f.cat))}</td><td class="muted" style="min-width:220px">${esc(f.desc)}</td><td class="num" style="white-space:nowrap">${f.eta} min</td><td>${tagHtml(f.tags) || '<span class="muted">None</span>'}</td><td><span class="pill ${f.status === 'available' ? 'p-ok' : 'p-error'}">${f.status === 'available' ? 'Available' : 'Not available'}</span></td><td class="r num"><b>${peso(f.price)}</b></td><td class="r" style="white-space:nowrap">${rowActions([{ic:'edit', label:'Edit', aria:`Edit ${f.name}`, act:'food-edit', id:f.id}, {ic:'trash', label:'Delete', aria:`Delete ${f.name}`, act:'food-del', id:f.id, danger:true}])}</td></tr>`).join('')}
+    ${pg.rows.map(f => `<tr><td><div style="display:flex;gap:12px;align-items:center"><div class="thumb">${foodImg(f, 20)}</div><div><b>${esc(f.name)}</b>${hasV(f) ? `<div class="caption muted">${f.variants.map(v => esc(v.name)).join(' · ')}</div>` : ''}</div></div></td><td>${esc(catName(f.cat))}</td><td class="muted" style="min-width:220px">${esc(f.desc)}</td><td class="num" style="white-space:nowrap">${f.eta} min</td><td>${tagHtml(f.tags) || '<span class="muted">None</span>'}</td><td><span class="pill ${f.status === 'available' ? 'p-ok' : 'p-error'}">${f.status === 'available' ? 'Available' : 'Not available'}</span></td><td class="r num">${hasV(f) ? '<span class="caption muted">From </span>' : ''}<b>${peso(f.price)}</b></td><td class="r" style="white-space:nowrap">${rowActions([{ic:'edit', label:'Edit', aria:`Edit ${f.name}`, act:'food-edit', id:f.id}, {ic:'trash', label:'Delete', aria:`Delete ${f.name}`, act:'food-del', id:f.id, danger:true}])}</td></tr>`).join('')}
   </tbody></table></div>${pg.bar}`}`;
 }
 
@@ -1001,7 +1409,9 @@ function tableBody(t){
   const os = sessionOrders(t), items = aggregate(os.filter(o => o.status !== 'paid' || t.status === 'cleaning'));
   const ready = os.filter(o => o.status === 'completed');
   const a = [];
-  if (t.status === 'inactive') a.push(`<button class="btn btn-primary" data-act="activate" data-id="${t.id}">${icon('qr', 20)}Activate table</button>`);
+  const rv = tableRes(t);
+  if (rv && t.status === 'inactive') a.push(`<button class="btn btn-primary" data-act="res-seat" data-id="${rv.id}">${icon('calendar', 20)}Seat ${esc(rv.name)}</button>`);
+  if (t.status === 'inactive') a.push(`<button class="btn ${rv ? 'btn-outline' : 'btn-primary'}" data-act="activate" data-id="${t.id}">${icon('qr', 20)}Activate table</button>`);
   if (['active','ordering','eating'].includes(t.status)) a.push(`<button class="btn btn-outline" data-act="show-qr" data-id="${t.id}">${icon('qr', 20)}Show QR</button>`);
   ready.forEach(o => a.push(`<button class="btn btn-secondary" data-act="serve" data-id="${o.id}">${icon('check', 20)}Serve ${o.id}</button>`));
   if (t.status === 'billout') a.push(`<button class="btn btn-primary" data-act="receive" data-id="${t.id}">${icon('wallet', 20)}Receive payment</button>`);
@@ -1009,7 +1419,7 @@ function tableBody(t){
   if (t.token && t.status !== 'cleaning') a.push(`<button class="btn btn-ghost" data-act="open-guest" data-id="${t.id}">${icon('phone', 20)}Guest view</button>`);
   const over = tableOverLimit(t);
   return `${over ? `<div class="alert err"><span class="ic">${icon('clock', 18)}</span><p><b>Over the stay time limit</b><br><span class="caption">Seated for ${mins(t.openedAt)} min, past the ${S.tableTimerMins} min limit.</span></p></div>` : ''}
-  <dl class="kv"><dt>Status</dt><dd>${tPill(t)}</dd><dt>Seats</dt><dd>${t.seats}</dd>${t.guests ? `<dt>Guests</dt><dd class="num">${t.guests}</dd>` : ''}
+  <dl class="kv"><dt>Status</dt><dd>${tPill(t)}</dd><dt>Seats</dt><dd>${t.seats}</dd>${rv ? `<dt>Reserved</dt><dd class="num">${tm(rv.at)} · ${esc(rv.name)} · ${rv.pax} guests${rv.order?.length ? ' · advance order' : ''}</dd>` : ''}${t.guests ? `<dt>Guests</dt><dd class="num">${t.guests}</dd>` : ''}
     ${t.openedAt ? `<dt>Seated</dt><dd class="num">${tm(t.openedAt)} (${mins(t.openedAt)} min)</dd>` : ''}
     ${os.length ? `<dt>Orders</dt><dd class="num">${os.map(o => `${o.id} at ${tm(o.createdAt)} · ${OSTAT[o.status].l}`).join('<br>')}</dd>` : ''}
     ${t.bill ? `<dt>Pays with</dt><dd>${esc(payName(t.bill.method))}</dd>` : ''}</dl>
@@ -1033,13 +1443,14 @@ function vTables(){
     <button class="btn btn-outline" data-act="goto-set" data-v="tables">${icon('sliders', 20)}Manage tables</button>
     <button class="btn ${edit ? 'btn-primary' : 'btn-outline'} desk-only" data-act="layout-edit" aria-pressed="${edit}">${icon(edit ? 'check' : 'grid', 20)}${edit ? 'Done arranging' : 'Arrange tables'}</button></div>
   <div class="floor-bar"><div class="chips" role="group" aria-label="Floor level">${S.floors.map(f => `<button class="chip" data-act="floor" data-v="${f.id}" aria-pressed="${S.floor === f.id}">${esc(f.name)} <span class="num muted">${S.tables.filter(t => t.floor === f.id).length}</span></button>`).join('')}</div>
-    <span class="spacer"></span><div class="legend">${Object.values(TSTAT).map(m => pill(m)).join('')}</div></div>
+    <span class="spacer"></span><div class="legend">${Object.values(TSTAT).map(m => pill(m)).join('')}${pill(RESERVED)}</div></div>
   <div class="floor-scroll" data-keep="floor"><div class="floor ${edit ? 'editing' : ''}">
-    ${tables.map(t => { const [tp, bt, w, h, round] = tableShape(t.seats), open = !edit && S.openTable === t.id, over = !edit && tableOverLimit(t);
+    ${tables.map(t => { const [tp, bt, w, h, round] = tableShape(t.seats), open = !edit && S.openTable === t.id, over = !edit && tableOverLimit(t), rv = !edit && tableRes(t), rface = rv && t.status === 'inactive';
       return `<div class="tw ${open ? 'open' : ''}" style="left:${t.x}%;top:${t.y}%">
         <div class="chairs" style="grid-column:2;grid-row:1">${chair(tp)}</div>
-        <button id="tb-${t.id}" class="tbl ${round ? 'round' : ''} t-${t.status}${over ? ' overstay' : ''}" style="width:${w}px;height:${h}px" ${edit ? `data-drag="${t.id}" aria-label="Move ${esc(t.name)}. Use the arrow keys."` : `data-act="tbl" data-id="${t.id}" aria-expanded="${open}" aria-label="${esc(t.name)}, ${t.seats} seats, ${TSTAT[t.status].l}${over ? ', over the stay time limit' : ''}"`}>
-          <b>${esc(t.name)}</b><span class="st">${icon(edit ? 'grid' : TSTAT[t.status].i, 16)}${edit ? 'Drag to move' : TSTAT[t.status].l}</span></button>
+        <button id="tb-${t.id}" class="tbl ${round ? 'round' : ''} t-${rface ? 'reserved' : t.status}${over ? ' overstay' : ''}" style="width:${w}px;height:${h}px" ${edit ? `data-drag="${t.id}" aria-label="Move ${esc(t.name)}. Use the arrow keys."` : `data-act="tbl" data-id="${t.id}" aria-expanded="${open}" aria-label="${esc(t.name)}, ${t.seats} seats, ${TSTAT[t.status].l}${rv ? `, reserved at ${tm(rv.at)}` : ''}${over ? ', over the stay time limit' : ''}"`}>
+          <b>${esc(t.name)}</b><span class="st">${rface ? `${icon('calendar', 16)}Reserved</span><span class="rsv-time num">${tm(rv.at)}` : `${icon(edit ? 'grid' : TSTAT[t.status].i, 16)}${edit ? 'Drag to move' : TSTAT[t.status].l}`}</span></button>
+        ${rv && !rface ? `<span class="rsv-badge num" title="Reserved at ${tm(rv.at)}" aria-hidden="true">${icon('calendar', 13)}${tm(rv.at)}</span>` : ''}
         ${over ? `<span class="overstay-badge" title="Over the ${S.tableTimerMins} min stay limit" aria-hidden="true">${icon('clock', 14)}</span>` : ''}
         <div class="chairs" style="grid-column:2;grid-row:3">${chair(bt)}</div>
         ${open ? `<div class="pop ${t.y > 55 ? 'up' : 'dn'} ${t.x > 60 ? 'ar' : 'al'}" role="region" aria-label="${esc(t.name)} details"><div class="pop-head"><h3>${esc(t.name)}</h3><button class="icon-btn" data-act="tbl" data-id="${t.id}" aria-label="Close">${icon('x')}</button></div>${tableBody(t)}</div>` : ''}
@@ -1047,7 +1458,7 @@ function vTables(){
     ${tables.length ? '' : `<div class="empty" style="position:absolute;inset:0;justify-content:center">No tables on this floor yet.<button class="btn btn-primary" data-act="goto-set" data-v="tables">Add a table</button></div>`}
   </div></div>
   <div class="tlist">${tables.map(t => { const open = S.openTable === t.id, over = tableOverLimit(t); return `<div class="trow ${open ? 'open' : ''}">
-    <button data-act="tbl" data-id="${t.id}" aria-expanded="${open}"><span class="grow"><b>${esc(t.name)}</b><span class="caption muted"> · ${t.seats} seats</span></span>${over ? `<span class="pill p-error">${icon('clock', 16)}Over time limit</span>` : ''}${tPill(t)}<span class="chev">${icon('chev')}</span></button>
+    <button data-act="tbl" data-id="${t.id}" aria-expanded="${open}"><span class="grow"><b>${esc(t.name)}</b><span class="caption muted"> · ${t.seats} seats</span></span>${over ? `<span class="pill p-error">${icon('clock', 16)}Over time limit</span>` : ''}${tableRes(t) ? pill(RESERVED) : ''}${tPill(t)}<span class="chev">${icon('chev')}</span></button>
     ${open ? `<div class="tbody">${tableBody(t)}</div>` : ''}</div>`; }).join('') || '<div class="card empty">No tables on this floor yet.</div>'}</div>`;
 }
 
@@ -1091,16 +1502,17 @@ function vSettings(){
 const GUIDE = [
   {v:'dashboard', ic:'dash', t:'Dashboard', d:'See how the day is going at a glance.', s:['Check income today and the amount still to collect.', 'Count today’s orders, paid and open.', 'See the top 5 foods ordered today.', 'Check how many tables are active and inactive.']},
   {v:'tables', ic:'table', t:'Tables', d:'Seat guests, collect payment and reset tables.', s:['When guests sit at an inactive table, select it and tap Activate table. This always comes first.', 'Show the QR to the guests. Every guest at the table scans the same code.', 'When a table shows Bill out, go to it and tap Receive payment.', 'After cleaning, tap Mark as clean. The old QR stops working.', 'Tap Arrange tables and drag each table to where it sits in your restaurant.']},
-  {v:'kitchen', ic:'pot', t:'Kitchen', d:'Cook orders in the order they arrived.', s:['New orders appear in Queued, oldest at the top.', 'Tap the button on a card to move it: Cooking, Order out.', 'Guests see every change on their phone right away.', 'Waiters tap Mark as served after bringing the food to the table.']},
+  {v:'kitchen', ic:'pot', t:'Kitchen', d:'Cook orders in the order they arrived.', s:['New orders appear in Queued, oldest at the top.', 'Tap the button on a card to move it: Cooking, Plating, Order out.', 'Guests see every change on their phone right away.', 'Waiters tap Mark as served after bringing the food to the table.']},
   {v:'orders', ic:'receipt', t:'Orders', d:'Find any order, in any status.', s:['Pick Today, This week or This month.', 'Type an order ID in the search box to find it on any date.', 'Select a row to see its items, payment and discount.']},
   {v:'orders', ic:'bag', t:'Takeout', d:'Orders to go, paid on pickup.', s:['At the counter: in Orders, tap New takeout order, enter the name and add food. It goes straight to the kitchen.', 'Self-order: put the Takeout QR (in Orders) at the counter. Customers order on their phone and get a pickup number.', 'Kitchen cards for takeout are tagged Takeout and move like dine-in. In Order out, pack it and tap Ready for pickup. The card leaves the kitchen.', 'Ready orders appear under Ready for pickup in Orders. Tap Collect payment as you hand the food over. That marks it paid and picked up.']},
-  {v:'foods', ic:'utensils', t:'Foods', d:'Keep the menu up to date.', s:['Tap Add food and fill in the name, category, price and description.', 'Add photos for the gallery, the prep time guests see as the estimated wait, and tags: New, Must try or Best seller.', 'Set a food to Not available when it runs out. Guests cannot order it.', 'Switch between Cards and Table view.']},
+  {v:'reservations', ic:'calendar', t:'Reservations', d:'Book tables ahead and keep track of who is coming.', s:['Switch between Month, Week and List. Select a day to see its reservations, and use the arrows or Today to move around.', 'Tap New reservation (or the + on a day) and enter the guest, date, time and table. Turn on Advance order to pick the food they want ready.', 'Reschedule from the reservation, or drag it to another day on the calendar. Cancel keeps a record, and you can restore it.', '20 minutes before the time, a banner appears on every screen. Tap Seat now to activate the table. The advance order goes on its plate.', 'A table shows Reserved in its own color from an hour before the booking.']},
+  {v:'foods', ic:'utensils', t:'Foods', d:'Keep the menu up to date.', s:['Tap Add food and fill in the name, category, price and description.', 'Add photos for the gallery, the prep time guests see as the estimated wait, and tags: New, Must try or Best seller.', 'If a food comes in sizes or portions, such as a pizza or a drink, tap Add variant and give each one a name and its own price. The food then shows From and the lowest price, and guests pick one when they add it.', 'Set a food to Not available when it runs out. Guests cannot order it.', 'Switch between Cards and Table view.']},
   {v:'settings', ic:'sliders', t:'Settings', d:'Set up how the restaurant runs.', s:['Payment methods: choose what guests can pick when they ask for the bill.', 'Discounts: set the percent off and what the guest must show.', 'Users and roles: decide who can open each module.', 'Categories: group foods on the menu.', 'Tables and floor levels: add, rename or remove tables, set their seats, and add a 2nd floor.']},
 ];
 function vGuide(){
   return `<div class="page-head"><div><h1>Guide</h1><p class="muted">How each part of FBS Serve works.</p></div></div>
   <section class="card"><div class="card-head"><h3>From QR to clean table</h3></div>
-    <ol class="flow">${[['Waiter','Activates the inactive table the guests sat at. Its QR code appears.'], ['Guests','Add food to one shared plate. One guest sends it to the kitchen.'], ['Kitchen','Moves the order: Cooking, Order out.'], ['Waiter','Brings the food. The table becomes Eating.'], ['Guest','Taps Bill out and picks a payment method. The waiter is called.'], ['Waiter','Collects payment, cleans, and marks the table clean.']].map(([w, d], i) => `<li><span class="n">${i + 1}</span><b>${w}</b><span class="caption muted">${d}</span></li>`).join('')}</ol>
+    <ol class="flow">${[['Waiter','Activates the inactive table the guests sat at. Its QR code appears.'], ['Guests','Add food to one shared plate. One guest sends it to the kitchen.'], ['Kitchen','Moves the order: Cooking, Plating, Order out.'], ['Waiter','Brings the food. The table becomes Eating.'], ['Guest','Taps Bill out and picks a payment method. The waiter is called.'], ['Waiter','Collects payment, cleans, and marks the table clean.']].map(([w, d], i) => `<li><span class="n">${i + 1}</span><b>${w}</b><span class="caption muted">${d}</span></li>`).join('')}</ol>
   </section>
   <div class="guide-grid">${GUIDE.map(g => `<article class="card gcard"><div class="gi">${icon(g.ic)}</div><h3>${g.t}</h3><p class="muted">${g.d}</p><ol>${g.s.map(x => `<li>${x}</li>`).join('')}</ol><button class="btn btn-outline" data-act="nav" data-v="${g.v}">Open ${g.t}</button></article>`).join('')}
     <article class="card gcard"><div class="gi">${icon('phone')}</div><h3>Guest phone</h3><p class="muted">What guests see after scanning the QR.</p><ol><li>Browse the menu. Tap a photo to open the gallery and zoom in. Tap Add to put a dish on the plate.</li><li>Check Your plate. Everyone at the table shares it.</li><li>One guest taps Send to kitchen.</li><li>Follow the order live, then tap Bill out to pay.</li></ol><button class="btn btn-outline" data-act="mode" data-v="guest">Preview guest view</button></article>
@@ -1110,11 +1522,13 @@ function vGuide(){
 function staffShell(){
   const bills = S.tables.filter(t => t.status === 'billout');
   const kq = S.orders.filter(o => KITCHEN.includes(o.status)).length;
-  const badge = {kitchen:kq, tables:bills.length, orders:toReady().length};
-  const views = {dashboard:vDashboard, orders:vOrders, kitchen:vKitchen, foods:vFoods, tables:vTables, settings:vSettings, guide:vGuide};
+  const due = dueRes();
+  const badge = {kitchen:kq, tables:bills.length, orders:toReady().length, reservations:due.length};
+  const views = {dashboard:vDashboard, orders:vOrders, kitchen:vKitchen, foods:vFoods, tables:vTables, reservations:vReservations, settings:vSettings, guide:vGuide};
   return `<div class="shell"><nav class="rail" aria-label="Modules" data-keep="rail"><div class="rail-brand">${LOGO}<span>FBS Serve<small>Restaurant manager</small></span></div>${NAV.map(n => `<button class="nav" data-act="nav" data-v="${n.id}" ${S.view === n.id ? 'aria-current="page"' : ''}>${icon(n.ic, 18)}${n.label}${badge[n.id] ? `<span class="badge num" aria-label="${badge[n.id]} waiting">${badge[n.id]}</span>` : ''}</button>`).join('')}</nav>
   <main class="main">${topBar(false)}<div class="wrap">
     ${bills.map(t => `<div class="alert brand" role="alert">${icon('bell')}<p><b>${t.name} is asking for the bill.</b> Pays with ${esc(payName(t.bill.method))} · ${mins(t.bill.at)} min ago</p><button class="btn btn-primary" data-act="receive" data-id="${t.id}">Receive payment</button></div>`).join('')}
+    ${due.map(r => `<div class="alert rsv" role="alert">${icon('calendar')}<p><b>Reservation at ${tm(r.at)} · ${esc(r.name)}.</b> ${r.pax} guests · ${r.tableId ? esc(tName(r.tableId)) : 'no table yet'}${r.order?.length ? ' · has an advance order' : ''} · ${dueText(r)}</p><button class="btn btn-primary" data-act="res-seat" data-id="${r.id}">Seat now</button><button class="btn btn-outline" data-act="res-open" data-id="${r.id}">Open</button><button class="icon-btn" data-act="res-dismiss" data-id="${r.id}" aria-label="Got it, dismiss">${icon('x', 18)}</button></div>`).join('')}
     ${views[S.view]()}
   </div><footer class="foot"><span>© 2026 Frontline Business Solutions</span><span>FBS Serve v1.0</span></footer></main></div>`;
 }
@@ -1144,9 +1558,9 @@ function tablePhone(t){
   return `<div class="phone" aria-label="Guest phone preview">
       <div class="g-top">${LOGO}<div class="grow"><b>FBS Serve</b><div class="caption muted">${t.name} · ${esc(S.guestName)}</div></div>${live ? tPill(t) : ''}</div>
       ${!live ? `<div class="g-scroll">${gClosed(t)}</div>` : `<div class="g-scroll" data-keep="gscroll">${({menu:gMenu, plate:gPlate, orders:gOrders, bill:gBill})[S.guestTab](t)}</div>
-      ${S.guestTab === 'plate' && n ? `<div class="g-foot"><button class="btn btn-primary block" data-act="g-send">Send to kitchen · ${peso(sum(plate.map(l => food(l.foodId).price * l.qty)))}</button></div>` : ''}
+      ${S.guestTab === 'plate' && n ? `<div class="g-foot"><button class="btn btn-primary block" data-act="g-send">Send to kitchen · ${peso(sum(plate.map(l => linePrice(l) * l.qty)))}</button></div>` : ''}
       <nav class="g-tabs" aria-label="Guest menu">${[['menu','Menu','utensils'], ['plate','Plate','plate'], ['orders','Orders','clock'], ['bill','Bill','wallet']].map(([k, l, ic]) => `<button class="g-tab" data-act="g-tab" data-v="${k}" ${S.guestTab === k ? 'aria-current="page"' : ''}>${icon(ic)}${l}${k === 'plate' && n ? `<span class="badge num">${n}</span>` : ''}</button>`).join('')}</nav>`}
-</div>`;
+${pickSheet()}</div>`;
 }
 // Takeout QR phone: menu, plate and order tracker. No bill tab, since takeout is paid at the counter on pickup.
 function toPhone(){
@@ -1155,15 +1569,15 @@ function toPhone(){
   return `<div class="phone" aria-label="Takeout phone preview">
       <div class="g-top">${LOGO}<div class="grow"><b>FBS Serve</b><div class="caption muted">Takeout · pay when you pick up</div></div>${toTag()}</div>
       <div class="g-scroll" data-keep="gscroll">${tab === 'menu' ? gMenu() : tab === 'plate' ? toPlate(plate) : toTrack()}</div>
-      ${tab === 'plate' && n ? `<div class="g-foot"><button class="btn btn-primary block" data-act="to-send">Place takeout order · ${peso(sum(plate.map(l => food(l.foodId).price * l.qty)))}</button></div>` : ''}
+      ${tab === 'plate' && n ? `<div class="g-foot"><button class="btn btn-primary block" data-act="to-send">Place takeout order · ${peso(sum(plate.map(l => linePrice(l) * l.qty)))}</button></div>` : ''}
       <nav class="g-tabs three" aria-label="Takeout menu">${[['menu','Menu','utensils'], ['plate','Plate','plate'], ['orders','Orders','clock']].map(([k, l, ic]) => `<button class="g-tab" data-act="g-tab" data-v="${k}" ${tab === k ? 'aria-current="page"' : ''}>${icon(ic)}${l}${k === 'plate' && n ? `<span class="badge num">${n}</span>` : ''}</button>`).join('')}</nav>
-</div>`;
+${pickSheet()}</div>`;
 }
 function toPlate(plate){
   if (!plate.length) return `<div class="center"><div class="big-ic">${icon('bag', 32)}</div><h3>Your plate is empty</h3><p class="muted">Pick food from the menu, then place your takeout order.</p><button class="btn btn-primary" data-act="g-tab" data-v="menu">Browse menu</button></div>`;
   return `<div><h3>Your plate</h3><p class="caption muted">Packed to go. You pay at the counter when you pick it up.</p></div>
   <div class="alert info">${icon('clock')}<p><b>Ready in about ${orderEta(plate)} min</b><br><span class="caption">The kitchen starts cooking as soon as you place the order.</span></p></div>
-  <div class="card" style="padding:4px 16px">${plate.map(l => { const f = food(l.foodId); return `<div class="pline"><div class="grow"><b>${esc(f.name)}</b><div class="caption muted"><span class="num">${peso(f.price * l.qty)}</span> · <span class="num">${f.eta} min</span></div></div>
+  <div class="card" style="padding:4px 16px">${plate.map(l => { const f = food(l.foodId); return `<div class="pline"><div class="grow"><b>${esc(itemName(f, l.variantId))}</b><div class="caption muted"><span class="num">${peso(unitPrice(f, l.variantId) * l.qty)}</span> · <span class="num">${f.eta} min</span></div></div>
     <div class="stepper"><button data-act="g-qty" data-id="${l.id}" data-v="-1" aria-label="Remove one ${esc(f.name)}">${icon(l.qty > 1 ? 'minus' : 'trash', 20)}</button><span class="num">${l.qty}</span><button data-act="g-qty" data-id="${l.id}" data-v="1" aria-label="Add one ${esc(f.name)}">${icon('plus', 20)}</button></div></div>`; }).join('')}</div>`;
 }
 function toTrack(){
@@ -1173,8 +1587,8 @@ function toTrack(){
     <span class="caption muted num">${o.id} · ${tm(o.createdAt)} · ${esc(o.customer)}</span>
     <div class="pickup"><span class="caption muted">Pickup number</span><b class="num">${o.pickup}</b></div>
     <h3>${m.g}</h3><p class="caption muted">${m.d}</p>
-    ${['queued','cooking'].includes(o.status) ? (left => `<span class="pill p-info" style="align-self:flex-start">${icon('clock', 16)}${left > 0 ? `Ready in about ${left} min` : 'Almost ready'}</span>`)((o.eta || orderEta(o.items)) - mins(o.createdAt)) : ''}
-    <div class="prog" aria-hidden="true">${TO_STEPS.map((_, i) => `<i class="${i <= k ? 'on' : ''}"></i>`).join('')}</div>
+    ${['queued','cooking','plating'].includes(o.status) ? (left => `<span class="pill p-info" style="align-self:flex-start">${icon('clock', 16)}${left > 0 ? `Ready in about ${left} min` : 'Almost ready'}</span>`)((o.eta || orderEta(o.items)) - mins(o.createdAt)) : ''}
+    <div class="prog" style="grid-template-columns:repeat(${TO_STEPS.length},1fr)" aria-hidden="true">${TO_STEPS.map((_, i) => `<i class="${i <= k ? 'on' : ''}"></i>`).join('')}</div>
     <ol class="steps">${TO_STEP_L.map((l, i) => `<li class="${i < k || done ? 'done' : i === k ? 'now' : ''}"><span class="dot">${i < k || done ? icon('check') : ''}</span>${l}</li>`).join('')}</ol>
     <ul class="items">${o.items.map(i => `<li><b class="num">${i.qty}×</b><span>${esc(i.name)}</span><span class="num">${peso(i.qty * i.price)}</span></li>`).join('')}</ul>
     <div class="sum"><div class="total"><span>${done ? 'Paid' : 'Pay at pickup'}</span><span class="num">${peso(total(o))}</span></div></div>
@@ -1189,8 +1603,8 @@ function gMenu(){
   const list = S.foods.filter(f => S.guestCat === 'all' || f.cat === S.guestCat);
   return `<div class="g-cats" data-keep="gcats">${cats.map(([k, l]) => `<button class="chip" data-act="g-cat" data-v="${k}" aria-pressed="${S.guestCat === k}">${esc(l)}</button>`).join('')}</div>
   ${list.map(f => { const ok = f.status === 'available'; return `<article class="gfood ${ok ? '' : 'unavail'}"><button class="gimg" data-act="gallery" data-id="${f.id}" aria-label="View photos of ${esc(f.name)}">${foodImg(f, 32)}${f.photos.length > 1 ? `<span class="pcount">${icon('image', 14)}${f.photos.length}</span>` : ''}</button><div class="info">
-    <div>${tagHtml(f.tags)}</div><h4>${esc(f.name)}</h4><p class="caption muted">${esc(f.desc)}</p>${etaHtml(f)}
-    <div class="foot"><span class="price num">${peso(f.price)}</span>${ok ? `<button class="btn btn-primary btn-add" data-act="g-add" data-id="${f.id}" aria-label="Add ${esc(f.name)} to plate">${icon('plus', 18)}Add</button>` : `<span class="pill p-error">Not available</span>`}</div>
+    <div>${tagHtml(f.tags)}</div><h4>${esc(f.name)}</h4><p class="caption muted">${esc(f.desc)}</p>${etaHtml(f)}${hasV(f) ? `<span class="caption muted">${f.variants.map(v => esc(v.name)).join(' · ')}</span>` : ''}
+    <div class="foot">${priceHtml(f)}${ok ? `<button class="btn btn-primary btn-add" data-act="g-add" data-id="${f.id}" aria-label="${hasV(f) ? 'Choose an option for' : 'Add'} ${esc(f.name)}${hasV(f) ? '' : ' to plate'}">${icon('plus', 18)}Add</button>` : `<span class="pill p-error">Not available</span>`}</div>
   </div></article>`; }).join('')}`;
 }
 function gPlate(t){
@@ -1199,7 +1613,7 @@ function gPlate(t){
   const wait = orderEta(plate);
   return `<div><h3>Your plate</h3><p class="caption muted">Shared by everyone at ${t.name}. Only one guest sends it to the kitchen.</p></div>
   <div class="alert info">${icon('clock')}<p><b>Estimated wait: about ${wait} min</b><br><span class="caption">The kitchen cooks your dishes at the same time, so the wait is about as long as the slowest dish.</span></p></div>
-  <div class="card" style="padding:4px 16px">${plate.map(l => { const f = food(l.foodId); return `<div class="pline"><div class="grow"><b>${esc(f.name)}</b><div class="caption muted">${esc(l.by)}${l.by === S.guestName ? ' (you)' : ''} · <span class="num">${peso(f.price * l.qty)}</span> · <span class="num">${f.eta} min</span></div></div>
+  <div class="card" style="padding:4px 16px">${plate.map(l => { const f = food(l.foodId); return `<div class="pline"><div class="grow"><b>${esc(itemName(f, l.variantId))}</b><div class="caption muted">${esc(l.by)}${l.by === S.guestName ? ' (you)' : ''} · <span class="num">${peso(unitPrice(f, l.variantId) * l.qty)}</span> · <span class="num">${f.eta} min</span></div></div>
     <div class="stepper"><button data-act="g-qty" data-id="${l.id}" data-v="-1" aria-label="Remove one ${esc(f.name)}">${icon(l.qty > 1 ? 'minus' : 'trash', 20)}</button><span class="num">${l.qty}</span><button data-act="g-qty" data-id="${l.id}" data-v="1" aria-label="Add one ${esc(f.name)}">${icon('plus', 20)}</button></div></div>`; }).join('')}</div>`;
 }
 function gOrders(t){
@@ -1208,8 +1622,8 @@ function gOrders(t){
   return os.map(o => { const k = GSTEPS.indexOf(o.status), m = OSTAT[o.status]; return `<section class="card track" style="padding:16px">
     <span class="caption muted num">${o.id} · ${tm(o.createdAt)} · sent by ${esc(o.by)}</span>
     <h3>${m.g}</h3><p class="caption muted">${m.d}</p>
-    ${['queued','cooking'].includes(o.status) ? (left => `<span class="pill p-info" style="align-self:flex-start">${icon('clock', 16)}${left > 0 ? `Ready in about ${left} min` : 'Almost ready'}</span>`)((o.eta || orderEta(o.items)) - mins(o.createdAt)) : ''}
-    <div class="prog" aria-hidden="true">${GSTEPS.map((_, i) => `<i class="${i <= k ? 'on' : ''}"></i>`).join('')}</div>
+    ${['queued','cooking','plating'].includes(o.status) ? (left => `<span class="pill p-info" style="align-self:flex-start">${icon('clock', 16)}${left > 0 ? `Ready in about ${left} min` : 'Almost ready'}</span>`)((o.eta || orderEta(o.items)) - mins(o.createdAt)) : ''}
+    <div class="prog" style="grid-template-columns:repeat(${GSTEPS.length},1fr)" aria-hidden="true">${GSTEPS.map((_, i) => `<i class="${i <= k ? 'on' : ''}"></i>`).join('')}</div>
     <ol class="steps">${GSTEP_L.map((l, i) => `<li class="${i < k || o.status === 'served' ? 'done' : i === k ? 'now' : ''}"><span class="dot">${i < k || o.status === 'served' ? icon('check') : ''}</span>${l}</li>`).join('')}</ol>
     <ul class="items">${o.items.map(i => `<li><b class="num">${i.qty}×</b><span>${esc(i.name)}</span><span class="num">${peso(i.qty * i.price)}</span></li>`).join('')}</ul>
   </section>`; }).join('');
@@ -1237,11 +1651,25 @@ function qrModal(t){
     `<div class="m-foot"><button class="btn btn-outline" data-act="close">Done</button><button class="btn btn-outline" data-act="copy-link" data-id="${t.id}">Copy link</button><button class="btn btn-primary" data-act="open-guest" data-id="${t.id}">${icon('phone', 20)}Open guest view</button></div>`);
 }
 function orderModal(o){
-  modal(o.id, `<div class="m-body"><dl class="kv"><dt>Status</dt><dd>${oPill(o)}</dd>${isTO(o) ? `<dt>Type</dt><dd>Takeout, ${o.source === 'qr' ? 'from the Takeout QR' : 'at the counter'}</dd><dt>Pickup number</dt><dd class="num">${o.pickup}</dd><dt>Customer</dt><dd>${esc(o.customer)}${o.phone ? ` · <span class="num">${esc(o.phone)}</span>` : ''}</dd>` : `<dt>Table</dt><dd>${esc(tName(o.table))}</dd>`}<dt>Ordered</dt><dd class="num">${dt(o.createdAt)}, ${tm(o.createdAt)}</dd>${isTO(o) ? '' : `<dt>Sent by</dt><dd>${esc(o.by)}</dd>`}
-    ${o.payment ? `<dt>Payment</dt><dd>${esc(payName(o.payment))}</dd>` : ''}${o.discount ? `<dt>Discount</dt><dd>${esc(o.discount.name)} (${o.discount.pct}%)</dd>` : ''}</dl>
-    <ul class="items">${o.items.map(i => `<li><b class="num">${i.qty}×</b><span>${esc(i.name)}</span><span class="num">${peso(i.qty * i.price)}</span></li>`).join('')}</ul>
+  // A served dine-in order can be paid right here: method, discount and the amount to collect.
+  const payable = o.status === 'served' && !isTO(o), t = tableOf(o.table);
+  const details = `<dl class="kv"><dt>Status</dt><dd>${oPill(o)}</dd>${isTO(o) ? `<dt>Order from</dt><dd>${chTag(o)}</dd>${o.ref ? `<dt>${chanOf(o).l} order no.</dt><dd class="num">${esc(o.ref)}</dd>` : ''}<dt>Type</dt><dd>Takeout, ${isPlatform(o) ? 'entered by staff' : o.source === 'qr' ? 'from the Takeout QR' : 'at the counter'}</dd><dt>Pickup number</dt><dd class="num">${o.pickup}</dd><dt>Customer</dt><dd>${esc(o.customer)}${o.phone ? ` · <span class="num">${esc(o.phone)}</span>` : ''}</dd>` : `<dt>Table</dt><dd>${esc(tName(o.table))}</dd>`}<dt>Ordered</dt><dd class="num">${dt(o.createdAt)}, ${tm(o.createdAt)}</dd>${isTO(o) ? '' : `<dt>Sent by</dt><dd>${esc(o.by)}</dd>`}
+    ${o.payment ? `<dt>Payment</dt><dd>${esc(payName(o.payment))}${payBreakdown(o) ? `<br><span class="caption muted num">${payBreakdown(o)}</span>` : ''}</dd>` : ''}${o.discount ? `<dt>Discount</dt><dd>${esc(o.discount.name)} (${o.discount.pct}%)</dd>` : ''}</dl>
+    <ul class="items">${o.items.map(i => `<li><b class="num">${i.qty}×</b><span>${esc(i.name)}</span><span class="num">${peso(i.qty * i.price)}</span></li>`).join('')}</ul>`;
+  if (payable){
+    const methods = S.payments.filter(x => x.active), list = methods.length ? methods : S.payments;
+    modal(o.id, `<form id="pay-form" data-form="orderPay" data-id="${o.id}"><div class="m-body">${details}
+      <div class="form-grid">
+        <label class="field"><span>Payment method</span><select id="pay-method" name="method" class="input">${list.map(x => `<option value="${x.id}" ${x.id === t?.bill?.method ? 'selected' : ''}>${esc(x.name)}</option>`).join('')}</select>${t?.bill ? `<span class="hint">Guest chose ${esc(payName(t.bill.method))}.</span>` : ''}</label>
+        <label class="field"><span>Discount</span><select id="pay-disc" name="disc" class="input" data-change="payCalc"><option value="">No discount</option>${S.discounts.filter(d => d.active).map(d => `<option value="${d.id}">${esc(d.name)} (${d.pct}%)</option>`).join('')}</select><span class="hint" id="pay-note">Check the guest’s ID before applying a discount.</span></label>
+      </div><div class="sum" id="pay-sum"></div>${splitHtml()}</div>
+      <div class="m-foot"><button type="button" class="btn btn-outline" data-act="close">Close</button><button class="btn btn-primary">${icon('check', 20)}Payment received</button></div></form>`);
+    resetSplit(); CHANGE.payCalc();
+    return;
+  }
+  modal(o.id, `<div class="m-body">${details}
     <div class="sum"><div><span class="muted">Subtotal</span><span class="num">${peso(subtotal(o))}</span></div>${o.discount ? `<div><span class="muted">Discount</span><span class="num">−${peso(subtotal(o) - total(o))}</span></div>` : ''}<div class="total"><span>Total</span><span class="num">${peso(total(o))}</span></div></div></div>`,
-    `<div class="m-foot"><button class="btn btn-outline" data-act="close">Close</button>${isTO(o) && o.status === 'ready' ? `<button class="btn btn-primary" data-act="pickup" data-id="${o.id}">${icon('wallet', 20)}Collect payment</button>` : ''}</div>`);
+    `<div class="m-foot"><button class="btn btn-outline" data-act="close">Close</button>${isTO(o) && o.status === 'ready' ? `<button class="btn btn-primary" data-act="pickup" data-id="${o.id}">${icon(isPlatform(o) ? 'bag' : 'wallet', 20)}${isPlatform(o) ? 'Hand to rider' : 'Collect payment'}</button>` : ''}</div>`);
 }
 function payModal(t){
   const os = sessionOrders(t).filter(o => o.status !== 'paid');
@@ -1251,9 +1679,9 @@ function payModal(t){
       <label class="field"><span>Payment method</span><select id="pay-method" name="method" class="input">${S.payments.map(p => `<option value="${p.id}" ${t.bill?.method === p.id ? 'selected' : ''}>${esc(p.name)}</option>`).join('')}</select><span class="hint">Guest chose ${esc(payName(t.bill?.method))}.</span></label>
       <label class="field"><span>Discount</span><select id="pay-disc" name="disc" class="input" data-change="payCalc"><option value="">No discount</option>${S.discounts.filter(d => d.active).map(d => `<option value="${d.id}">${esc(d.name)} (${d.pct}%)</option>`).join('')}</select><span class="hint" id="pay-note">Check the guest’s ID before applying a discount.</span></label>
     </div>
-    <div class="sum" id="pay-sum"></div></div>
+    <div class="sum" id="pay-sum"></div>${splitHtml()}</div>
     <div class="m-foot"><button type="button" class="btn btn-outline" data-act="close">Cancel</button><button class="btn btn-primary">${icon('check', 20)}Payment received</button></div></form>`);
-  CHANGE.payCalc();
+  resetSplit(); CHANGE.payCalc();
 }
 // Pay on pickup: one takeout order, handed over and paid at the counter.
 function pickupModal(o){
@@ -1264,9 +1692,19 @@ function pickupModal(o){
       <label class="field"><span>Payment method</span><select id="pay-method" name="method" class="input">${S.payments.filter(p => p.active).map(p => `<option value="${p.id}">${esc(p.name)}</option>`).join('')}</select></label>
       <label class="field"><span>Discount</span><select id="pay-disc" name="disc" class="input" data-change="payCalc"><option value="">No discount</option>${S.discounts.filter(d => d.active).map(d => `<option value="${d.id}">${esc(d.name)} (${d.pct}%)</option>`).join('')}</select><span class="hint" id="pay-note">Check the guest’s ID before applying a discount.</span></label>
     </div>
-    <div class="sum" id="pay-sum"></div></div>
+    <div class="sum" id="pay-sum"></div>${splitHtml()}</div>
     <div class="m-foot"><button type="button" class="btn btn-outline" data-act="close">Cancel</button><button class="btn btn-primary">${icon('check', 20)}Paid and picked up</button></div></form>`);
-  CHANGE.payCalc();
+  resetSplit(); CHANGE.payCalc();
+}
+// GrabFood and Foodpanda orders are paid in the app, so the counter only hands the order to the rider.
+function handoverModal(o){
+  const c = chanOf(o);
+  modal(`Hand to rider · ${o.pickup}`, `<form id="hand-form" data-form="handover" data-id="${o.id}"><div class="m-body">
+    <p>${chTag(o)}<br><b>${esc(o.customer)}</b>${o.ref ? ` · <span class="num">${esc(o.ref)}</span>` : ''}<br><span class="caption muted num">${o.id}</span></p>
+    <ul class="items">${o.items.map(i => `<li><b class="num">${i.qty}×</b><span>${esc(i.name)}</span><span class="num">${peso(i.qty * i.price)}</span></li>`).join('')}</ul>
+    <div class="alert info">${icon('wallet')}<p><b>Already paid in the ${c.l} app.</b><br><span class="caption">Give the order to the rider. Do not collect payment.</span></p></div>
+    <div class="sum"><div class="total"><span>Order total</span><span class="num">${peso(subtotal(o))}</span></div></div></div>
+    <div class="m-foot"><button type="button" class="btn btn-outline" data-act="close">Cancel</button><button class="btn btn-primary">${icon('check', 20)}Handed to rider</button></div></form>`);
 }
 function toQrModal(){
   modal('Takeout QR code', `<div class="m-body"><div class="qr-box">${qrSvg(toLink(), 'QR code for takeout orders')}<b>Scan to order takeout</b><span class="caption muted" style="word-break:break-all;user-select:all">${esc(toLink())}</span></div>
@@ -1274,48 +1712,86 @@ function toQrModal(){
     `<div class="m-foot"><button class="btn btn-outline" data-act="close">Done</button><button class="btn btn-outline" data-act="copy-to-link">Copy link</button><button class="btn btn-primary" data-act="open-to">${icon('phone', 20)}Open guest view</button></div>`);
 }
 // Counter takeout: staff enter the name and pick food by category tab. Rebuilt on every change; the name, phone and tab live in S so they survive.
+// Takeout counter draft: key is the food id, or "foodId|variantId" for a food with variants.
+const draftItems = (d = S.toDraft) => Object.entries(d).filter(([, q]) => q > 0).map(([k, qty]) => { const [fid, vid] = k.split('|'), f = food(fid); return {foodId:fid, variantId:vid, name:itemName(f, vid), price:unitPrice(f, vid), qty}; });
 function toCounterModal(){
-  const d = S.toDraft, items = Object.entries(d).filter(([, q]) => q > 0).map(([id, qty]) => ({foodId:id, qty, price:food(id).price}));
+  const d = S.toDraft, items = draftItems();
   const n = sum(items.map(i => i.qty)), tot = sum(items.map(i => i.price * i.qty));
   const cats = S.categories.filter(c => S.foods.some(f => f.cat === c.id && f.status === 'available'));
-  const card = f => `<div class="to-food ${d[f.id] ? 'on' : ''}"><div><b>${esc(f.name)}</b><div class="caption muted num">${peso(f.price)} · ${f.eta} min</div></div>
-    ${d[f.id] ? `<div class="stepper" style="align-self:flex-start"><button type="button" data-act="to-qty" data-id="${f.id}" data-v="-1" aria-label="Remove one ${esc(f.name)}">${icon(d[f.id] > 1 ? 'minus' : 'trash', 18)}</button><span class="num">${d[f.id]}</span><button type="button" data-act="to-qty" data-id="${f.id}" data-v="1" aria-label="Add one ${esc(f.name)}">${icon('plus', 18)}</button></div>`
-      : `<button type="button" class="btn btn-outline" data-act="to-qty" data-id="${f.id}" data-v="1" aria-label="Add ${esc(f.name)}">${icon('plus', 18)}Add</button>`}</div>`;
+  const card = (f, v) => { const k = v ? f.id + '|' + v.id : f.id, nm = v ? `${f.name} (${v.name})` : f.name; return `<div class="to-food ${d[k] ? 'on' : ''}"><div><b>${esc(f.name)}</b>${v ? `<span class="vchip" style="margin-left:6px">${esc(v.name)}</span>` : ''}<div class="caption muted num">${peso(v ? v.price : f.price)} · ${f.eta} min</div></div>
+    ${d[k] ? `<div class="stepper" style="align-self:flex-start"><button type="button" data-act="to-qty" data-id="${esc(k)}" data-v="-1" aria-label="Remove one ${esc(nm)}">${icon(d[k] > 1 ? 'minus' : 'trash', 18)}</button><span class="num">${d[k]}</span><button type="button" data-act="to-qty" data-id="${esc(k)}" data-v="1" aria-label="Add one ${esc(nm)}">${icon('plus', 18)}</button></div>`
+      : `<button type="button" class="btn btn-outline" data-act="to-qty" data-id="${esc(k)}" data-v="1" aria-label="Add ${esc(nm)}">${icon('plus', 18)}Add</button>`}</div>`; };
+  const cards = f => hasV(f) ? f.variants.map(v => card(f, v)).join('') : card(f);
   const avail = c => S.foods.filter(f => f.cat === c && f.status === 'available');
   modal('New takeout order', `<div class="m-body">
     <div class="tabs to-tabs" role="tablist" aria-label="Food category">${[['all', 'All']].concat(cats.map(c => [c.id, c.name])).map(([k, l]) => `<button type="button" class="tab" role="tab" data-act="to-cat" data-v="${k}" aria-selected="${S.toCat === k}">${esc(l)}</button>`).join('')}</div>
     <div class="to-grid">
-    <div class="to-foods">${S.toCat === 'all' ? cats.map(c => `<span class="label muted to-cat">${esc(c.name)}</span>${avail(c.id).map(card).join('')}`).join('') : avail(S.toCat).map(card).join('')}</div>
+    <div class="to-foods">${S.toCat === 'all' ? cats.map(c => `<span class="label muted to-cat">${esc(c.name)}</span>${avail(c.id).map(cards).join('')}`).join('') : avail(S.toCat).map(cards).join('')}</div>
     <aside class="to-side">
+      <div class="field"><span>Order from</span><div class="chips" role="group" aria-label="Order from">${Object.entries(CHAN).map(([k, c]) => `<button type="button" class="chip" data-act="to-ch" data-v="${k}" aria-pressed="${S.toChannel === k}">${c.l}</button>`).join('')}</div></div>
+      ${S.toChannel !== 'walkin' ? `<label class="field"><span>${CHAN[S.toChannel].l} order no. (optional)</span><input id="to-ref" class="input num" data-input="toRef" value="${esc(S.toRef)}" autocomplete="off" maxlength="24"></label>` : ''}
       <label class="field"><span>Customer name</span><input id="to-name" class="input" data-input="toName" value="${esc(S.toName)}" autocomplete="off" maxlength="40"></label>
       <label class="field"><span>Phone (optional)</span><input id="to-phone" class="input num" data-input="toPhone" value="${esc(S.toPhone)}" inputmode="tel" autocomplete="off" maxlength="20"><span class="hint">To call or text when it’s ready.</span></label>
       <b>Order</b>
-      ${n ? `<ul class="items">${items.map(i => `<li><b class="num">${i.qty}×</b><span>${esc(food(i.foodId).name)}</span><span class="num">${peso(i.price * i.qty)}</span></li>`).join('')}</ul>
+      ${n ? `<ul class="items">${items.map(i => `<li><b class="num">${i.qty}×</b><span>${esc(i.name)}</span><span class="num">${peso(i.price * i.qty)}</span></li>`).join('')}</ul>
       <div class="sum"><div class="total"><span>Total</span><span class="num">${peso(tot)}</span></div></div>
-      <span class="caption muted num">Ready in about ${orderEta(items)} min · pay on pickup</span>` : `<p class="caption muted">No food yet. Pick from the tabs.</p>`}
+      <span class="caption muted num">Ready in about ${orderEta(items)} min · ${S.toChannel === 'walkin' ? 'pay on pickup' : `paid in the ${CHAN[S.toChannel].l} app`}</span>` : `<p class="caption muted">No food yet. Pick from the tabs.</p>`}
     </aside>
   </div></div>`,
   `<div class="m-foot to-foot"><span class="grow caption muted num">${n ? `${n} items · ${peso(tot)}` : 'Add food to start the order.'}</span><button class="btn btn-outline" data-act="close">Cancel</button><button class="btn btn-primary" data-act="to-place" ${n ? '' : 'disabled'}>Send to kitchen${n ? ' · ' + peso(tot) : ''}</button></div>`);
   dlg.classList.add('wide');
 }
+// Guest picks one variant (size or portion) before the food goes on the plate. A bottom sheet inside the phone, driven by S.pick.
+function pickSheet(){
+  const f = S.pick && food(S.pick); if (!f || !hasV(f)) return '';
+  const sel = f.variants.some(v => v.id === S.pickV) ? S.pickV : f.variants[0].id;
+  return `<div class="g-sheet-wrap"><button class="g-scrim" data-act="pick-close" tabindex="-1" aria-label="Close"></button>
+    <form class="g-sheet" data-form="variant" role="dialog" aria-modal="true" aria-label="Choose an option for ${esc(f.name)}">
+      <div class="g-sheet-head"><div class="grow"><h3>${esc(f.name)}</h3><p class="caption muted">Choose one</p></div><button type="button" class="icon-btn" data-act="pick-close" aria-label="Close">${icon('x')}</button></div>
+      ${f.variants.map(v => `<label class="radio-card"><input type="radio" name="variant" value="${esc(v.id)}" data-change="pickV" ${v.id === sel ? 'checked' : ''}><span class="grow"><b>${esc(v.name)}</b></span><b class="num">${peso(v.price)}</b></label>`).join('')}
+      ${etaHtml(f)}
+      <button class="btn btn-primary block">${icon('plus', 20)}Add to plate</button>
+    </form></div>`;
+}
+function addToPlate(f, vid){
+  const p = S.plates[S.guestTable] = S.plates[S.guestTable] || [];
+  const l = p.find(x => x.foodId === f.id && x.variantId === vid && x.by === S.guestName);
+  l ? l.qty++ : p.push({id:uid(), foodId:f.id, variantId:vid, qty:1, by:S.guestName});
+  toast(`${itemName(f, vid)} added to plate`);
+}
 function confirmModal(title, text, act, id, label){
   modal(title, `<div class="m-body"><p>${text}</p></div>`, `<div class="m-foot"><button class="btn btn-outline" data-act="close">Cancel</button><button class="btn btn-danger" data-act="${act}" data-id="${id}">${icon('trash', 20)}${label}</button></div>`);
 }
 function foodModal(f){
-  const n = !f; f = f || {name:'', cat:S.categories[0]?.id, price:'', desc:'', status:'available', tags:[], photos:[], eta:15};
-  draftPhotos = [...f.photos];
+  const n = !f; f = f || {name:'', cat:S.categories[0]?.id, price:'', desc:'', status:'available', tags:[], photos:[], eta:15, variants:[]};
+  draftPhotos = [...f.photos]; draftVariants = (f.variants || []).map(v => ({...v}));
   modal(n ? 'Add food' : `Edit ${esc(f.name)}`, `<form id="food-form" data-form="food" data-id="${n ? '' : f.id}"><div class="m-body"><div class="form-grid">
     <label class="field full"><span>Name</span><input id="ff-name" name="name" class="input" required value="${esc(f.name)}" placeholder="Chicken Inasal"></label>
     <label class="field"><span>Category</span><select id="ff-cat" name="cat" class="input">${S.categories.map(c => `<option value="${c.id}" ${c.id === f.cat ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</select></label>
-    <label class="field"><span>Price (₱)</span><input id="ff-price" name="price" class="input num" type="number" min="1" step="0.01" required value="${f.price}" placeholder="245.00"></label>
+    <label class="field"><span>Price (₱)</span><input id="ff-price" name="price" class="input num" type="number" min="1" step="0.01" ${draftVariants.length ? 'disabled' : 'required'} value="${f.price}" placeholder="245.00"><span class="hint" id="ff-price-hint">${draftVariants.length ? 'Set by the lowest variant price.' : 'Add variants below if it comes in sizes.'}</span></label>
     <label class="field"><span>Prep time (minutes)</span><input id="ff-eta" name="eta" class="input num" type="number" min="1" max="180" inputmode="numeric" required value="${f.eta}"><span class="hint">Guests see this as the estimated wait.</span></label>
     <label class="field full"><span>Description</span><textarea id="ff-desc" name="desc" class="input" placeholder="Ingredients in one line">${esc(f.desc)}</textarea></label>
+    <div class="field full"><span>Variants <span class="muted">(optional)</span></span><div class="ff-variants" id="ff-variants">${variantDraftHtml()}</div><span class="hint">For sizes or portions, such as Small, Medium and Large for a pizza. Each variant has its own price, and guests pick one when they order.</span></div>
     <div class="field full"><span>Photos</span><div class="ff-photos" id="ff-photos">${photoDraftHtml()}</div><span class="hint">The first photo is the cover. Guests can open all photos in a gallery.</span></div>
     <fieldset class="field full" style="border:0;padding:0;margin:0"><span class="label">Status</span><div class="checks">${[['available','Available'], ['unavailable','Not available']].map(([v, l]) => `<label class="check"><input type="radio" name="status" value="${v}" ${f.status === v ? 'checked' : ''}>${l}</label>`).join('')}</div></fieldset>
     <fieldset class="field full" style="border:0;padding:0;margin:0"><span class="label">Menu tags</span><div class="checks">${Object.entries(TAGS).map(([k, l]) => `<label class="check"><input type="checkbox" name="tags" value="${k}" ${f.tags.includes(k) ? 'checked' : ''}>${l}</label>`).join('')}</div></fieldset>
   </div></div><div class="m-foot"><button type="button" class="btn btn-outline" data-act="close">Cancel</button><button class="btn btn-primary">${n ? 'Add food' : 'Save changes'}</button></div></form>`);
 }
-let draftPhotos = [];
+let draftPhotos = [], draftVariants = [];
+const variantDraftHtml = () => draftVariants.map((v, i) => `<div class="ff-var"><input type="hidden" name="vid" value="${esc(v.id)}"><input class="input" name="vname" required maxlength="30" value="${esc(v.name)}" placeholder="Large" aria-label="Variant ${i + 1} name"><input class="input num" name="vprice" type="number" min="1" step="0.01" required value="${esc(v.price)}" placeholder="Price" aria-label="Variant ${i + 1} price"><button type="button" class="icon-btn danger" data-act="fv-rm" data-v="${i}" aria-label="Remove variant ${i + 1}">${icon('trash')}</button></div>`).join('')
+  + `<button type="button" class="btn btn-outline" data-act="fv-add">${icon('plus', 20)}Add variant</button>`;
+// Copy what is typed in the variant rows back into the draft before rows are added or removed.
+function syncVariants(){
+  const f = $('#food-form'); if (!f) return;
+  const fd = new FormData(f), ids = fd.getAll('vid'), names = fd.getAll('vname'), prices = fd.getAll('vprice');
+  draftVariants = ids.map((id, i) => ({id, name:names[i], price:prices[i]}));
+}
+function refreshVariants(){
+  $('#ff-variants').innerHTML = variantDraftHtml();
+  const pr = $('#ff-price'), on = draftVariants.length > 0, low = Math.min(...draftVariants.map(v => +v.price).filter(x => x > 0));
+  pr.disabled = on; pr.required = !on; if (on && isFinite(low)) pr.value = low;
+  $('#ff-price-hint').textContent = on ? 'Set by the lowest variant price.' : 'Add variants below if it comes in sizes.';
+}
 const photoDraftHtml = () => draftPhotos.map((src, i) => `<div class="ff-photo"><img src="${src}" alt="Photo ${i + 1}"><button type="button" data-act="ff-rm" data-v="${i}" aria-label="Remove photo ${i + 1}">${icon('x', 16)}</button></div>`).join('')
   + `<label class="ff-add">${icon('plus', 20)}Add photos<input id="ff-img" type="file" accept="image/*" multiple data-change="foodPhotos"></label>`;
 function setModal(row){
@@ -1337,7 +1813,7 @@ const lb = $('#lb');
 let LB = null;
 function lbRender(){
   const {f, i} = LB, n = f.photos.length;
-  lb.innerHTML = `<div class="lb-top"><div class="grow"><b>${esc(f.name)}</b><div class="caption num">Photo ${i + 1} of ${n} · ${peso(f.price)} · about ${f.eta} min</div></div>
+  lb.innerHTML = `<div class="lb-top"><div class="grow"><b>${esc(f.name)}</b><div class="caption num">Photo ${i + 1} of ${n} · ${hasV(f) ? 'from ' : ''}${peso(f.price)} · about ${f.eta} min</div></div>
     <button class="icon-btn" data-act="lb-close" aria-label="Close photos">${icon('x')}</button></div>
   <div class="lb-stage" id="lb-stage"><img id="lb-img" src="${f.photos[i]}" alt="${esc(f.name)}, photo ${i + 1} of ${n}">
     ${n > 1 ? `<button class="icon-btn lb-nav prev" data-act="lb-step" data-v="-1" aria-label="Previous photo" ${i ? '' : 'disabled'}>${icon('arrow')}</button><button class="icon-btn lb-nav next" data-act="lb-step" data-v="1" aria-label="Next photo" ${i < n - 1 ? '' : 'disabled'}>${icon('arrow')}</button>` : ''}</div>
@@ -1408,18 +1884,19 @@ const ACT = {
   otype:d => { S.orderType = d.v; },
   page:d => { S.pages[d.k] = +d.v; },
   // takeout
-  pickup:d => pickupModal(S.orders.find(o => o.id === d.id)),
+  pickup:d => { const o = S.orders.find(x => x.id === d.id); isPlatform(o) ? handoverModal(o) : pickupModal(o); },
   'to-qr':() => toQrModal(),
   'copy-to-link':() => { navigator.clipboard?.writeText(toLink()).then(() => toast('Link copied'), () => toast('Select the link above and copy it')) ?? toast('Select the link above and copy it'); },
   'open-to':() => { S.mode = 'guest'; S.guestTable = TO; S.guestTab = 'menu'; dlg.close(); scrollTo(0, 0); },
-  'to-new':() => { S.toDraft = {}; S.toName = ''; S.toPhone = ''; S.toCat = 'all'; toCounterModal(); },
+  'to-new':() => { S.toDraft = {}; S.toName = ''; S.toPhone = ''; S.toCat = 'all'; S.toChannel = 'walkin'; S.toRef = ''; toCounterModal(); },
+  'to-ch':d => { S.toChannel = d.v; const y = dlg.scrollTop; toCounterModal(); dlg.scrollTop = y; },
   'to-cat':d => { S.toCat = d.v; toCounterModal(); dlg.scrollTop = 0; },
   'to-qty':d => { const y = dlg.scrollTop; S.toDraft[d.id] = Math.max(0, (S.toDraft[d.id] || 0) + +d.v); toCounterModal(); dlg.scrollTop = y; },
   'to-place':() => {
     if (!S.toName.trim()){ toast('Enter the customer name first'); $('#to-name')?.focus(); return; }
-    const items = Object.entries(S.toDraft).filter(([, q]) => q > 0).map(([id, qty]) => { const f = food(id); return {foodId:id, name:f.name, price:f.price, qty}; });
-    const o = newTO(items, S.toName.trim(), S.toPhone.trim(), 'counter');
-    dlg.close(); toast(`${o.pickup} sent to the kitchen. Pay on pickup.`);
+    const items = draftItems();
+    const o = newTO(items, S.toName.trim(), S.toPhone.trim(), 'counter', S.toChannel, S.toRef.trim());
+    dlg.close(); toast(isPlatform(o) ? `${chanOf(o).l} order ${o.pickup} sent to the kitchen.` : `${o.pickup} sent to the kitchen. Pay on pickup.`);
   },
   'to-send':() => {
     const p = S.plates[TO];
@@ -1427,12 +1904,18 @@ const ACT = {
       <label class="field"><span>Your name</span><input id="tos-name" name="name" class="input" required autocomplete="name" maxlength="40"><span class="hint">We call this name with your pickup number.</span></label>
       <label class="field"><span>Phone (optional)</span><input id="tos-phone" name="phone" class="input num" inputmode="tel" autocomplete="tel" maxlength="20"></label>
       <p><b>Ready in about ${orderEta(p)} min</b></p>
-      <ul class="items">${p.map(l => `<li><b class="num">${l.qty}×</b><span>${esc(food(l.foodId).name)}</span><span class="num">${peso(food(l.foodId).price * l.qty)}</span></li>`).join('')}</ul>
-      <div class="sum"><div class="total"><span>Pay at pickup</span><span class="num">${peso(sum(p.map(l => food(l.foodId).price * l.qty)))}</span></div></div></div>
+      <ul class="items">${p.map(l => `<li><b class="num">${l.qty}×</b><span>${esc(lineName(l))}</span><span class="num">${peso(linePrice(l) * l.qty)}</span></li>`).join('')}</ul>
+      <div class="sum"><div class="total"><span>Pay at pickup</span><span class="num">${peso(sum(p.map(l => linePrice(l) * l.qty)))}</span></div></div></div>
       <div class="m-foot"><button type="button" class="btn btn-outline" data-act="close">Not yet</button><button class="btn btn-primary">${icon('bag', 20)}Place order</button></div></form>`);
   },
-  'food-view':d => { S.foodView = d.v; },
-  'food-cat':d => { S.foodCat = d.v; },
+  'food-view':d => { S.foodView = d.v; S.foodShown = FOOD_STEP; },
+  'food-cat':d => { S.foodCat = d.v; S.foodShown = FOOD_STEP; },
+  'food-more':() => {
+    const list = S.foods.filter(f => S.foodCat === 'all' || f.cat === S.foodCat), first = list[S.foodShown];
+    S.foodShown += FOOD_STEP;
+    // Move focus to the first new card so keyboard and screen reader users land on what was loaded.
+    if (first) requestAnimationFrame(() => document.getElementById('fe-' + first.id)?.focus());
+  },
   'food-add':() => foodModal(null),
   'food-edit':d => foodModal(food(d.id)),
   'food-del':d => confirmModal('Delete food?', `<b>${esc(food(d.id).name)}</b> will be removed from the menu. Past orders keep their record.`, 'food-del-ok', d.id, 'Delete food'),
@@ -1468,17 +1951,19 @@ const ACT = {
   'g-who':d => { S.guestName = d.v; },
   'g-tab':d => { S.guestTab = d.v; },
   'g-cat':d => { S.guestCat = d.v; },
-  'g-add':d => {
-    const p = S.plates[S.guestTable] = S.plates[S.guestTable] || [];
-    const l = p.find(x => x.foodId === d.id && x.by === S.guestName);
-    l ? l.qty++ : p.push({id:uid(), foodId:d.id, qty:1, by:S.guestName});
-    toast(`${food(d.id).name} added to plate`);
+  'g-add':d => { const f = food(d.id); if (hasV(f)){ S.pick = f.id; S.pickV = f.variants[0].id; } else addToPlate(f); },
+  'pick-close':() => { S.pick = null; },
+  'fv-add':() => {
+    syncVariants();
+    draftVariants.push({id:'', name:'', price:draftVariants.length ? '' : ($('#ff-price').value || '')});
+    refreshVariants(); [...document.querySelectorAll('#ff-variants input[name=vname]')].at(-1)?.focus();
   },
+  'fv-rm':d => { syncVariants(); draftVariants.splice(+d.v, 1); refreshVariants(); },
   'g-qty':d => { const p = S.plates[S.guestTable], l = p.find(x => x.id === d.id); l.qty += +d.v; if (l.qty < 1) S.plates[S.guestTable] = p.filter(x => x !== l); },
   'g-send':() => {
     const t = tableOf(S.guestTable), p = S.plates[t.id];
     modal('Send plate to kitchen?', `<div class="m-body"><p>You are sending the plate for everyone at ${t.name}. Only one guest sends it, so check with your table first.</p><p><b>Estimated wait: about ${orderEta(p)} min</b></p>
-      <ul class="items">${p.map(l => `<li><b class="num">${l.qty}×</b><span>${esc(food(l.foodId).name)}</span><span class="caption muted">${esc(l.by)}</span></li>`).join('')}</ul></div>`,
+      <ul class="items">${p.map(l => `<li><b class="num">${l.qty}×</b><span>${esc(lineName(l))}</span><span class="caption muted">${esc(l.by)}</span></li>`).join('')}</ul></div>`,
       `<div class="m-foot"><button class="btn btn-outline" data-act="close">Not yet</button><button class="btn btn-primary" data-act="g-send-ok">Send to kitchen</button></div>`);
   },
   'g-send-ok':() => {
@@ -1502,14 +1987,33 @@ const FORMS = {
     qrModal(t); toast(`${t.name} is active. Show the QR code to the guests.`);
   },
   pay:(fd, f) => {
-    const t = tableOf(f.dataset.id), disc = S.discounts.find(d => d.id === fd.get('disc'));
-    sessionOrders(t).filter(o => o.status !== 'paid').forEach(o => Object.assign(o, {status:'paid', payment:fd.get('method'), discount:disc ? {name:disc.name, pct:disc.pct} : null, paidAt:Date.now()}));
+    const t = tableOf(f.dataset.id), disc = S.discounts.find(d => d.id === fd.get('disc')), dObj = disc ? {name:disc.name, pct:disc.pct} : null;
+    const orders = sessionOrders(t).filter(o => o.status !== 'paid');
+    const pays = collectPayments(fd, r2(sum(orders.map(o => r2(subtotal(o) * (1 - (dObj?.pct || 0) / 100)))))); if (!pays) return;
+    settleOrders(orders, pays, dObj);
     Object.assign(t, {status:'cleaning', bill:null}); S.openTable = t.id; dlg.close(); toast(`${t.name} paid. Clean the table, then mark it clean.`);
   },
   pickup:(fd, f) => {
-    const o = S.orders.find(x => x.id === f.dataset.id), disc = S.discounts.find(d => d.id === fd.get('disc'));
-    Object.assign(o, {status:'paid', payment:fd.get('method'), discount:disc ? {name:disc.name, pct:disc.pct} : null, paidAt:Date.now()});
+    const o = S.orders.find(x => x.id === f.dataset.id), disc = S.discounts.find(d => d.id === fd.get('disc')), dObj = disc ? {name:disc.name, pct:disc.pct} : null;
+    const pays = collectPayments(fd, r2(subtotal(o) * (1 - (dObj?.pct || 0) / 100))); if (!pays) return;
+    settleOrders([o], pays, dObj);
     dlg.close(); toast(`${o.pickup} paid and picked up`);
+  },
+  // Pays one served order from the Orders screen. The table is cleaned up once nothing on it is unpaid.
+  orderPay:(fd, f) => {
+    const o = S.orders.find(x => x.id === f.dataset.id), disc = S.discounts.find(d => d.id === fd.get('disc')), dObj = disc ? {name:disc.name, pct:disc.pct} : null;
+    const pays = collectPayments(fd, r2(subtotal(o) * (1 - (dObj?.pct || 0) / 100))); if (!pays) return;
+    settleOrders([o], pays, dObj);
+    const t = tableOf(o.table);
+    if (t && t.token && o.session === t.token && ['active', 'ordering', 'eating', 'billout'].includes(t.status)){
+      if (sessionOrders(t).some(x => x.status !== 'paid')) syncTable(t); else Object.assign(t, {status:'cleaning', bill:null});
+    }
+    dlg.close(); toast(`${o.id} paid${o.payment === 'split' ? ' with a split bill' : ' with ' + payName(o.payment)}${t && t.status === 'cleaning' ? `. ${t.name} is ready to clean.` : ''}`);
+  },
+  handover:(fd, f) => {
+    const o = S.orders.find(x => x.id === f.dataset.id);
+    settleOrders([o], [{method:o.channel, amount:r2(subtotal(o))}], null);
+    dlg.close(); toast(`${o.pickup} handed to the ${chanOf(o).l} rider`);
   },
   toSend:fd => {
     const name = String(fd.get('name')).trim(); if (!name) return;
@@ -1517,9 +2021,14 @@ const FORMS = {
     S.toMine.push(o.id); S.plates[TO] = []; S.guestTab = 'orders'; dlg.close(); toast(`Order placed. Your pickup number is ${o.pickup}`);
   },
   bill:fd => { const t = tableOf(S.guestTable); t.status = 'billout'; t.bill = {method:fd.get('method'), at:Date.now()}; dlg.close(); toast('Your waiter has been called'); },
+  variant:fd => { const f = food(S.pick); if (f) addToPlate(f, fd.get('variant')); S.pick = null; },
   food:(fd, f) => {
     const v = {name:fd.get('name').trim(), cat:fd.get('cat'), price:r2(+fd.get('price')), eta:Math.round(+fd.get('eta')), desc:fd.get('desc').trim(), status:fd.get('status'), tags:fd.getAll('tags'), photos:[...draftPhotos]};
     if (!v.name) return;
+    const vn = fd.getAll('vname'), vp = fd.getAll('vprice'), vi = fd.getAll('vid');
+    v.variants = vn.map((nm, i) => ({id:vi[i] || uid(), name:nm.trim(), price:r2(+vp[i])})).filter(x => x.name);
+    if (new Set(v.variants.map(x => x.name.toLowerCase())).size !== v.variants.length) return toast('Each variant needs a different name');
+    if (v.variants.length) v.price = Math.min(...v.variants.map(x => x.price));
     if (f.dataset.id) Object.assign(food(f.dataset.id), v); else S.foods.push({id:'f' + uid(), ...v});
     dlg.close(); toast(f.dataset.id ? `${v.name} saved` : `${v.name} added to the menu`);
   },
@@ -1533,14 +2042,19 @@ const FORMS = {
   },
 };
 const CHANGE = {
-  gTable:el => { S.guestTable = el.value; S.guestTab = 'menu'; },
+  perPage:el => { S.perPage[el.dataset.k] = +el.value; S.pages[el.dataset.k] = 1; },
+  pickV:el => { S.pickV = el.value; return true; },
+  gTable:el => { S.pick = null; S.guestTable = el.value; S.guestTab = 'menu'; },
   payCalc:() => {
     const f = $('#pay-form'); if (!f) return;
-    const os = f.dataset.form === 'pickup' ? [S.orders.find(o => o.id === f.dataset.id)] : sessionOrders(tableOf(f.dataset.id)).filter(o => o.status !== 'paid');
+    const os = ['pickup', 'orderPay'].includes(f.dataset.form) ? [S.orders.find(o => o.id === f.dataset.id)] : sessionOrders(tableOf(f.dataset.id)).filter(o => o.status !== 'paid');
     const sub = sum(os.map(subtotal)), d = S.discounts.find(x => x.id === $('#pay-disc').value);
     const off = d ? r2(sub * d.pct / 100) : 0;
     $('#pay-sum').innerHTML = `<div><span class="muted">Subtotal</span><span class="num">${peso(sub)}</span></div>${d ? `<div><span class="muted">${esc(d.name)} (${d.pct}%)</span><span class="num">−${peso(off)}</span></div>` : ''}<div class="total"><span>Amount to collect</span><span class="num">${peso(sub - off)}</span></div>`;
     $('#pay-note').textContent = d ? `Requirement: ${d.note || 'none'}.` : 'Check the guest’s ID before applying a discount.';
+    S.payDue = r2(sub - off);
+    if (S.split.on) S.split.rows = equalRows(S.split.n, S.payDue, S.split.rows);
+    splitRender();
     return true;
   },
   foodPhotos:el => {
@@ -1550,6 +2064,105 @@ const CHANGE = {
   timerOn:el => { S.tableTimerOn = el.checked; },
   timerMins:el => { S.tableTimerMins = Math.min(600, Math.max(1, Math.round(+el.value) || 1)); },
 };
+
+/* ---------- Reservation actions ---------- */
+Object.assign(ACT, {
+  'split-equal':() => { S.split.rows = equalRows(S.split.n, S.payDue, S.split.rows); splitRender(); },
+  'res-view':d => { S.resView = d.v; },
+  'res-today':() => { S.resDay = sod(Date.now()); },
+  'res-day':d => { S.resDay = +d.v; },
+  'res-status':d => { S.resStatus = d.v; },
+  'res-range':d => { S.resRange = d.v; },
+  'res-jump':() => resJumpModal(),
+  'res-nav':d => {
+    const n = +d.v;
+    if (S.resView === 'week'){ S.resDay = addDays(S.resDay, 7 * n); return; }
+    const x = new Date(S.resDay), day = x.getDate(); x.setDate(1); x.setMonth(x.getMonth() + n);
+    x.setDate(Math.min(day, new Date(x.getFullYear(), x.getMonth() + 1, 0).getDate())); S.resDay = +x;
+  },
+  'res-open':d => { const r = resOf(d.id); if (r) resModal(r); },
+  'res-new':d => openResForm(null, d.date),
+  'res-edit':d => { const r = resOf(d.id); if (r) openResForm(r); },
+  'res-order':() => { readResForm(); S.resDraft.adv = true; resOrderModal(); },
+  'ro-qty':d => { S.roDraft[d.id] = Math.max(0, (S.roDraft[d.id] || 0) + +d.v); const y = dlg.scrollTop; resOrderModal(); dlg.scrollTop = y; },
+  'ro-cat':d => { S.roCat = d.v; resOrderModal(); dlg.scrollTop = 0; },
+  'ro-done':() => { S.resDraft.adv = draftItems(S.roDraft).length > 0; resFormModal(); },
+  'res-move':d => { const r = resOf(d.id); if (r) resMoveModal(r); },
+  'res-cancel':d => { const r = resOf(d.id); if (r) resCancelModal(r); },
+  'res-noshow':d => { const r = resOf(d.id); if (!r) return; r.status = 'noshow'; r.dismissed = true; r.history.push({at:Date.now(), text:'Marked as no-show'}); dlg.close(); toast(`${r.name} marked as no-show`); },
+  'res-restore':d => { const r = resOf(d.id); if (!r) return; r.status = 'booked'; r.dismissed = false; r.history.push({at:Date.now(), text:'Restored'}); dlg.close(); toast(`${r.name} is booked again`); },
+  'res-dismiss':d => { const r = resOf(d.id); if (r) r.dismissed = true; },
+  'res-seat':d => {
+    const r = resOf(d.id); if (!r || r.status !== 'booked') return;
+    const t = tableOf(r.tableId);
+    if (t && t.status === 'inactive') return seatReservation(r, t.id);
+    seatModal(r, t ? `${t.name} is in use right now.` : '');
+  },
+});
+Object.assign(FORMS, {
+  res:(fd, f) => {
+    const id = f.dataset.id, at = parseAt(fd.get('date'), fd.get('time')), pax = Math.round(+fd.get('pax')), tableId = fd.get('table') || null, name = fd.get('name').trim();
+    if (!name || !isFinite(at) || !(pax >= 1)) return toast('Fill in the name, guests, date and time');
+    const problem = resProblem(tableId, pax, at, id); if (problem) return toast(problem);
+    let order = null;
+    if (fd.has('adv')){ order = draftItems(S.roDraft); if (!order.length) return toast('Pick food for the advance order, or turn it off'); }
+    const v = {name, phone:fd.get('phone').trim(), pax, at, tableId, note:fd.get('note').trim(), order};
+    if (id){ const r = resOf(id); if (r.at !== at) r.dismissed = false; Object.assign(r, v); r.history.push({at:Date.now(), text:'Edited'}); toast(`${name} saved`); }
+    else { S.reservations.push({id:uid(), status:'booked', history:[{at:Date.now(), text:'Booked'}], ...v}); toast(`${name} booked for ${whenText(at)}`); }
+    S.resDay = sod(at); dlg.close();
+  },
+  resMove:(fd, f) => {
+    const r = resOf(f.dataset.id), at = parseAt(fd.get('date'), fd.get('time')), tableId = fd.get('table') || null;
+    if (!isFinite(at)) return toast('Pick a date and time');
+    if (at === r.at && tableId === (r.tableId || null)) return toast('Pick a different date, time or table');
+    const problem = resProblem(tableId, r.pax, at, r.id); if (problem) return toast(problem);
+    const why = fd.get('reason').trim();
+    r.history.push({at:Date.now(), text:`Rescheduled from ${whenText(r.at)}${why ? ': ' + why : ''}`});
+    Object.assign(r, {at, tableId, dismissed:false}); S.resDay = sod(at); dlg.close(); toast(`${r.name} moved to ${whenText(at)}`);
+  },
+  resCancel:(fd, f) => {
+    const r = resOf(f.dataset.id), why = fd.get('reason').trim();
+    Object.assign(r, {status:'cancelled', cancelReason:why, dismissed:true}); r.history.push({at:Date.now(), text:`Cancelled${why ? ': ' + why : ''}`});
+    dlg.close(); toast(`${r.name} cancelled`);
+  },
+  resSeat:(fd, f) => { const r = resOf(f.dataset.id); if (r) seatReservation(r, fd.get('table')); },
+  resJump:fd => { const t = parseAt(fd.get('date'), '00:00'); if (isFinite(t)) S.resDay = sod(t); dlg.close(); },
+});
+Object.assign(CHANGE, {
+  // Live check while the date, time or table changes.
+  resCheck:() => {
+    const f = $('#res-form') || $('#move-form'), h = $('#res-hint'); if (!f || !h) return true;
+    const fd = new FormData(f), at = parseAt(fd.get('date'), fd.get('time')), pax = +(fd.get('pax') || f.dataset.pax) || 1, table = fd.get('table');
+    const msg = table && isFinite(at) ? resProblem(table, pax, at, f.dataset.id) : '';
+    h.textContent = msg || (table ? `${tableOf(table).name} is free at that time.` : '');
+    h.classList.toggle('bad', !!msg);
+    return true;
+  },
+  splitToggle:el => { S.split.on = el.checked; if (el.checked) S.split.rows = equalRows(S.split.n, S.payDue, S.split.rows); splitRender(); return true; },
+  splitN:el => { S.split.n = Math.min(12, Math.max(2, Math.round(+el.value) || 2)); S.split.rows = equalRows(S.split.n, S.payDue, S.split.rows); splitRender(); return true; },
+  splitRow:el => { const row = S.split.rows[+el.dataset.i]; if (row){ if (el.dataset.k === 'amt') row.amt = r2(+el.value || 0); else row.method = el.value; } splitStatus(); return true; },
+  resAdv:el => { $('#res-adv').hidden = !el.checked; return true; },
+});
+// Drag a booked reservation onto another day to reschedule it. The Reschedule button does the same without a mouse.
+document.addEventListener('input', e => {
+  const el = e.target; if (el.dataset?.change !== 'splitRow' || el.dataset.k !== 'amt') return;
+  const row = S.split.rows[+el.dataset.i]; if (row){ row.amt = r2(+el.value || 0); splitStatus(); }
+});
+let dragOver = null;
+document.addEventListener('dragstart', e => { const c = e.target.closest?.('[data-rdrag]'); if (!c) return; e.dataTransfer.setData('text/plain', c.dataset.rdrag); e.dataTransfer.effectAllowed = 'move'; });
+document.addEventListener('dragover', e => {
+  const c = e.target.closest?.('[data-rdrop]'); if (!c) return;
+  e.preventDefault();
+  if (dragOver !== c){ dragOver?.classList.remove('over'); dragOver = c; c.classList.add('over'); }
+});
+document.addEventListener('dragend', () => { dragOver?.classList.remove('over'); dragOver = null; });
+document.addEventListener('drop', e => {
+  const c = e.target.closest?.('[data-rdrop]'); if (!c) return;
+  e.preventDefault(); dragOver?.classList.remove('over'); dragOver = null;
+  const r = resOf(e.dataTransfer.getData('text/plain')); if (r){ moveResToDay(r, +c.dataset.rdrop); render(); }
+});
+// Re-render when a reminder becomes due or ends, without waiting for the next 30 second refresh.
+setInterval(() => { if (!dlg.open && document.activeElement?.tagName !== 'INPUT' && dueRes().map(r => r.id).join() !== lastDue) render(); }, 10000);
 
 /* ---------- Theme ---------- */
 // Saved per browser; with no choice saved the page follows the system setting.
@@ -1574,8 +2187,13 @@ function render(){
   const keep = {}; document.querySelectorAll('[data-keep]').forEach(el => keep[el.dataset.keep] = [el.scrollLeft, el.scrollTop]);
   document.body.classList.toggle('solo', !!S.guestOnly);
   MENUS = [];
+  lastDue = dueRes().map(r => r.id).join();
+  if (S.mode !== 'guest') S.pick = null;
+  const hadSheet = !!document.querySelector('.g-sheet');
   $('#app').innerHTML = S.mode === 'guest' ? `${S.guestOnly ? '' : topBar(true)}${guestShell()}` : staffShell();
   document.querySelectorAll('[data-keep]').forEach(el => { const k = keep[el.dataset.keep]; if (k) [el.scrollLeft, el.scrollTop] = k; });
+  if (!hadSheet) document.querySelector('.g-sheet input:checked')?.focus({preventScroll:true});
+  watchFoods();
   if (id && !dlg.contains(a)){ const n = document.getElementById(id); if (n){ n.focus(); if (sel != null) try { n.setSelectionRange(sel, sel); } catch {} } }
 }
 // The ⋯ row menu lives outside #app (position: fixed) so a table's scroll box cannot clip it.
@@ -1671,6 +2289,7 @@ document.addEventListener('pointermove', e => {
 const endDrag = () => { if (!drag) return; if (drag.x != null){ drag.t.x = r2(drag.x); drag.t.y = r2(drag.y); } drag = null; render(); };
 document.addEventListener('pointerup', endDrag);
 document.addEventListener('pointercancel', endDrag);
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && S.pick){ S.pick = null; render(); } });
 document.addEventListener('keydown', e => {
   const el = e.target.closest?.('[data-drag]'), k = {ArrowLeft:[-1, 0], ArrowRight:[1, 0], ArrowUp:[0, -1], ArrowDown:[0, 1]}[e.key];
   if (!el || !k) return;
