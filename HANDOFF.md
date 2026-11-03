@@ -218,3 +218,9 @@ Guests and the kitchen need realtime updates, through websockets or a realtime D
 ## Variants in orders
 
 A plate line is `{id, foodId, variantId?, qty, by}` and an order item is `{foodId, variantId?, name, price, qty}`, where `name` already reads "Classic Pizza (Large)" and `price` is the variant's price at the time of the order. Helpers: `hasV`, `unitPrice(f, vid)`, `itemName(f, vid)`, `lineName(l)`, `linePrice(l)`; `pickSheet()` is the guest picker: a bottom sheet drawn inside the phone frame (state `S.pick` and `S.pickV`), not a page-level dialog. Reports and the dashboard group by item name, so each variant counts separately.
+
+## Notifications
+Bell icon in the staff header with an unread badge and a dropdown (Mark all as read, Clear, click an item to open its module). `notify(icon, text, view)` pushes into `S.notifs` (last 40). Fired on: guest sends an order, takeout placed (counter or QR), kitchen order cooked, takeout ready for pickup, guest asks for the bill, table paid (cleanup), and a reservation coming due. The existing banners stay for actionable items (bill, reservation). In-browser only; real cross-device alerts need a backend.
+
+## Orders: one bill per table
+Dine-in orders from the same table session (first order plus additional orders) share one row in Orders, with a "+N additional" tag and a chevron that expands the individual orders (`groupRows`, `orderRowHtml`, `billOrders`). The group status is the least advanced unpaid order. Clicking the main row opens one payment modal for every unpaid order of the session (method, discount and split bill cover the total); payment opens only when all of them are served. Clicking an expanded child opens that order read-only. Takeout orders stay single rows.
