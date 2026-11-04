@@ -45,7 +45,9 @@ export function settleOrders(orders: Order[], pays: Payment[], dObj: AppliedDisc
 }
 
 /** Error the API throws; the UI shows `message` in a toast. */
-export class ApiError extends Error {}
+export class ApiError extends Error {
+  constructor(message: string, public status = 0, public errors?: Record<string, string[]>) { super(message); }
+}
 export const fail = (message: string): never => { throw new ApiError(message); };
 
 /** Creates a takeout order (counter entry, Takeout QR, or a delivery platform) and queues it for the kitchen. */

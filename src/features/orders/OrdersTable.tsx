@@ -30,9 +30,8 @@ export function OrdersTable({ groups, open, groupStatus, onToggle, onOpen, onOpe
               <td>
                 {many
                   ? <button className="gchev" aria-expanded={isOpen} aria-label={`${isOpen ? 'Hide' : 'Show'} additional orders`} onClick={e => { e.stopPropagation(); onToggle(g.k); }}><Icon name="right" size={18} /></button>
-                  : billKey(o, sod) ? <span className="gspacer" /> : null}
+                  : <span className="gspacer" />}
                 <button className="link num" onClick={e => { e.stopPropagation(); onOpen(o); }}>{o.id}</button>
-                {many ? <span className="gtag">+{g.kids.length} additional</span> : null}
               </td>
               <td><Pill meta={oMeta(gs)} /></td>
               <td>{isTO(o) ? <><ChTag o={o} /> <span className="num">{o.pickup}</span></> : tName(o.table)}</td>
@@ -43,7 +42,7 @@ export function OrdersTable({ groups, open, groupStatus, onToggle, onOpen, onOpe
             </tr>
             {many && isOpen && g.all.map((x, i) => (
               <tr key={x.id} className="click gsub" onClick={() => onOpenOne(x)}>
-                <td><button className="link num" onClick={e => { e.stopPropagation(); onOpenOne(x); }}>{x.id}</button><span className="gtag">{i ? 'Additional' : 'First order'}</span></td>
+                <td><button className="link num" onClick={e => { e.stopPropagation(); onOpenOne(x); }}>{x.id}</button></td>
                 <td><Pill meta={oMeta(x)} /></td>
                 <td></td>
                 <td className="num">{dt(x.createdAt)}, {tm(x.createdAt)}</td>

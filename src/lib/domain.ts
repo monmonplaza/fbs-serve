@@ -22,9 +22,11 @@ export function plateItems(plate: PlateLine[], foods: Food[]): OrderItem[] {
   plate.forEach(l => {
     const f = foods.find(x => x.id === l.foodId);
     if (!f) return;
-    const e = items.find(i => i.foodId === f.id && i.variantId === l.variantId);
+    // Lines with different notes stay separate so the kitchen sees each request.
+    const note = l.note?.trim() || undefined;
+    const e = items.find(i => i.foodId === f.id && i.variantId === l.variantId && i.note === note);
     if (e) e.qty += l.qty;
-    else items.push({ foodId: f.id, variantId: l.variantId, name: itemName(f, l.variantId), price: unitPrice(f, l.variantId), qty: l.qty });
+    else items.push({ foodId: f.id, variantId: l.variantId, name: itemName(f, l.variantId), price: unitPrice(f, l.variantId), qty: l.qty, ...(note ? { note } : {}) });
   });
   return items;
 }

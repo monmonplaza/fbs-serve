@@ -1,5 +1,6 @@
 import { api } from '@/api';
 import { useFoods, useInvalidate } from '@/api/queries';
+import { useState } from 'react';
 import { useUi } from '@/store/ui';
 import { TO } from '@/api/constants';
 import type { PlateLine } from '@/api/types';
@@ -7,6 +8,32 @@ import { Icon } from '@/components/Icon';
 import { itemName, orderEta, unitPrice } from '@/lib/domain';
 import { peso } from '@/lib/format';
 import { toast } from '@/store/toast';
+
+const QUICK = ['Less spicy', 'No onion', 'No garlic', 'Less salt', 'Well done'];
+
+/** A cooking request for one plate line, e.g. "Less spicy, no onion". It goes to the kitchen with the order. */
+function NoteField({ line, onSave }: { line: PlateLine; onSave: (note: string) => void }) {
+  const [open, setOpen] = useState(false);
+  const [text, setText] = useState(line.note ?? '');
+  const commit = (v = text) => { const n = v.trim().slice(0, 120); setText(n); if (n !== (line.note ?? '')) onSave(n); };
+  const toggle = (c: string) => {
+    const parts = text.split(',').map(x => x.trim()).filter(Boolean), has = parts.some(x => x.toLowerCase() === c.toLowerCase());
+    const next = (has ? parts.filter(x => x.toLowerCase() !== c.toLowerCase()) : [...parts, c]).join(', ');
+    setText(next); onSave(next.slice(0, 120));
+  };
+  if (!open && !line.note) return (
+    <div className="pnote"><button className="link-btn" onClick={() => setOpen(true)}><Icon name="edit" size={16} />Add note for the kitchen</button></div>
+  );
+  return (
+    <div className="pnote">
+      <input className="input" value={text} maxLength={120} placeholder="e.g. less spicy, no onion" aria-label="Note for the kitchen"
+        onChange={e => setText(e.target.value)} onBlur={() => commit()} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); commit(); (e.target as HTMLInputElement).blur(); } }} autoFocus={!line.note} />
+      <div className="pchips" role="group" aria-label="Quick requests">
+        {QUICK.map(c => <button key={c} aria-pressed={text.toLowerCase().split(',').map(x => x.trim()).includes(c.toLowerCase())} onMouseDown={e => e.preventDefault()} onClick={() => toggle(c)}>{c}</button>)}
+      </div>
+    </div>
+  );
+}
 
 const Empty = ({ icon, title, text, browse }: { icon: string; title: string; text: string; browse?: boolean }) => (
   <div className="center">
@@ -26,6 +53,9 @@ export function GuestPlate({ plate, tableId, tableName }: { plate: PlateLine[]; 
     : <Empty icon="plate" title="Your plate is empty" text={`Everyone at ${tableName} adds to the same plate. Pick food from the menu.`} browse />;
   const qty = async (id: string, d: number) => {
     try { await api.guest.changeQty(tableId, id, d); await invalidate('plate'); } catch (e) { toast((e as Error).message); }
+  };
+  const saveNote = async (id: string, note: string) => {
+    try { await api.guest.setNote(tableId, id, note); await invalidate('plate'); } catch (e) { toast((e as Error).message); }
   };
   const lines = plate.map(l => ({ l, f: foods.find(x => x.id === l.foodId) })).filter((x): x is { l: PlateLine; f: NonNullable<typeof x.f> } => !!x.f);
   const wait = orderEta(plate.flatMap(l => { const f = foods.find(x => x.id === l.foodId); return f ? [{ foodId: f.id, name: f.name, price: 0, qty: l.qty }] : []; }), foods);
@@ -49,6 +79,7 @@ export function GuestPlate({ plate, tableId, tableName }: { plate: PlateLine[]; 
               <div className="caption muted">
                 {!takeout && <>{l.by}{l.by === me ? ' (you)' : ''} · </>}<span className="num">{peso(unitPrice(f, l.variantId) * l.qty)}</span> · <span className="num">{f.eta} min</span>
               </div>
+              <NoteField key={l.id + (l.note ?? '')} line={l} onSave={n => saveNote(l.id, n)} />
             </div>
             <div className="stepper">
               <button aria-label={`Remove one ${f.name}`} onClick={() => qty(l.id, -1)}><Icon name={l.qty > 1 ? 'minus' : 'trash'} size={20} /></button>

@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react';
+import { ItemNote } from '@/components/ItemNote';
 import { api } from '@/api';
 import { useFoods, useInvalidate, useOrders, usePayments, usePlate, useTables } from '@/api/queries';
 import { TO } from '@/api/constants';
@@ -95,7 +96,7 @@ export function TakeoutModal() {
         <label className="field"><span>Your name</span><input id="tos-name" name="name" className="input" required autoComplete="name" maxLength={40} /><span className="hint">We call this name with your pickup number.</span></label>
         <label className="field"><span>Phone (optional)</span><input id="tos-phone" name="phone" className="input num" inputMode="tel" autoComplete="tel" maxLength={20} /></label>
         <p><b>Ready in about {orderEta(items, foods)} min</b></p>
-        <ul className="items">{items.map((i, x) => <li key={x}><b className="num">{i.qty}×</b><span>{i.name}</span><span className="num">{peso(i.price * i.qty)}</span></li>)}</ul>
+        <ul className="items">{items.map((i, x) => <li key={x}><b className="num">{i.qty}×</b><span>{i.name}<ItemNote note={i.note} /></span><span className="num">{peso(i.price * i.qty)}</span></li>)}</ul>
         <div className="sum"><div className="total"><span>Pay at pickup</span><span className="num">{peso(sum(items.map(i => i.price * i.qty)))}</span></div></div>
       </div>
       <div className="m-foot"><button type="button" className="btn btn-outline" onClick={closeModal}>Not yet</button><button className="btn btn-primary"><Icon name="bag" size={20} />Place order</button></div>

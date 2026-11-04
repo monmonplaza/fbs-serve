@@ -1,4 +1,5 @@
 import type { Order } from '@/api/types';
+import { ItemNote } from '@/components/ItemNote';
 import { GSTEPS, GSTEP_L, OSTAT, TO_STEPS, TO_STEP_L } from '@/api/constants';
 import { Icon } from '@/components/Icon';
 import { useNow } from '@/lib/useNow';
@@ -33,7 +34,7 @@ function Track({ o, takeout }: { o: Order; takeout: boolean }) {
         })}
       </ol>
       <ul className="items">
-        {o.items.map((i, x) => <li key={x}><b className="num">{i.qty}×</b><span>{i.name}</span><span className="num">{peso(i.qty * i.price)}</span></li>)}
+        {o.items.map((i, x) => <li key={x}><b className="num">{i.qty}×</b><span>{i.name}<ItemNote note={i.note} /></span><span className="num">{peso(i.qty * i.price)}</span></li>)}
       </ul>
       {takeout && <div className="sum"><div className="total"><span>{done ? 'Paid' : 'Pay at pickup'}</span><span className="num">{peso(total(o))}</span></div></div>}
     </section>

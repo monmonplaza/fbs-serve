@@ -1,5 +1,7 @@
 # Backend contract
 
+Laravel mapping (tables, routes, realtime): `docs/LARAVEL.md`. Team conventions: `docs/reusable-components-in-all-projects.md`.
+
 The UI calls these methods (`src/api/*.ts`). Types are in `src/api/types.ts`. Every method is async; failures throw `ApiError(message)` and the UI shows the message in a toast.
 Times are epoch milliseconds, money is a number in pesos (2 decimals), ids are strings.
 
@@ -11,7 +13,7 @@ Times are epoch milliseconds, money is a number in pesos (2 decimals), ids are s
 | `tables` | `list()`, `floors()`, `activate(id, guests)`, `clean(id)`, `move(id, x, y)`, `add`, `update`, `remove`, `addFloor`, `updateFloor`, `removeFloor` |
 | `reservations` | `list()`, `create`, `update`, `move`, `moveToDay`, `cancel`, `noShow`, `restore`, `dismiss`, `seat(id, tableId)` |
 | `admin` | `payments()`, `discounts()`, `roles()`, `users()`, `settings()`, `saveSettings`, `saveSetting(list, id, values)`, `deleteSetting(list, id)`, `deleteBlock(list, id)`, `updateProfile` |
-| `guest` | `join(tableId, token)`, `plate(tableId)`, `addLine`, `changeQty`, `send(tableId, by)`, `billOut(tableId, method)`, `placeTakeout(name, phone)` |
+| `guest` | `join(tableId, token)`, `plate(tableId)`, `addLine`, `changeQty`, `setNote(tableId, lineId, note)`, `send(tableId, by)`, `billOut(tableId, method)`, `placeTakeout(name, phone)` |
 
 ## Rules the server must enforce
 
@@ -19,6 +21,7 @@ Times are epoch milliseconds, money is a number in pesos (2 decimals), ids are s
 - **Table status** follows its orders: `active` (no orders), `ordering` (any order queued, cooking, plating or completed), `eating` (all served). `billout` and `cleaning` are set by actions (`billOut`, payment).
 - **One bill per table session**: all unpaid orders of a session are paid together (`payTable` / `payBill`), with one discount and a payment list (split bill; the payments must add up to the total after the discount, and each order gets its share).
 - **Takeout** (`type: 'takeout'`): pickup number `TO-001` per day, channels walk-in, GrabFood, Foodpanda (platform orders are paid in the app and handed to the rider). Status flow queued, cooking, plating, completed, ready, paid.
+- **Kitchen notes**: a plate line can carry a note (max 120 characters, e.g. "Less spicy, no onion"). Lines with different notes stay separate order items, and the note is shown on the kitchen card and order details.
 - **Foods with variants**: `price` is the lowest variant price; variant names are unique per food.
 - **Guards**: a category used by foods and a role used by users cannot be deleted; a table with guests cannot be deleted; the last floor cannot be deleted; reservations cannot double-book a table within 90 minutes or exceed its seats.
 

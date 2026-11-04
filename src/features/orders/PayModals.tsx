@@ -1,4 +1,5 @@
 import { api } from '@/api';
+import { ItemNote } from '@/components/ItemNote';
 import { ApiError } from '@/api';
 import { Icon } from '@/components/Icon';
 import { Pill } from '@/components/Pill';
@@ -20,10 +21,10 @@ const useMethods = (activeOnly: boolean): PaymentMethod[] => {
 };
 const fail = (e: unknown) => toast(e instanceof ApiError ? e.message : 'Something went wrong. Please try again.');
 
-function Items({ items }: { items: Pick<OrderItem, 'name' | 'price' | 'qty'>[] }) {
+function Items({ items }: { items: (Pick<OrderItem, 'name' | 'price' | 'qty'> & { note?: string })[] }) {
   return (
     <ul className="items">
-      {items.map((i, k) => <li key={k}><b className="num">{i.qty}×</b><span>{i.name}</span><span className="num">{peso(i.qty * i.price)}</span></li>)}
+      {items.map((i, k) => <li key={k}><b className="num">{i.qty}×</b><span>{i.name}<ItemNote note={i.note} /></span><span className="num">{peso(i.qty * i.price)}</span></li>)}
     </ul>
   );
 }

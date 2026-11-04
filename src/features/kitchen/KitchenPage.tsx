@@ -1,4 +1,5 @@
 import { api } from '@/api';
+import { ItemNote } from '@/components/ItemNote';
 import { KITCHEN, OSTAT } from '@/api/constants';
 import { useInvalidate, useOrders, useTables } from '@/api/queries';
 import type { Order } from '@/api/types';
@@ -55,7 +56,7 @@ export function KitchenPage() {
                       </div>
                       <span className={`caption num ${late ? 'late label' : 'muted'}`} title={`Target ${eta} min`}><Icon name="clock" size={16} /> {m} / {eta} min</span>
                     </div>
-                    <ul>{o.items.map((i, k) => <li key={k}><b className="num">{i.qty}×</b><span>{i.name}</span></li>)}</ul>
+                    <ul>{o.items.map((i, k) => <li key={k}><b className="num">{i.qty}×</b><span>{i.name}<ItemNote note={i.note} /></span></li>)}</ul>
                     {isTO(o) && <p className="caption muted">Pack to go.</p>}
                     <button className={`btn ${st === 'completed' ? 'btn-secondary' : 'btn-outline'} block`} onClick={() => act(o)}>
                       {st !== 'completed' ? <>{OSTAT[st]!.next}<Icon name="arrow" size={20} /></> : isTO(o) ? 'Ready for pickup' : OSTAT[st]!.next}

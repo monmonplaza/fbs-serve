@@ -34,6 +34,13 @@ export const guest = {
     l.qty += delta;
     if (l.qty < 1) db.plates[tableId] = p.filter(x => x !== l);
   },
+  /** Sets or clears the cooking request on a plate line (max 120 characters). */
+  setNote: async (tableId: string, lineId: string, note: string) => {
+    const l = plateOf(tableId).find(x => x.id === lineId);
+    if (!l) return;
+    const n = note.trim().slice(0, 120);
+    if (n) l.note = n; else delete l.note;
+  },
   /** Sends the table's shared plate to the kitchen as a new order. */
   send: async (tableId: string, by: string) => {
     const t = tableOf(tableId), p = plateOf(tableId);

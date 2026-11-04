@@ -37,7 +37,11 @@ export interface DiningTable {
   guests?: number | null;
 }
 
-export interface OrderItem { foodId: string; variantId?: string; name: string; price: number; qty: number }
+export interface OrderItem {
+  foodId: string; variantId?: string; name: string; price: number; qty: number;
+  /** Guest's cooking request for the kitchen, e.g. "Less spicy, no onion". */
+  note?: string;
+}
 export interface Payment { method: string; amount: number }
 export interface AppliedDiscount { name: string; pct: number }
 export interface Order {
@@ -59,7 +63,7 @@ export interface Order {
 }
 
 /** A guest's line on the shared plate, before it is sent to the kitchen. */
-export interface PlateLine { id: string; foodId: string; variantId?: string; qty: number; by: string }
+export interface PlateLine { id: string; foodId: string; variantId?: string; qty: number; by: string; note?: string }
 
 export interface Reservation {
   id: string; name: string; phone: string; pax: number; at: number;

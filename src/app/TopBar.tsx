@@ -115,11 +115,11 @@ export function TopBar({ brand }: { brand: boolean }) {
           <button className="icon-btn" aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'} title={isDark ? 'Light mode' : 'Dark mode'} onClick={toggle}>
             <Icon name={isDark ? 'sun' : 'moon'} />
           </button>
+          <div className="seg seg-icons" role="group" aria-label="View as">
+            <button aria-pressed={mode === 'staff'} aria-label="Staff view" title="Staff view" onClick={() => set({ mode: 'staff' })}><Icon name="user" size={20} /></button>
+            <button aria-pressed={mode === 'guest'} aria-label="Guest phone view" title="Guest phone view" onClick={() => set({ mode: 'guest' })}><Icon name="phone" size={20} /></button>
+          </div>
         </span>
-        <div className="seg" role="group" aria-label="View as">
-          <button aria-pressed={mode === 'staff'} onClick={() => set({ mode: 'staff' })}><Icon name="user" size={20} />Staff</button>
-          <button aria-pressed={mode === 'guest'} onClick={() => set({ mode: 'guest' })}><Icon name="phone" size={20} />Guest phone</button>
-        </div>
         {!brand && <AccountMenu />}
       </div>
     </header>
