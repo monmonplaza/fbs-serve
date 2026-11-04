@@ -32,3 +32,7 @@ export function useInvalidate() {
   const qc = useQueryClient();
   return (...names: KeyName[]) => (names.length ? Promise.all(names.map(n => qc.invalidateQueries({ queryKey: [n] }))) : qc.invalidateQueries());
 }
+
+/** The app's QueryClient, for code outside React components (for example a banner button handler). Set once in main.tsx. */
+export const clientRef: { current: import('@tanstack/react-query').QueryClient | null } = { current: null };
+export const invalidateOutside = (...names: KeyName[]) => Promise.all(names.map(n => clientRef.current?.invalidateQueries({ queryKey: [n] })));

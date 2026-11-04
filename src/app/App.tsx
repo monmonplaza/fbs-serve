@@ -10,6 +10,7 @@ import { toast } from '@/store/toast';
 import { StaffShell } from './StaffShell';
 import { TopBar, initials } from './TopBar';
 import { GuestShell } from '@/features/guest/GuestShell';
+import { LightboxHost } from '@/features/foods/Lightbox';
 
 const notified = new Set<string>();
 
@@ -48,6 +49,7 @@ export function App() {
   return (
     <>
       {signedOut && !guestOnly ? <SignedOut /> : mode === 'guest' ? <>{!guestOnly && <TopBar brand />}<GuestShell /></> : <StaffShell />}
+      <LightboxHost />
       <ModalHost />
       <Toast />
     </>

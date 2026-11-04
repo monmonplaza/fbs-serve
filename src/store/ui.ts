@@ -13,7 +13,7 @@ interface UiState {
   meId: string;
   signedOut: boolean;
   notifs: Notif[];
-  guest: { table: string; name: string; tab: 'menu' | 'plate' | 'orders'; cat: string };
+  guest: { table: string; name: string; tab: 'menu' | 'plate' | 'orders' | 'bill'; cat: string };
   set: (p: Partial<Omit<UiState, 'set' | 'notify' | 'go'>>) => void;
   setGuest: (p: Partial<UiState['guest']>) => void;
   /** Adds an entry to the bell. Newest first, last 40 kept. */

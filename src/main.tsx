@@ -4,9 +4,11 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import './styles/app.css';
 import { App } from './app/App';
 import { api } from './api';
+import { clientRef } from './api/queries';
 import { bootFromHash } from './store/ui';
 
-const client = new QueryClient({ defaultOptions: { queries: { staleTime: Infinity, refetchOnWindowFocus: false, retry: false } } });
+const client = new QueryClient({ defaultOptions: { queries: { staleTime: 0, refetchOnWindowFocus: false, retry: false } } });
+clientRef.current = client;
 
 // Opened from a table QR code: join that table's session before the first render.
 const { table, token } = bootFromHash();

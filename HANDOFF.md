@@ -1,3 +1,5 @@
+> **Note:** the app is now React + TypeScript in `src/` (see README.md and docs/PORTING.md). `prototype/index.html` is the original single-file version these notes describe; behavior is the same.
+
 # FBS Serve — Handoff
 
 Last updated: 2026-10-26. Read this file first when continuing on a new machine or account.
