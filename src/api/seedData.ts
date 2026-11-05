@@ -1,0 +1,76 @@
+// Sample data for the in-memory mock API. Replace with real responses once the backend exists.
+import type { Category, DiningTable, Discount, Floor, Food, PaymentMethod, Role, User } from './types';
+import { NAV } from './constants';
+
+export const categories: Category[] = [
+    {id:'appetizer', name:'Appetizer', desc:'Small plates to start'},
+    {id:'main', name:'Main', desc:'Rice meals and sharing plates'},
+    {id:'drinks', name:'Drinks', desc:'Juices, shakes and beer'},
+    {id:'dessert', name:'Dessert', desc:'Sweet endings'},
+    {id:'sidedish', name:'Side dish', desc:'Rice and vegetables'},
+  ];
+
+export const foods: Food[] = [
+    {id:'f1', cat:'appetizer', name:'Lumpiang Shanghai', price:180, desc:'Pork and shrimp spring rolls, sweet chili dip.', status:'available', tags:['best'], eta:12, photos:[]},
+    {id:'f2', cat:'appetizer', name:'Calamares', price:220, desc:'Fried squid rings, garlic aioli, calamansi.', status:'available', tags:[], eta:12, photos:[]},
+    {id:'f3', cat:'appetizer', name:'Chicharon Bulaklak', price:240, desc:'Crispy pork ruffle fat, spiced vinegar.', status:'unavailable', tags:[], eta:15, photos:[]},
+    {id:'f4', cat:'main', name:'Crispy Pata', price:695, desc:'Deep-fried pork knuckle, soy-vinegar dip. Good for 3.', status:'available', tags:['best','must'], eta:35, photos:[]},
+    {id:'f5', cat:'main', name:'Kare-Kare', price:560, desc:'Oxtail and tripe in peanut sauce, bagoong.', status:'available', tags:['must'], eta:30, photos:[]},
+    {id:'f6', cat:'main', name:'Chicken Inasal', price:245, desc:'Lemongrass-annatto grilled chicken leg, chicken oil.', status:'available', tags:['best'], eta:20, photos:[]},
+    {id:'f7', cat:'main', name:'Sinigang na Hipon', price:420, desc:'Shrimp in tamarind broth, kangkong, radish.', status:'available', tags:[], eta:25, photos:[]},
+    {id:'f8', cat:'main', name:'Beef Tapa Bowl', price:265, desc:'Cured beef, garlic rice, fried egg, atchara.', status:'available', tags:['new'], eta:15, photos:[]},
+    {id:'f9', cat:'sidedish', name:'Garlic Rice', price:65, desc:'Rice fried with toasted garlic.', status:'available', tags:[], eta:5, photos:[]},
+    {id:'f10', cat:'sidedish', name:'Ensaladang Talong', price:95, desc:'Grilled eggplant, tomato, onion, salted egg.', status:'available', tags:[], eta:8, photos:[]},
+    {id:'f11', cat:'sidedish', name:'Java Rice', price:75, desc:'Annatto butter rice.', status:'available', tags:['new'], eta:5, photos:[]},
+    {id:'f12', cat:'drinks', name:'Calamansi Juice', price:85, desc:'Fresh calamansi, honey, ice.', status:'available', tags:[], eta:3, photos:[], variants:[{id:'reg', name:'Regular', price:85}, {id:'lg', name:'Large', price:120}]},
+    {id:'f13', cat:'drinks', name:'Iced Tea Pitcher', price:180, desc:'House-brewed black tea with lemon. Serves 4.', status:'available', tags:[], eta:5, photos:[]},
+    {id:'f14', cat:'drinks', name:'Buko Shake', price:120, desc:'Young coconut, milk, crushed ice.', status:'available', tags:['new'], eta:5, photos:[], variants:[{id:'reg', name:'Regular', price:120}, {id:'lg', name:'Large', price:160}]},
+    {id:'f15', cat:'dessert', name:'Halo-Halo', price:165, desc:'Shaved ice, ube, leche flan, sweet beans, milk.', status:'available', tags:['best'], eta:8, photos:[]},
+    {id:'f16', cat:'dessert', name:'Leche Flan', price:120, desc:'Egg custard, burnt caramel.', status:'available', tags:['must'], eta:5, photos:[]},
+    {id:'f17', cat:'dessert', name:'Turon à la Mode', price:140, desc:'Banana and jackfruit roll, vanilla ice cream.', status:'unavailable', tags:['new'], eta:10, photos:[]},
+    {id:'f18', cat:'main', name:'Classic Pizza', price:250, desc:'Tomato, mozzarella and basil on a thin crust.', status:'available', tags:['new', 'best'], eta:20, photos:[], variants:[{id:'sm', name:'Small', price:250}, {id:'md', name:'Medium', price:380}, {id:'lg', name:'Large', price:520}]},
+    {id:'f19', cat:'main', name:'Sizzling Sisig', price:285, desc:'Chopped pork cheek and liver on a hot plate, calamansi, egg.', status:'available', tags:['best'], eta:18, photos:[], variants:[{id:'solo', name:'Solo', price:285}, {id:'duo', name:'Good for 2', price:520}, {id:'plt', name:'Platter', price:950}]},
+    {id:'f20', cat:'drinks', name:'Iced Coffee', price:95, desc:'Cold-brewed coffee, milk, brown sugar syrup, ice.', status:'available', tags:['new'], eta:4, photos:[], variants:[{id:'s12', name:'12 oz', price:95}, {id:'m16', name:'16 oz', price:120}, {id:'l22', name:'22 oz', price:145}]},
+    {id:'f21', cat:'dessert', name:'Ube Cake', price:95, desc:'Soft ube chiffon, cream cheese frosting, toasted coconut.', status:'available', tags:['must'], eta:6, photos:[], variants:[{id:'sl', name:'Slice', price:95}, {id:'hf', name:'Half cake', price:380}, {id:'wh', name:'Whole cake', price:680}]},
+  ];
+
+export const payments: PaymentMethod[] = [
+    {id:'cash', name:'Cash', details:'Pay the waiter at the table', active:true},
+    {id:'gcash', name:'GCash', details:'0917 555 0142 · FBS Serve', active:true, needsRef:true},
+    {id:'card', name:'Credit or debit card', details:'Visa and Mastercard via terminal', active:true, needsRef:true},
+    {id:'maya', name:'Maya', details:'Maya QR at the counter', active:false, needsRef:true},
+  ];
+
+export const discounts: Discount[] = [
+    {id:'senior', name:'Senior citizen', pct:20, note:'Valid senior citizen ID', active:true},
+    {id:'pwd', name:'PWD', pct:20, note:'Valid PWD ID', active:true},
+    {id:'bday', name:'Birthday promo', pct:10, note:'Valid ID on birth month', active:true},
+  ];
+
+export const roles: Role[] = [
+    {id:'admin', name:'Admin', modules:NAV.map(n => n.id)},
+    {id:'manager', name:'Manager', modules:['dashboard','orders','reservations','foods','tables','guide']},
+    {id:'waiter', name:'Waiter', modules:['orders','reservations','kitchen','tables','guide']},
+    {id:'kitchen', name:'Kitchen staff', modules:['kitchen','guide']},
+    {id:'cashier', name:'Cashier', modules:['dashboard','orders','reservations','tables','guide']},
+  ];
+
+export const users: User[] = [
+    {id:'u1', name:'Maria Santos', username:'maria', role:'admin', active:true},
+    {id:'u2', name:'Jun Reyes', username:'jun', role:'waiter', active:true},
+    {id:'u3', name:'Carla dela Cruz', username:'carla', role:'waiter', active:true},
+    {id:'u4', name:'Ben Ramos', username:'ben', role:'kitchen', active:true},
+    {id:'u5', name:'Liza Mendoza', username:'liza', role:'cashier', active:false},
+  ];
+
+export const floors: Floor[] = [{id:'f1', name:'Ground floor'}, {id:'f2', name:'2nd floor'}];
+
+const tablePlan = [
+    {id:'T1', seats:2, x:11, y:26}, {id:'T2', seats:2, x:11, y:52}, {id:'T3', seats:2, x:11, y:78},
+    {id:'T4', seats:4, x:31, y:32}, {id:'T5', seats:4, x:31, y:70}, {id:'T6', seats:4, x:51, y:32}, {id:'T7', seats:4, x:51, y:70},
+    {id:'T8', seats:6, x:74, y:44}, {id:'T9', seats:6, x:74, y:76},
+    {id:'T10', seats:2, x:93, y:24}, {id:'T11', seats:2, x:93, y:51}, {id:'T12', seats:2, x:93, y:78},
+      {id:'T13', seats:12, x:38, y:36, name:'Function room', floor:'f2'}, {id:'T14', seats:8, x:38, y:76, floor:'f2'},
+    {id:'T15', seats:4, x:72, y:36, floor:'f2'}, {id:'T16', seats:4, x:72, y:74, floor:'f2'}, {id:'T17', seats:2, x:12, y:40, floor:'f2'},
+  ] as Partial<DiningTable>[];
+export const tables: DiningTable[] = tablePlan.map(t => ({floor:'f1', name:'Table ' + t.id!.slice(1), ...t, status:'inactive', token:null, openedAt:null, bill:null} as DiningTable));
