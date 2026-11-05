@@ -1,5 +1,5 @@
 import type { Order } from '@/api/types';
-import { isTO, oMeta, total } from '@/lib/domain';
+import { isTO, oMeta, orderTag, total } from '@/lib/domain';
 import { dt, sum } from '@/lib/format';
 import { chanOf } from './helpers';
 
@@ -8,7 +8,7 @@ export interface Col { k: string; l: string; t: 'list' | 'range' | 'text'; r?: b
 export type ColValue = string[] | { min: string; max: string } | string;
 
 export const buildCols = (tName: (id: string | null) => string, payName: (id?: string) => string): Col[] => [
-  { k: 'id', l: 'Order ID', t: 'text', v: o => o.id },
+  { k: 'id', l: 'Order ID', t: 'text', v: o => orderTag(o) },
   { k: 'status', l: 'Status', t: 'list', v: o => oMeta(o).l },
   { k: 'table', l: 'Table or pickup', t: 'list', v: o => (isTO(o) ? `Takeout · ${chanOf(o).l}` : tName(o.table)) },
   { k: 'day', l: 'Date and time', t: 'list', v: o => dt(o.createdAt) },

@@ -23,7 +23,7 @@ interface UiState {
 
 let seq = 0;
 export const useUi = create<UiState>((set, get) => ({
-  mode: 'staff', guestOnly: false, view: 'dashboard', meId: 'u1', signedOut: false, notifs: [],
+  mode: 'staff', guestOnly: false, view: 'dashboard', meId: 'u1', signedOut: true, notifs: [],
   guest: { table: 'T3', name: 'Guest 1', tab: 'menu', cat: 'all' },
   set: p => set(p),
   setGuest: p => set({ guest: { ...get().guest, ...p } }),

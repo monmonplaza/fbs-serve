@@ -2,6 +2,7 @@
 import { db } from './db';
 import { out, tableOf, sessionOrders, syncTable, nextId, newTakeout, fail, uid } from './core';
 import { TO } from './constants';
+import type { Order } from './types';
 import { plateItems, orderEta, itemName } from '@/lib/domain';
 import { sum } from '@/lib/format';
 import { total } from '@/lib/domain';
@@ -47,7 +48,7 @@ export const guest = {
     if (!t || !t.token) return fail('This table is not active');
     if (!p.length) return fail('Your plate is empty');
     const items = plateItems(p, db.foods);
-    const o = { id: nextId(), table: t.id, session: t.token, items, status: 'queued' as const, createdAt: Date.now(), by, eta: orderEta(items, db.foods) };
+    const o: Order = { id: nextId(), table: t.id, session: t.token, items, status: 'queued', createdAt: Date.now(), by, eta: orderEta(items, db.foods) };
     db.orders.push(o);
     db.plates[t.id] = [];
     syncTable(t);

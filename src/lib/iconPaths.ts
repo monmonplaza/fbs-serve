@@ -1,5 +1,12 @@
 // Icon paths (24x24 viewBox, stroke icons). Generated from the prototype; add new ones here.
 export const IC: Record<string, string> = {
+  "copy": "<rect x=\"9\" y=\"9\" width=\"11\" height=\"11\" rx=\"2.5\"/><path d=\"M5 15V6a2 2 0 0 1 2-2h9\"/>",
+  "mail": "<rect x=\"3\" y=\"5\" width=\"18\" height=\"14\" rx=\"2.5\"/><path d=\"M3.5 7l8.5 6 8.5-6\"/>",
+  "lock": "<rect x=\"4\" y=\"10\" width=\"16\" height=\"11\" rx=\"2.5\"/><path d=\"M8 10V7a4 4 0 0 1 8 0v3\"/>",
+  "eye": "<path d=\"M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z\"/><circle cx=\"12\" cy=\"12\" r=\"3\"/>",
+  "eyeoff": "<path d=\"M3 3l18 18M10.6 6.1A9.7 9.7 0 0 1 12 5c6 0 10 7 10 7a17 17 0 0 1-3.2 4M6.5 7.5C3.8 9.3 2 12 2 12s4 7 10 7c1.5 0 2.8-.4 4-1\"/>",
+  "arrowr": "<path d=\"M5 12h14M13 6l6 6-6 6\"/>",
+  "shield": "<path d=\"M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z\"/><path d=\"M9 12l2 2 4-4\"/>",
   "dash": "<rect x=\"3\" y=\"3\" width=\"7\" height=\"9\" rx=\"1.5\"/><rect x=\"14\" y=\"3\" width=\"7\" height=\"5\" rx=\"1.5\"/><rect x=\"14\" y=\"12\" width=\"7\" height=\"9\" rx=\"1.5\"/><rect x=\"3\" y=\"16\" width=\"7\" height=\"5\" rx=\"1.5\"/>",
   "receipt": "<path d=\"M6 3h12v18l-3-2-3 2-3-2-3 2z\"/><path d=\"M9 8h6M9 12h6M9 16h3\"/>",
   "pot": "<path d=\"M4 10h16v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z\"/><path d=\"M2 10h20M9 6c0-1 1-1 1-2M14 6c0-1 1-1 1-2\"/>",

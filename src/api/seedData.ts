@@ -36,9 +36,9 @@ export const foods: Food[] = [
 
 export const payments: PaymentMethod[] = [
     {id:'cash', name:'Cash', details:'Pay the waiter at the table', active:true},
-    {id:'gcash', name:'GCash', details:'0917 555 0142 · FBS Serve', active:true},
-    {id:'card', name:'Credit or debit card', details:'Visa and Mastercard via terminal', active:true},
-    {id:'maya', name:'Maya', details:'Maya QR at the counter', active:false},
+    {id:'gcash', name:'GCash', details:'0917 555 0142 · FBS Serve', active:true, needsRef:true},
+    {id:'card', name:'Credit or debit card', details:'Visa and Mastercard via terminal', active:true, needsRef:true},
+    {id:'maya', name:'Maya', details:'Maya QR at the counter', active:false, needsRef:true},
   ];
 
 export const discounts: Discount[] = [

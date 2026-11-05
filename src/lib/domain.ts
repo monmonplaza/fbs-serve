@@ -10,6 +10,8 @@ export const itemName = (f: Food, vid?: string) => (hasV(f) ? `${f.name} (${vOf(
 
 export const subtotal = (o: Pick<Order, 'items'>) => sum(o.items.map(i => i.price * i.qty));
 export const total = (o: Pick<Order, 'items' | 'discount'>) => r2(subtotal(o) * (1 - (o.discount?.pct || 0) / 100));
+/** What to print as the order id: the order's single code, plus the round when the order has several. */
+export const orderTag = (o: Pick<Order, 'id' | 'code' | 'round' | 'rounds'>, wholeOrder = false) => (!o.code ? o.id : wholeOrder || (o.rounds ?? 1) < 2 ? o.code : `${o.code} · Round ${o.round}`);
 export const isTO = (o: Pick<Order, 'type'>) => o.type === 'takeout';
 export const oMeta = (o: Order): OrderStatusMeta => ((isTO(o) && TO_OSTAT[o.status]) || OSTAT[o.status])!;
 

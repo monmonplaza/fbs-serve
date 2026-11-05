@@ -2,13 +2,14 @@ import { api } from '@/api';
 import { ItemNote } from '@/components/ItemNote';
 import { ApiError } from '@/api';
 import { Icon } from '@/components/Icon';
-import { Pill } from '@/components/Pill';
+import { StatusDot } from '@/components/StatusDot';
 import { useInvalidate, useOrders, usePayments, useTables } from '@/api/queries';
 import type { Order, OrderItem, Payment, PaymentMethod } from '@/api/types';
 import { useUi } from '@/store/ui';
 import { closeModal, openModal } from '@/store/modal';
 import { toast } from '@/store/toast';
-import { aggregate, billKey, isTO, oMeta, subtotal, total } from '@/lib/domain';
+import { printBill } from '@/store/print';
+import { aggregate, billKey, isTO, oMeta, orderTag, subtotal, total } from '@/lib/domain';
 import { dt, peso, sum, tm } from '@/lib/format';
 import { ChTag, chanOf, isPlatform, sod, usePayName, useTableName } from './helpers';
 import { PayForm } from './PayForm';
@@ -21,9 +22,19 @@ const useMethods = (activeOnly: boolean): PaymentMethod[] => {
 };
 const fail = (e: unknown) => toast(e instanceof ApiError ? e.message : 'Something went wrong. Please try again.');
 
+/** One detail of an order: a small label above its value. */
+function KV({ label, children }: { ic?: string; label: string; children: React.ReactNode }) {
+  return (
+    <div className="kvi">
+      <span className="kvl">{label}</span>
+      <span className="kvv">{children}</span>
+    </div>
+  );
+}
+
 function Items({ items }: { items: (Pick<OrderItem, 'name' | 'price' | 'qty'> & { note?: string })[] }) {
   return (
-    <ul className="items">
+    <ul className="items items-box">
       {items.map((i, k) => <li key={k}><b className="num">{i.qty}×</b><span>{i.name}<ItemNote note={i.note} /></span><span className="num">{peso(i.qty * i.price)}</span></li>)}
     </ul>
   );
@@ -49,7 +60,7 @@ const isPayable = (o: Order, grp: Order[]) =>
 /** Opens an order. `grp` is its whole bill (omit or pass [o] with solo for a single order). */
 export function openOrder(o: Order, grp: Order[] = [o], solo = false) {
   const g = solo ? [o] : grp;
-  openModal({ title: !solo && isPayable(o, g) && g.length > 1 ? `${o.id} and ${g.length - 1} additional` : o.id, content: <OrderModal id={o.id} solo={solo} /> });
+  openModal({ title: !solo && isPayable(o, g) && g.length > 1 ? (o.code ? orderTag(o, true) : `${o.id} and ${g.length - 1} additional`) : orderTag(o), content: <OrderModal id={o.id} solo={solo} /> });
 }
 
 /** Receive payment for a whole table (the "asking for the bill" banner). */
@@ -63,8 +74,8 @@ export function PayTableModal({ tableId }: { tableId: string }) {
   const os = t.token ? orders.filter(o => o.table === t.id && o.session === t.token && o.status !== 'paid') : [];
   return (
     <PayForm
-      orders={os} methods={methods} defaultMethod={t.bill?.method} hint={`Guest chose ${payName(t.bill?.method)}.`}
-      before={<ul className="items">{aggregate(os).map(i => <li key={i.name}><b className="num">{i.qty}×</b><span>{i.name}</span><span className="num">{peso(i.qty * i.price)}</span></li>)}</ul>}
+      orders={os} methods={methods} defaultMethod={t.bill?.method} hint={`Guest chose ${payName(t.bill?.method)}.`} printable
+      before={<ul className="items items-box">{aggregate(os).map(i => <li key={i.name}><b className="num">{i.qty}×</b><span>{i.name}</span><span className="num">{peso(i.qty * i.price)}</span></li>)}</ul>}
       cancelLabel="Cancel" submitLabel="Payment received"
       onSubmit={async (disc, pays) => {
         try {
@@ -86,9 +97,9 @@ export function PickupModal({ id }: { id: string }) {
   if (!o) return null;
   return (
     <PayForm
-      orders={[o]} methods={methods}
+      orders={[o]} methods={methods} printable
       before={<>
-        <p><b>{o.customer}</b>{o.phone ? <> · <span className="num">{o.phone}</span></> : null}<br /><span className="caption muted num">{o.id} · takeout, paid on pickup</span></p>
+        <p><b>{o.customer}</b>{o.phone ? <> · <span className="num">{o.phone}</span></> : null}<br /><span className="caption muted num">{orderTag(o)} · takeout, paid on pickup</span></p>
         <Items items={o.items} />
       </>}
       cancelLabel="Cancel" submitLabel="Paid and picked up"
@@ -120,7 +131,7 @@ export function HandoverModal({ id }: { id: string }) {
   return (
     <form id="hand-form" onSubmit={submit}>
       <div className="m-body">
-        <p><ChTag o={o} /><br /><b>{o.customer}</b>{o.ref ? <> · <span className="num">{o.ref}</span></> : null}<br /><span className="caption muted num">{o.id}</span></p>
+        <p><ChTag o={o} /><br /><b>{o.customer}</b>{o.ref ? <> · <span className="num">{o.ref}</span></> : null}<br /><span className="caption muted num">{orderTag(o)}</span></p>
         <Items items={o.items} />
         <div className="alert info"><Icon name="wallet" /><p><b>Already paid in the {c.l} app.</b><br /><span className="caption">Give the order to the rider. Do not collect payment.</span></p></div>
         <div className="sum"><div className="total"><span>Order total</span><span className="num">{peso(subtotal(o))}</span></div></div>
@@ -149,31 +160,31 @@ export function OrderModal({ id, solo = false }: { id: string; solo?: boolean })
 
   const details = (
     <>
-      <dl className="kv">
-        <dt>Status</dt><dd><Pill meta={oMeta(o)} /></dd>
+      <div className="kvg">
+        <KV label="Status"><StatusDot meta={oMeta(o)} /></KV>
         {isTO(o) ? (
           <>
-            <dt>Order from</dt><dd><ChTag o={o} /></dd>
-            {o.ref ? <><dt>{chanOf(o).l} order no.</dt><dd className="num">{o.ref}</dd></> : null}
-            <dt>Type</dt><dd>Takeout, {isPlatform(o) ? 'entered by staff' : o.source === 'qr' ? 'from the Takeout QR' : 'at the counter'}</dd>
-            <dt>Pickup number</dt><dd className="num">{o.pickup}</dd>
-            <dt>Customer</dt><dd>{o.customer}{o.phone ? <> · <span className="num">{o.phone}</span></> : null}</dd>
+            <KV label="Order from"><ChTag o={o} /></KV>
+            {o.ref ? <KV label={`${chanOf(o).l} order no.`}><span className="num">{o.ref}</span></KV> : null}
+            <KV label="Type">Takeout, {isPlatform(o) ? 'entered by staff' : o.source === 'qr' ? 'from the Takeout QR' : 'at the counter'}</KV>
+            <KV label="Pickup number"><span className="num">{o.pickup}</span></KV>
+            <KV label="Customer">{o.customer}{o.phone ? <> · <span className="num">{o.phone}</span></> : null}</KV>
           </>
-        ) : <><dt>Table</dt><dd>{tName(o.table)}</dd></>}
-        <dt>Ordered</dt><dd className="num">{dt(o.createdAt)}, {tm(o.createdAt)}</dd>
-        {isTO(o) ? null : <><dt>Sent by</dt><dd>{o.by}</dd></>}
+        ) : <KV label="Table">{tName(o.table)}</KV>}
+        <KV label="Ordered"><span className="num">{dt(o.createdAt)}, {tm(o.createdAt)}</span></KV>
+        {isTO(o) ? null : <KV label="Sent by">{o.by}</KV>}
         {o.payment ? (
-          <>
-            <dt>Payment</dt>
-            <dd>{payName(o.payment)}{breakdown ? <><br /><span className="caption muted num">{breakdown.map((p, i) => <span key={i}>{i ? <br /> : null}{payName(p.method)} {peso(p.amount)}</span>)}</span></> : null}</dd>
-          </>
+          <KV label="Payment">
+            {payName(o.payment)}{breakdown ? <><br /><span className="caption muted num">{breakdown.map((p, i) => <span key={i}>{i ? <br /> : null}{payName(p.method)} {peso(p.amount)}</span>)}</span></> : null}
+          </KV>
         ) : null}
-        {o.discount ? <><dt>Discount</dt><dd>{o.discount.name} ({o.discount.pct}%)</dd></> : null}
-      </dl>
+        {o.payRef ? <KV label="Reference no."><span className="num">{o.payRef}</span></KV> : null}
+        {o.discount ? <KV label="Discount">{o.discount.name} ({o.discount.pct}%)</KV> : null}
+      </div>
       {many
         ? grp.map((x, i) => (
           <div key={x.id}>
-            <p className="caption muted num" style={{ margin: '8px 0 2px' }}>{x.id} · {i ? 'Additional order' : 'First order'} · {oMeta(x).l}</p>
+            <p className="caption muted num" style={{ margin: '8px 0 2px' }}>{x.code ? orderTag(x) : `${x.id} · ${i ? 'Additional order' : 'First order'}`} · {oMeta(x).l}</p>
             <Items items={x.items} />
           </div>
         ))
@@ -185,7 +196,7 @@ export function OrderModal({ id, solo = false }: { id: string; solo?: boolean })
   if (payable) {
     return (
       <PayForm
-        orders={unpaid} methods={methods} defaultMethod={t?.bill?.method}
+        orders={unpaid} methods={methods} defaultMethod={t?.bill?.method} printable
         hint={t?.bill ? `Guest chose ${payName(t.bill.method)}.` : undefined}
         before={details} cancelLabel="Close" submitLabel="Payment received"
         onSubmit={async (disc, pays) => {
@@ -194,7 +205,7 @@ export function OrderModal({ id, solo = false }: { id: string; solo?: boolean })
             const split = pays.length > 1;
             closeModal(); await invalidate('orders', 'tables');
             const cleaning = r.table?.status === 'cleaning';
-            toast(`${r.count > 1 ? `${r.count} orders` : o.id} paid${split ? ' with a split bill' : ' with ' + payName(pays[0].method)}${cleaning ? `. ${r.table!.name} is ready to clean.` : ''}`);
+            toast(`${r.count > 1 ? `${r.count} orders` : orderTag(o)} paid${split ? ' with a split bill' : ' with ' + payName(pays[0].method)}${cleaning ? `. ${r.table!.name} is ready to clean.` : ''}`);
           } catch (e) { fail(e); }
         }}
       />
@@ -209,10 +220,12 @@ export function OrderModal({ id, solo = false }: { id: string; solo?: boolean })
           <div><span className="muted">Subtotal</span><span className="num">{peso(sub)}</span></div>
           {o.discount ? <div><span className="muted">Discount</span><span className="num">−{peso(sub - tot)}</span></div> : null}
           <div className="total"><span>Total</span><span className="num">{peso(tot)}</span></div>
+          {o.received != null ? <><div><span className="muted">Amount received</span><span className="num">{peso(o.received)}</span></div><div><span className="muted">Change</span><span className="num">{peso(o.change ?? 0)}</span></div></> : null}
         </div>
       </div>
       <div className="m-foot">
         <button className="btn btn-outline" onClick={closeModal}>Close</button>
+        {grp.every(x => x.status === 'paid') ? <button className="btn btn-outline" onClick={() => printBill({ orders: grp, discount: o.discount ?? null })}><Icon name="receipt" size={20} />Print receipt</button> : null}
         {isTO(o) && o.status === 'ready' ? (
           <button className="btn btn-primary" onClick={() => openPickup(o)}><Icon name={isPlatform(o) ? 'bag' : 'wallet'} size={20} />{isPlatform(o) ? 'Hand to rider' : 'Collect payment'}</button>
         ) : null}

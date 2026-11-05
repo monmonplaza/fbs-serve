@@ -6,17 +6,19 @@ import { clamp, peso } from '@/lib/format';
 import { Icon } from '@/components/Icon';
 import { toast } from '@/store/toast';
 
-const useLightbox = create<{ food: Food | null }>(() => ({ food: null }));
+/** `page` fills the browser window; `phone` stays inside the guest phone frame (see PhoneLightbox). */
+type Scope = 'page' | 'phone';
+const useLightbox = create<{ food: Food | null; scope: Scope }>(() => ({ food: null, scope: 'page' }));
 
 /** Opens the full-screen photo gallery. Needs a mounted <LightboxHost />. */
-export function openGallery(food: Food): void {
+export function openGallery(food: Food, scope: Scope = 'page'): void {
   if (!food.photos.length) return toast('No photos yet for ' + food.name);
-  useLightbox.setState({ food });
+  useLightbox.setState({ food, scope });
 }
 const closeGallery = () => useLightbox.setState({ food: null });
 
 export function LightboxHost() {
-  const food = useLightbox(s => s.food);
+  const food = useLightbox(s => s.scope === 'page' ? s.food : null);
   const ref = useRef<HTMLDialogElement>(null);
   useEffect(() => {
     const d = ref.current!;
@@ -27,6 +29,19 @@ export function LightboxHost() {
     <dialog ref={ref} className="lb" aria-label="Food photos" onClose={closeGallery}>
       {food && <Gallery key={food.id} food={food} />}
     </dialog>
+  );
+}
+/** Same gallery, drawn inside the guest phone so it never covers the staff screen. Mount it inside `.phone`. */
+export function PhoneLightbox() {
+  const food = useLightbox(s => s.scope === 'phone' ? s.food : null);
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => { if (food) ref.current?.focus(); }, [food]);
+  if (!food) return null;
+  return (
+    <div ref={ref} className="lb lb-in" role="dialog" aria-modal="true" aria-label="Food photos" tabIndex={-1}
+      onKeyDown={e => { if (e.key === 'Escape') { e.stopPropagation(); closeGallery(); } }}>
+      <Gallery key={food.id} food={food} />
+    </div>
   );
 }
 /** Alias so a page can mount the host by either name. */

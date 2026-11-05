@@ -12,8 +12,11 @@ const discountOf = (id?: string | null): AppliedDiscount | null => {
 const dueOf = (orders: Order[], d: AppliedDiscount | null) => r2(sum(orders.map(o => r2(subtotal(o) * (1 - (d?.pct || 0) / 100)))));
 /** Payments must be positive and add up to the amount due. */
 function checkPays(pays: Payment[], due: number) {
-  const rows = pays.map(p => ({ method: p.method, amount: r2(p.amount) }));
+  const rows = pays.map(p => ({ method: p.method, amount: r2(p.amount), received: p.received == null ? undefined : r2(p.received), ref: p.ref?.trim().slice(0, 40) || undefined }));
+  const need = rows.map(r => db.payments.find(m => m.id === r.method)).find((m, i) => m?.needsRef && !rows[i].ref);
+  if (need) fail(`Enter the reference no. for ${need.name}`);
   if (!rows.length || rows.some(r => !(r.amount > 0)) || r2(sum(rows.map(r => r.amount)) - due) !== 0) fail(`The payments must add up to ₱${due.toFixed(2)}`);
+  if (rows.length === 1 && rows[0].received != null && rows[0].received < due) fail(`The amount received is less than the amount due (₱${due.toFixed(2)})`);
   return rows;
 }
 const billOf = (o: Order) => (o.session ? db.orders.filter(x => x.table === o.table && x.session === o.session && x.type !== 'takeout') : [o]);

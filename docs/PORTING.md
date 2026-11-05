@@ -42,3 +42,12 @@ src/app/        shell: App, StaffShell (rail, banners, routing by `useUi().view`
 9. **File ownership**: only edit the files your task owns. Shared files (`src/components/*`, `src/lib/*`, `src/api/types.ts`, `queries.ts`, `core.ts`, `store/*`, `app/*`)
    may only be extended by appending, and only when needed. Put module-specific helpers inside your own feature folder. New shared components get a new file.
 10. Keep files focused (a page file over ~400 lines should be split into the page plus modal/helper files in the same folder).
+
+## Styling (Tailwind v4)
+
+Tailwind v4 is installed through `@tailwindcss/vite` (`vite.config.ts`). The existing component CSS is unchanged and lives in `src/styles/app.css`, now inside `@layer components`, so any utility class overrides it.
+
+- **Layers:** `theme, base, components, utilities`. Only `tailwindcss/theme.css` and `tailwindcss/utilities.css` are imported; **preflight is left out on purpose** so existing screens keep their look. `@layer base` holds the app's own reset and the color variables.
+- **Tokens:** `@theme inline` in `app.css` maps the runtime CSS variables to utilities: `bg-card`, `bg-page`, `text-ink`, `text-ink-muted`, `border-hairline`, `bg-brand`, `text-on-brand`, `bg-success-tint`, `text-error`, `bg-nav`, `rounded-sm|md|lg|pill`, `shadow-card`, `shadow-lift`, `font-sans`, and so on. Colors point at the variables, so light and dark mode switch without `dark:` classes. `dark:` exists (saved theme, else the system setting) for the rare case that needs it.
+- **New components:** use utility classes with these tokens. Do not add new rules to `app.css`; when you touch an old component and it is simple, moving its rules to utilities is welcome, one component at a time.
+- **Dev note:** Tailwind finds class names in files the app imports. A class that exists only in a file nothing imports is not generated; `npm run build` always scans everything.

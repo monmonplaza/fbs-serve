@@ -22,7 +22,7 @@ export function GuestMenu({ onAdd }: { onAdd: (f: Food) => void }) {
         const ok = f.status === 'available';
         return (
           <article key={f.id} className={`gfood ${ok ? '' : 'unavail'}`}>
-            <button className="gimg" aria-label={`View photos of ${f.name}`} onClick={() => openGallery(f)}>
+            <button className="gimg" aria-label={`View photos of ${f.name}`} onClick={() => openGallery(f, 'phone')}>
               <FoodImage food={f} size={32} />
               {f.photos.length > 1 && <span className="pcount"><Icon name="image" size={14} />{f.photos.length}</span>}
             </button>

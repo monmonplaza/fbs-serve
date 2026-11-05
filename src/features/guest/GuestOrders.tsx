@@ -4,7 +4,7 @@ import { GSTEPS, GSTEP_L, OSTAT, TO_STEPS, TO_STEP_L } from '@/api/constants';
 import { Icon } from '@/components/Icon';
 import { useNow } from '@/lib/useNow';
 import { mins, peso, tm } from '@/lib/format';
-import { oMeta, orderEta, total } from '@/lib/domain';
+import { oMeta, orderEta, orderTag, total } from '@/lib/domain';
 
 function Empty({ icon, title, text }: { icon: string; title: string; text: string }) {
   return <div className="center"><div className="big-ic"><Icon name={icon} size={32} /></div><h3>{title}</h3><p className="muted">{text}</p></div>;
@@ -17,7 +17,7 @@ function Track({ o, takeout }: { o: Order; takeout: boolean }) {
   const left = (o.eta || orderEta(o.items, [])) - mins(o.createdAt);
   return (
     <section className="card track" style={{ padding: 16 }}>
-      <span className="caption muted num">{o.id} · {tm(o.createdAt)} · {takeout ? o.customer : `sent by ${o.by}`}</span>
+      <span className="caption muted num">{orderTag(o)} · {tm(o.createdAt)} · {takeout ? o.customer : `sent by ${o.by}`}</span>
       {takeout && <div className="pickup"><span className="caption muted">Pickup number</span><b className="num">{o.pickup}</b></div>}
       <h3>{m.g}</h3>
       <p className="caption muted">{m.d}</p>

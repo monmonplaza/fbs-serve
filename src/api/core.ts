@@ -40,7 +40,10 @@ export function settleOrders(orders: Order[], pays: Payment[], dObj: AppliedDisc
         return { method: x.method, amount: a };
       });
     }
-    Object.assign(o, { status: 'paid', discount: dObj, paidAt: Date.now(), payments: parts, payment: pays.length > 1 ? 'split' : pays[0].method });
+    const payRef = pays.map(x => x.ref).filter(Boolean).join(', ');
+    Object.assign(o, { status: 'paid', discount: dObj, paidAt: Date.now(), payments: parts, payment: pays.length > 1 ? 'split' : pays[0].method, ...(payRef ? { payRef } : {}) });
+    // Bill-level cash handling: what the customer handed over and the change for the whole bill.
+    if (pays.length === 1 && pays[0].received != null) Object.assign(o, { received: pays[0].received, change: r2(pays[0].received - grand) });
   });
 }
 

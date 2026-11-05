@@ -4,7 +4,7 @@ import { usePaged } from '@/components/Pager';
 import { useOrders } from '@/api/queries';
 import type { DiningTable, Order, OrderStatus } from '@/api/types';
 import { openModal } from '@/store/modal';
-import { billKey, isTO, total } from '@/lib/domain';
+import { billKey, isTO, orderTag, total } from '@/lib/domain';
 import { peso, sum } from '@/lib/format';
 import { ChTag, chanOf, isPlatform, sod, usePayName, useTableName } from './helpers';
 import { FLOW, blankAll, buildCols, cfMatch, cfOn, inRange, type ColValue } from './columns';
@@ -79,7 +79,7 @@ export function OrdersPage() {
               <li key={o.id}>
                 <div className="grow">
                   <b className="num">{o.pickup}</b> <ChTag o={o} /> <span className="muted">· {o.customer}{o.phone ? <> · <span className="num">{o.phone}</span></> : null}</span>
-                  <div className="caption muted num">{o.id} · {sum(o.items.map(i => i.qty))} items · {isPlatform(o) ? `paid in the ${chanOf(o).l} app${o.ref ? ' · ' + o.ref : ''}` : 'pay on pickup'}</div>
+                  <div className="caption muted num">{orderTag(o)} · {sum(o.items.map(i => i.qty))} items · {isPlatform(o) ? `paid in the ${chanOf(o).l} app${o.ref ? ' · ' + o.ref : ''}` : 'pay on pickup'}</div>
                 </div>
                 <b className="num">{peso(total(o))}</b>
                 <button className="btn btn-primary" onClick={() => openPickup(o)}><Icon name={isPlatform(o) ? 'bag' : 'wallet'} size={20} />{isPlatform(o) ? 'Hand to rider' : 'Collect payment'}</button>

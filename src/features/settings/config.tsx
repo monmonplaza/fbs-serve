@@ -4,13 +4,13 @@ import type { SettingsList } from '@/api/admin';
 
 export interface Field {
   k: string; l: string; req?: boolean; hint?: string; max?: number;
-  t?: 'check' | 'number' | 'select' | 'multi';
+  t?: 'check' | 'number' | 'select' | 'multi' | 'image';
 }
 export interface Cfg { title: string; one: string; fields: Field[]; extra?: string }
 export type Row = { id: string; name: string } & Record<string, unknown>;
 
 export const SET: Record<SettingsList, Cfg> = {
-  payments: { title: 'Payment methods', one: 'payment method', fields: [{ k: 'name', l: 'Name', req: true }, { k: 'details', l: 'Details', hint: 'Account name or number the waiter needs.' }, { k: 'active', l: 'Guests can choose this', t: 'check' }] },
+  payments: { title: 'Payment methods', one: 'payment method', fields: [{ k: 'name', l: 'Name', req: true }, { k: 'details', l: 'Details', hint: 'Account name or number the waiter needs.' }, { k: 'qr', l: 'QR code', t: 'image', hint: 'The restaurant’s QR code for this method. It is printed on the bill for the guest.' }, { k: 'needsRef', l: 'Needs a reference no.', t: 'check', hint: 'For GCash, Maya and cards: staff must enter the transaction reference before confirming payment.' }, { k: 'active', l: 'Guests can choose this', t: 'check' }] },
   discounts: { title: 'Discounts', one: 'discount', fields: [{ k: 'name', l: 'Name', req: true }, { k: 'pct', l: 'Percent off', t: 'number', req: true }, { k: 'note', l: 'Requirement', hint: 'For example: Valid senior citizen ID' }, { k: 'active', l: 'Active', t: 'check' }] },
   users: { title: 'Users', one: 'user', fields: [{ k: 'name', l: 'Full name', req: true }, { k: 'username', l: 'Username', req: true }, { k: 'role', l: 'Role', t: 'select' }, { k: 'active', l: 'Can sign in', t: 'check' }] },
   roles: { title: 'User roles', one: 'role', fields: [{ k: 'name', l: 'Role name', req: true }, { k: 'modules', l: 'Modules this role can open', t: 'multi' }] },
@@ -25,6 +25,7 @@ export const optsFor = (roles: { id: string; name: string }[], floors: { id: str
 
 export function cell(f: Field, v: unknown, opts: Opts): ReactNode {
   if (f.t === 'check') return v ? <span className="pill p-ok">Yes</span> : <span className="pill p-neutral">No</span>;
+  if (f.t === 'image') return v ? <img src={String(v)} alt={`${f.l} preview`} width={36} height={36} style={{ borderRadius: 6, objectFit: 'cover', background: '#fff' }} /> : <span className="muted">—</span>;
   if (f.t === 'select') return opts[f.k]?.find(o => o[0] === v)?.[1] || '—';
   if (f.t === 'multi') {
     const s = ((v as string[]) || []).map(id => opts[f.k]?.find(o => o[0] === id)?.[1]).filter(Boolean).join(', ');

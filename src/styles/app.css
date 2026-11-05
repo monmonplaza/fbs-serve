@@ -1,3 +1,34 @@
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+/* No Tailwind preflight: the base layer below is the app's own reset, so existing screens keep their look. */
+
+/* Utilities for the design tokens below. Colors point at the CSS variables, so light and dark mode switch with no `dark:` classes. */
+/* `dark:` follows the saved choice (data-theme) and, with none saved, the system setting, the same as the variables below. */
+@custom-variant dark {
+  &:where([data-theme="dark"], [data-theme="dark"] *) { @slot; }
+  @media (prefers-color-scheme: dark) { &:where(:root:not([data-theme]), :root:not([data-theme]) *) { @slot; } }
+}
+@theme inline {
+  --font-sans: var(--font);
+  --color-page: var(--surface-page); --color-card: var(--surface-card); --color-elevated: var(--surface-elevated); --color-sunken: var(--surface-sunken);
+  --color-ink: var(--ink); --color-ink-muted: var(--ink-muted); --color-control: var(--border-control); --color-hairline: var(--hairline);
+  --color-brand: var(--brand); --color-brand-hover: var(--brand-hover); --color-brand-active: var(--brand-active); --color-on-brand: var(--on-brand); --color-brand-tint: var(--brand-tint);
+  --color-brand-fill: var(--brand-fill); --color-brand-fill-hover: var(--brand-fill-hover); --color-brand-fill-active: var(--brand-fill-active); --color-on-brand-fill: var(--on-brand-fill);
+  --color-secondary: var(--secondary); --color-secondary-hover: var(--secondary-hover); --color-secondary-active: var(--secondary-active); --color-on-secondary: var(--on-secondary);
+  --color-accent: var(--accent); --color-accent-ink: var(--accent-ink); --color-accent-tint: var(--accent-tint); --color-on-accent: var(--on-accent);
+  --color-disabled: var(--disabled-bg); --color-disabled-ink: var(--disabled-ink); --color-focus: var(--focus);
+  --color-success: var(--success); --color-success-tint: var(--success-tint); --color-warning: var(--warning); --color-warning-tint: var(--warning-tint);
+  --color-error: var(--error); --color-error-tint: var(--error-tint); --color-info: var(--info); --color-info-tint: var(--info-tint);
+  --color-purple: var(--purple); --color-purple-tint: var(--purple-tint); --color-reserved: var(--reserved); --color-reserved-tint: var(--reserved-tint);
+  --color-chrome: var(--chrome-bg); --color-chrome-border: var(--chrome-border); --color-canvas-ink: var(--canvas-ink); --color-canvas-ink-muted: var(--canvas-ink-muted);
+  --color-nav: var(--nav-bg); --color-nav-ink: var(--nav-ink); --color-nav-ink-muted: var(--nav-ink-muted); --color-nav-active: var(--nav-active-bg); --color-nav-active-ink: var(--nav-active-ink);
+  --radius-sm: 8px; --radius-md: 12px; --radius-lg: 20px; --radius-pill: 999px;
+}
+/* Shadows share their names with the runtime variables defined below (which switch in dark mode), so only name them here. */
+@theme { --shadow-card: 0 1px 2px #3f1f140f; --shadow-lift: 0 2px 4px rgba(22,25,31,.10), 0 10px 24px rgba(22,25,31,.12); }
+
+@layer base {
 /* Layout: sticky top bar, left module rail on desktop (scroll strip on phone), content column max 1200px. Colors from the FBS Serve color system v1.0; type is Instrument Sans; spacing and radius from the Savora design guide. */
 :root{
   --surface-page:#F4F6F8;--surface-card:#FFFFFF;--surface-elevated:#FFFFFF;--surface-sunken:#EEF1F5;
@@ -52,6 +83,13 @@
   --brand-fill:#357A47;--brand-fill-hover:#2E6B3E;--brand-fill-active:#24563A;--on-brand-fill:#FFFFFF;--chip-on:#357A47;--on-chip-on:#FFFFFF;--tip-bg:#163C22;--nav-active-bg:#163C22;--nav-active-ink:#FFFFFF;
   color-scheme:dark}
 
+/* Printing a bill: only #bill-print (see BillPrintHost) is shown, 80 mm wide, nothing else of the app. */
+@page{margin:6mm}
+@media print{
+  html,body{height:auto;background:#fff!important}
+  body::before{display:none}
+  #root{display:none!important}
+}
 *{box-sizing:border-box}
 html,body{height:100%}
 body{margin:0;background:var(--chrome-bg);color:var(--ink);font:400 13px/20px var(--font)}
@@ -69,6 +107,9 @@ h3{font-size:22px;line-height:30px}
 button,input,select,textarea{font:inherit;color:inherit}
 :focus-visible{outline:3px solid var(--focus);outline-offset:2px}
 
+}
+
+@layer components {
 /* Top bar: on staff screens it is the top of the main column (the brand lives in the sidebar); on the guest preview it is full width with the brand. */
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--chrome-bg);border-bottom:1px solid var(--chrome-border)}
 .main > .top{margin:-24px calc(-1 * max(var(--main-px),env(safe-area-inset-right,0px))) 24px calc(-1 * max(var(--main-px),env(safe-area-inset-left,0px)))}
@@ -321,7 +362,7 @@ textarea.input{min-height:96px;resize:vertical}
 .radio-card .grow{flex:1}
 
 /* Dialog */
-dialog{border:0;padding:0;border-radius:var(--r-lg);background:var(--surface-elevated);color:var(--ink);box-shadow:var(--shadow-lift);width:min(560px,calc(100% - 32px));max-height:calc(100% - 48px)}
+dialog{border:0;padding:0;border-radius:10px;background:var(--surface-elevated);color:var(--ink);box-shadow:var(--shadow-lift);width:min(560px,calc(100% - 32px));max-height:calc(100% - 48px)}
 dialog::backdrop{background:rgba(22,19,15,.55)}
 @keyframes dlg-in{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:none}}
 @keyframes dlg-out{from{opacity:1;transform:none}to{opacity:0;transform:translateY(8px) scale(.98)}}
@@ -334,10 +375,15 @@ dialog.closing::backdrop{animation:bd-out .15s ease-in forwards}
 dialog.lb[open],dialog.lb.closing{animation-name:bd-in}
 dialog.lb.closing{animation-name:bd-out}
 @media (prefers-reduced-motion:reduce){dialog[open],dialog.closing,dialog[open]::backdrop,dialog.closing::backdrop{animation-duration:.01ms}}
-.m-head{display:flex;align-items:center;gap:12px;padding:16px 16px 0 24px}
-.m-head h2{flex:1;font-size:22px;line-height:30px}
-.m-body{padding:16px 24px;display:flex;flex-direction:column;gap:16px}
-.m-foot{display:flex;justify-content:flex-end;gap:8px;padding:0 24px 24px;flex-wrap:wrap}
+.m-head{flex:none;display:flex;align-items:center;gap:10px;padding:12px 12px 12px 16px;border-bottom:1px solid var(--hairline)}
+.m-ic{flex:none;width:32px;height:32px;border-radius:8px;display:grid;place-items:center;background:var(--brand-tint);color:var(--brand-fill)}
+.m-head h2{flex:1;font-size:20px;line-height:28px}
+.m-body{padding:12px 16px;display:flex;flex-direction:column;gap:12px;overflow:auto;min-height:0;flex:0 1 auto}
+dialog[open]{display:flex;flex-direction:column;overflow:hidden}
+/* Header and buttons stay put; only the body scrolls. A form wraps body and footer in most modals. */
+dialog>form{display:flex;flex-direction:column;min-height:0;flex:1 1 auto}
+.m-sticky{flex:none;display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start;padding:10px 16px;border-top:1px solid var(--hairline);background:var(--surface-elevated)}
+.m-foot{flex:none;display:flex;justify-content:flex-end;gap:8px;padding:12px 16px;border-top:1px solid var(--hairline);flex-wrap:wrap}
 .qr{width:220px;height:220px;display:block;margin:0 auto;border-radius:var(--r-md)}
 .qr-box{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;padding:16px;background:var(--surface-sunken);border-radius:var(--r-lg)}
 .sum{display:flex;flex-direction:column;gap:6px}
@@ -536,7 +582,7 @@ dialog.lb.closing{animation-name:bd-out}
 .tbl.t-cleaning{border-color:var(--purple);background:var(--purple-tint)}
 .tbl.t-cleaning .st{color:var(--purple)}
 @keyframes ring{0%{box-shadow:0 0 0 0 var(--accent)}100%{box-shadow:0 0 0 14px transparent}}
-.pop{position:absolute;width:320px;background:var(--surface-elevated);border-radius:var(--r-lg);box-shadow:var(--shadow-lift);padding:16px;display:flex;flex-direction:column;gap:12px;z-index:6;text-align:left;cursor:default}
+.pop{position:absolute;width:320px;background:var(--surface-elevated);border-radius:10px;box-shadow:var(--shadow-lift);padding:10px;display:flex;flex-direction:column;gap:10px;z-index:6;text-align:left;cursor:default}
 .pop.dn{top:calc(100% + 8px)}
 .pop.up{bottom:calc(100% + 8px)}
 .pop.al{left:0}
@@ -636,7 +682,7 @@ body.solo .phone-wrap{display:flex;justify-content:center;height:100%}
 .stepper button{width:44px;height:44px;border:0;background:none;border-radius:var(--r-pill);display:grid;place-items:center;cursor:pointer}
 .stepper button:hover{background:var(--brand-tint)}
 .stepper span{min-width:24px;text-align:center;font-weight:500}
-.pline{display:flex;gap:12px;align-items:center;padding:12px 0;border-top:1px solid var(--hairline)}
+.pline{display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding:12px 0;border-top:1px solid var(--hairline)}
 .pline:first-child{border-top:0}
 .pline .grow{flex:1;min-width:0}
 .track{display:flex;flex-direction:column;gap:12px}
@@ -647,7 +693,6 @@ body.solo .phone-wrap{display:flex;justify-content:center;height:100%}
 .kcard .to-tag{align-self:flex-start;margin-top:6px}
 /* Fixed height so switching category tabs does not make the modal jump; the footer stays at the bottom. */
 dialog.wide{width:min(1120px,calc(100% - 32px));height:min(760px,calc(100% - 48px))}
-dialog.wide[open]{display:flex;flex-direction:column}
 dialog.wide .m-body{flex:1}
 .to-grid{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:24px;align-items:start}
 /* Category tabs run the full width of the modal, edge to edge, and stay at the top while the food list scrolls. */
@@ -686,9 +731,119 @@ dialog.wide .m-body{flex:1}
 .inote{display:block;font-style:normal;font-size:13px;line-height:1.35;color:var(--warning);margin-top:2px}
 .inote b{font-weight:700}
 .kcard .inote{display:inline-block;font-size:14px;background:var(--warning-tint);padding:3px 10px;border-radius:6px;margin-top:4px}
-.pnote{margin-top:6px;display:flex;flex-direction:column;gap:6px}
+.pnote{flex:0 0 100%;margin-top:-4px;display:flex;flex-direction:column;gap:6px}
 .pnote .link-btn{align-self:flex-start;border:0;background:none;padding:0;color:var(--brand-fill);font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
-.pnote input{width:100%}
-.pchips{display:flex;flex-wrap:wrap;gap:6px}
-.pchips button{border:1px solid var(--hairline);background:none;border-radius:999px;padding:4px 10px;font-size:13px;cursor:pointer;color:var(--ink)}
-.pchips button[aria-pressed="true"]{background:var(--brand-tint);border-color:var(--brand-fill);color:var(--brand-fill)}
+.pnote textarea{display:block;width:100%;box-sizing:border-box;resize:none;font:inherit;padding:8px 12px;min-height:56px}
+
+.items-box{padding:10px;background:var(--chrome-bg);border:1px solid var(--nav-bg);border-radius:10px}
+.kvg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px 16px;font-size:14px;line-height:20px}
+.kvi{display:flex;flex-direction:column;gap:2px;min-width:0}
+@media (max-width:480px){.kvg{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kvl{font-size:11px;line-height:16px;font-weight:500;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.04em}
+.kvv{min-width:0;font-weight:500;overflow-wrap:anywhere}
+.sdot{display:inline-flex;align-items:center;gap:8px;font-weight:600}
+.sdot i{width:8px;height:8px;border-radius:50%;background:currentColor;flex:none}
+
+/* Login */
+.login{--lg-bg:#07140d;--lg-ink:#fff;--lg-mut:#b9cfc0;--lg-line:rgba(255,255,255,.14);--lg-g:#47d37c;min-height:100dvh;display:grid;grid-template-columns:1.05fr 1fr;background:var(--lg-bg);color:var(--lg-ink)}
+.login{align-items:start}
+.login-hero{position:sticky;top:0;height:100dvh;overflow:hidden;padding:48px 54px 90px;display:flex;flex-direction:column;gap:20px;background:radial-gradient(900px 600px at 10% 0,#1f6a3a 0,transparent 60%),radial-gradient(700px 500px at 90% 80%,rgba(160,130,20,.28),transparent 60%),linear-gradient(160deg,#0f3d22,#0a2316 70%)}
+.login-hero::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:56px 56px;pointer-events:none}
+.login-hero>*{position:relative;flex:none}
+.lg-brand{display:flex;gap:14px;align-items:center}
+.lg-brand .logo{width:60px;height:auto;border-radius:10px}
+.lg-brand strong{display:block;font-size:24px;line-height:28px}
+.lg-brand span{display:block;color:var(--lg-mut);font-size:14px}
+.lg-brand em{display:block;color:var(--lg-g);font-size:14px}
+.lg-chip{align-self:flex-start;display:inline-flex;gap:8px;align-items:center;padding:8px 16px;border:1px solid var(--lg-line);border-radius:999px;background:rgba(255,255,255,.06);font-size:14px;margin-top:24px}
+.lg-h{margin:8px 0 0;font-size:clamp(28px,3.3vw,58px);line-height:1.1;font-weight:700;letter-spacing:-.02em;min-height:3.3em;text-wrap:balance}
+.lg-caret{display:inline-block;width:3px;height:.9em;margin-left:6px;background:var(--lg-g);vertical-align:-.1em;animation:lg-blink 1s steps(1) infinite}
+@keyframes lg-blink{50%{opacity:0}}
+.lg-sub{margin:0;max-width:520px;color:var(--lg-mut);font-size:17px;line-height:26px}
+.lg-cards{position:relative;margin-top:6px;height:290px}
+.lg-card{position:absolute;border:1px solid var(--lg-line);border-radius:18px;backdrop-filter:blur(6px)}
+.lg-card small{display:block;color:var(--lg-mut);letter-spacing:.06em;font-size:12px}
+.lg-card.main{left:90px;top:0;width:330px;padding:24px;background:rgba(255,255,255,.08);display:flex;flex-direction:column;gap:8px}
+.lg-card.main b{font-size:34px;line-height:38px}
+.lg-card.main span{color:var(--lg-mut);font-size:14px}
+.lg-bar{height:6px;border-radius:6px;background:rgba(255,255,255,.18);margin:6px 0}
+.lg-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;color:var(--lg-mut);font-size:14px}
+.lg-card.pill{display:flex;gap:12px;align-items:center;padding:14px 18px;background:#fff;color:#0b2416;left:290px;top:225px;border-radius:14px;box-shadow:0 14px 40px rgba(0,0,0,.35);animation:lg-float 6s ease-in-out infinite}
+.lg-card.pill small{color:#51655a;letter-spacing:0;font-size:13px}
+.lg-card.pill b{font-size:20px}.lg-card.pill em{font-style:normal;color:#51655a;font-weight:400}
+.lg-card.pill.alt{left:0;top:170px;background:rgba(255,255,255,.08);color:#fff;box-shadow:none;animation-delay:-3s}
+.lg-card.pill.alt small,.lg-card.pill.alt em{color:var(--lg-mut)}
+.lg-pi{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:#d9f3e2;color:#1f7a45}
+.lg-card.pill.alt .lg-pi{background:rgba(255,255,255,.12);color:#fff}
+@keyframes lg-float{50%{transform:translateY(-8px)}}
+.lg-marquee{position:absolute!important;left:0;right:0;bottom:0;border-top:1px solid var(--lg-line);padding:18px 0;overflow:hidden;white-space:nowrap;color:var(--lg-mut);font-size:17px}
+.lg-marquee>div{display:inline-flex;gap:36px;animation:lg-run 30s linear infinite}
+.lg-marquee span{display:inline-flex;gap:36px;align-items:center}
+.lg-marquee .ic{color:var(--lg-g)}
+@keyframes lg-run{to{transform:translateX(-50%)}}
+.login-side{position:relative;min-height:100dvh;display:grid;place-items:center;padding:44px 24px 12px;background:radial-gradient(700px 500px at 50% 0,#1d5233 0,transparent 70%),#123824}
+.lg-back{position:absolute;top:14px;left:56px;display:inline-flex;gap:8px;align-items:center;background:none;border:0;color:var(--lg-mut);cursor:pointer;font:inherit;font-size:15px}
+.lg-back .ic{transform:scaleX(-1)}.lg-back:hover{color:#fff}
+.lg-ver{position:absolute;top:14px;right:24px;color:var(--lg-mut);font-size:14px}
+.lg-form{width:min(100%,560px);padding:26px 36px;border:1px solid var(--lg-line);border-radius:36px;background:linear-gradient(180deg,#184a2e,#123a25);display:flex;flex-direction:column}
+.lg-form h2{margin:0;font-size:28px;line-height:34px;letter-spacing:-.01em}
+.lg-form>p{margin:2px 0 16px;color:var(--lg-mut);font-size:16px;line-height:22px}
+.lg-form label{font-size:14px;font-weight:500;margin-bottom:5px}
+.lg-field{display:flex;align-items:center;gap:12px;height:48px;padding:0 16px;margin-bottom:12px;border:1px solid var(--lg-line);border-radius:18px;background:rgba(255,255,255,.03);color:var(--lg-mut)}
+.lg-field:focus-within{border-color:var(--lg-g);box-shadow:0 0 0 3px rgba(71,211,124,.2)}
+.lg-field input{flex:1;min-width:0;height:100%;border:0;outline:0;background:none;color:#fff;font:inherit;font-size:16px}
+.lg-field input::placeholder{color:#8aa192}
+.lg-eye{background:none;border:0;color:var(--lg-mut);cursor:pointer;display:grid;padding:4px}
+.lg-err{margin:-4px 0 10px;padding:10px 14px;border-radius:12px;background:rgba(220,70,70,.14);color:#ffb4b4;font-size:14px}
+.lg-row{display:flex;justify-content:space-between;align-items:center;margin:0 0 14px}
+.lg-form .lg-keep{display:inline-flex;gap:10px;align-items:center;margin:0;font-size:15px;cursor:pointer;position:relative}
+.lg-keep input{position:absolute;opacity:0;width:22px;height:22px;margin:0}
+.lg-keep span{width:22px;height:22px;border-radius:6px;border:1.5px solid var(--lg-mut);display:grid;place-items:center;color:transparent}
+.lg-keep input:checked+span{background:var(--lg-g);border-color:var(--lg-g);color:#06240f}
+.lg-keep input:focus-visible+span{outline:2px solid #fff;outline-offset:2px}
+.lg-link{background:none;border:0;padding:0;color:var(--lg-g);cursor:pointer;font:inherit;font-size:15px}.lg-link:hover{text-decoration:underline}
+.lg-btn{height:44px;border:0;border-radius:999px;display:flex;gap:10px;align-items:center;justify-content:center;cursor:pointer;font:inherit;font-size:17px;font-weight:600;color:#06240f;background:linear-gradient(90deg,#6fe19a,#2f9a55);transition:filter .15s}
+.lg-btn:hover{filter:brightness(1.08)}.lg-btn:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.lg-btn.ghost{gap:12px;background:none;color:#fff;border:1px solid var(--lg-line);font-weight:500}
+.lg-btn.ghost:hover{background:rgba(255,255,255,.06);filter:none}
+.lg-or{display:flex;align-items:center;gap:16px;margin:10px 0;color:var(--lg-mut);font-size:14px}
+.lg-or::before,.lg-or::after{content:"";flex:1;height:1px;background:var(--lg-line)}
+.lg-form .lg-safe{display:flex;gap:8px;align-items:center;justify-content:center;margin:12px 0 0;color:var(--lg-mut);font-size:14px}
+.lg-demo{margin-top:12px;padding-top:10px;border-top:1px solid var(--lg-line);color:var(--lg-mut);font-size:13px;text-align:center}
+.lg-accts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:6px;text-align:left}
+.lg-acct{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:34px;padding:4px 10px;border:1px solid var(--lg-line);border-radius:12px;background:rgba(255,255,255,.04);color:#fff;font:inherit;cursor:pointer}
+.lg-acct:hover:not(:disabled){background:rgba(255,255,255,.1);border-color:var(--lg-g)}
+.lg-acct:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.lg-acct:disabled{opacity:.45;cursor:not-allowed}
+.lg-acct i{grid-row:span 2;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:#2f9a55;font-style:normal;font-size:12px;font-weight:600}
+.lg-acct b{font-size:14px;line-height:18px;font-weight:600;text-transform:capitalize}
+.lg-acct small{color:var(--lg-mut);font-size:12px;line-height:14px;text-transform:capitalize}
+@media (max-width:960px){
+  .login{grid-template-columns:1fr}
+  .login-hero{display:none}
+  .login-side{min-height:100dvh;padding:64px 16px 24px}
+  .lg-back{left:16px}.lg-form{padding:32px 22px;border-radius:28px}.lg-form h2{font-size:26px;line-height:32px}
+}
+@media (prefers-reduced-motion:reduce){.lg-caret,.lg-card.pill,.lg-marquee>div{animation:none}}
+
+/* Login: white form side */
+.login-side{--lg-ink:#0f2a1a;--lg-mut:#4f6657;--lg-line:#d3e2d8;--lg-g:#1f8a4c;color:var(--lg-ink);background:#fff}
+.login-side .lg-form{background:#f6faf7;box-shadow:0 20px 50px rgba(15,42,26,.08)}
+.login-side .lg-field{background:#fff;color:#4f6657}
+.login-side .lg-field input{color:#0f2a1a}
+.login-side .lg-field input::placeholder{color:#7d9285}
+.login-side .lg-back:hover{color:#0f2a1a}
+.login-side .lg-btn:not(.ghost){color:#fff;background:linear-gradient(90deg,#2f9a55,#1f7a45)}
+.login-side .lg-btn.ghost{color:#0f2a1a;background:#fff}
+.login-side .lg-btn.ghost:hover{background:#eef6f1}
+.login-side .lg-keep span{border-color:#7d9285}
+.login-side .lg-keep input:checked+span{color:#fff}
+.login-side .lg-err{background:#fde8e8;color:#9b1c1c}
+.login-side .lg-acct{background:#fff;color:#0f2a1a}
+.login-side .lg-acct:hover:not(:disabled){background:#eaf6ee}
+.login-side .lg-acct:focus-visible,.login-side .lg-btn:focus-visible{outline-color:#1f8a4c}
+
+/* Gallery drawn inside the guest phone */
+.lb.lb-in{display:flex;flex-direction:column;position:absolute;inset:0;z-index:40;width:auto;height:auto;border-radius:0;outline:0;animation:bd-in .15s ease}
+.lb-in .lb-nav{width:44px;height:44px}
+}

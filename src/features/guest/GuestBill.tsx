@@ -16,7 +16,8 @@ export function GuestBill({ t, orders }: { t: DiningTable; orders: Order[] }) {
   const payments = usePayments().data, tot = sum(orders.map(total));
   if (t.status === 'billout') {
     const id = t.bill?.method ?? '';
-    const name = id === 'split' ? 'Split bill' : payments.find(p => p.id === id)?.name || id;
+    const method = payments.find(p => p.id === id);
+    const name = id === 'split' ? 'Split bill' : method?.name || id;
     return (
       <div className="center">
         <div className="big-ic"><Icon name="bell" size={32} /></div>

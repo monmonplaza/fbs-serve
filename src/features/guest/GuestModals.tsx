@@ -4,7 +4,7 @@ import { api } from '@/api';
 import { useFoods, useInvalidate, useOrders, usePayments, usePlate, useTables } from '@/api/queries';
 import { TO } from '@/api/constants';
 import { Icon } from '@/components/Icon';
-import { itemName, orderEta, plateItems, total } from '@/lib/domain';
+import { itemName, orderEta, orderTag, plateItems, total } from '@/lib/domain';
 import { peso, sum } from '@/lib/format';
 import { closeModal } from '@/store/modal';
 import { toast } from '@/store/toast';
@@ -19,10 +19,10 @@ export function SendModal({ tableId }: { tableId: string }) {
   const send = async () => {
     try {
       const o = await api.guest.send(tableId, me);
-      useUi.getState().notify('plate', `${t?.name} sent a new order (${o.id})`, 'kitchen');
+      useUi.getState().notify('plate', `${t?.name} sent a new order (${orderTag(o)})`, 'kitchen');
       useUi.getState().setGuest({ tab: 'orders' });
       await invalidate('plate', 'orders', 'tables');
-      closeModal(); toast(`${o.id} sent to the kitchen`);
+      closeModal(); toast(`${orderTag(o)} sent to the kitchen`);
     } catch (e) { toast((e as Error).message); }
   };
   return (

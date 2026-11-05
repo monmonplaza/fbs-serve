@@ -1,3 +1,4 @@
+import { orderTag } from '@/lib/domain';
 import { useOrders, useTables } from '@/api/queries';
 import { KITCHEN, TSTAT } from '@/api/constants';
 import type { TableStatus } from '@/api/types';
@@ -45,7 +46,7 @@ export function DashboardPage() {
           <div className="card-head"><h3>In the kitchen now</h3><button className="btn btn-outline" onClick={() => go('kitchen')}>Open kitchen</button></div>
           {kq.length ? (
             <ul className="rows">{kq.slice(0, 6).map(o => (
-              <li key={o.id}><div className="grow"><b className="num">{o.id}</b> <span className="muted">· {where(o)}</span><div className="caption muted num">{mins(o.createdAt)} min ago</div></div><Pill meta={oMeta(o)} withIcon={false} /></li>
+              <li key={o.id}><div className="grow"><b className="num">{orderTag(o)}</b> <span className="muted">· {where(o)}</span><div className="caption muted num">{mins(o.createdAt)} min ago</div></div><Pill meta={oMeta(o)} withIcon={false} /></li>
             ))}</ul>
           ) : <div className="empty">The kitchen is clear.</div>}
         </section>

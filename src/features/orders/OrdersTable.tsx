@@ -1,7 +1,7 @@
 import { Icon } from '@/components/Icon';
 import { Pill } from '@/components/Pill';
 import type { Order, OrderStatus } from '@/api/types';
-import { billKey, isTO, oMeta, total } from '@/lib/domain';
+import { billKey, isTO, oMeta, orderTag, total } from '@/lib/domain';
 import { dt, peso, sum, tm } from '@/lib/format';
 import { ChTag, sod, usePayName, useTableName } from './helpers';
 
@@ -31,7 +31,7 @@ export function OrdersTable({ groups, open, groupStatus, onToggle, onOpen, onOpe
                 {many
                   ? <button className="gchev" aria-expanded={isOpen} aria-label={`${isOpen ? 'Hide' : 'Show'} additional orders`} onClick={e => { e.stopPropagation(); onToggle(g.k); }}><Icon name="right" size={18} /></button>
                   : <span className="gspacer" />}
-                <button className="link num" onClick={e => { e.stopPropagation(); onOpen(o); }}>{o.id}</button>
+                <button className="link num" onClick={e => { e.stopPropagation(); onOpen(o); }}>{orderTag(o, many)}</button>
               </td>
               <td><Pill meta={oMeta(gs)} /></td>
               <td>{isTO(o) ? <><ChTag o={o} /> <span className="num">{o.pickup}</span></> : tName(o.table)}</td>

@@ -4,7 +4,7 @@ import { api } from '@/api';
 import { useOrders, usePayments, useInvalidate, useSettings } from '@/api/queries';
 import { OSTAT, TSTAT } from '@/api/constants';
 import type { DiningTable, Reservation } from '@/api/types';
-import { aggregate, total } from '@/lib/domain';
+import { aggregate, orderTag, total } from '@/lib/domain';
 import { mins, peso, sum, tm } from '@/lib/format';
 import { toast } from '@/store/toast';
 import { openPayTable } from '@/features/orders/OrdersPage';
@@ -54,7 +54,7 @@ export function TableBody({ t, rv }: { t: DiningTable; rv?: Reservation }) {
         {rv ? <><dt>Reserved</dt><dd className="num">{tm(rv.at)} · {rv.name} · {rv.pax} guests{rv.order?.length ? ' · advance order' : ''}</dd></> : null}
         {t.guests ? <><dt>Guests</dt><dd className="num">{t.guests}</dd></> : null}
         {t.openedAt ? <><dt>Seated</dt><dd className="num">{tm(t.openedAt)} ({mins(t.openedAt)} min)</dd></> : null}
-        {os.length ? <><dt>Orders</dt><dd className="num">{os.map((o, i) => <span key={o.id}>{i ? <br /> : null}{o.id} at {tm(o.createdAt)} · {OSTAT[o.status]?.l}</span>)}</dd></> : null}
+        {os.length ? <><dt>Orders</dt><dd className="num">{os.map((o, i) => <span key={o.id}>{i ? <br /> : null}{orderTag(o)} at {tm(o.createdAt)} · {OSTAT[o.status]?.l}</span>)}</dd></> : null}
         {t.bill ? <><dt>Pays with</dt><dd>{payName(t.bill.method)}</dd></> : null}
       </dl>
       {items.length ? (
@@ -67,7 +67,7 @@ export function TableBody({ t, rv }: { t: DiningTable; rv?: Reservation }) {
         {rv && t.status === 'inactive' ? <button className="btn btn-primary" onClick={() => openSeatReservation(rv.id)}><Icon name="calendar" size={20} />Seat {rv.name}</button> : null}
         {t.status === 'inactive' ? <button className={`btn ${rv ? 'btn-outline' : 'btn-primary'}`} onClick={() => openActivate(t)}><Icon name="qr" size={20} />Activate table</button> : null}
         {['active', 'ordering', 'eating'].includes(t.status) ? <button className="btn btn-outline" onClick={() => openQr(t)}><Icon name="qr" size={20} />Show QR</button> : null}
-        {ready.map(o => <button key={o.id} className="btn btn-secondary" onClick={() => serve(o.id)}><Icon name="check" size={20} />Serve {o.id}</button>)}
+        {ready.map(o => <button key={o.id} className="btn btn-secondary" onClick={() => serve(o.id)}><Icon name="check" size={20} />Serve {orderTag(o)}</button>)}
         {t.status === 'billout' ? <button className="btn btn-primary" onClick={() => openPayTable(t)}><Icon name="wallet" size={20} />Receive payment</button> : null}
         {t.status === 'cleaning' ? <button className="btn btn-primary" onClick={clean}><Icon name="sparkle" size={20} />Mark as clean</button> : null}
         {t.token && t.status !== 'cleaning' ? <button className="btn btn-ghost" onClick={() => openGuestView(t.id)}><Icon name="phone" size={20} />Guest view</button> : null}

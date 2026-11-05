@@ -9,28 +9,18 @@ import { itemName, orderEta, unitPrice } from '@/lib/domain';
 import { peso } from '@/lib/format';
 import { toast } from '@/store/toast';
 
-const QUICK = ['Less spicy', 'No onion', 'No garlic', 'Less salt', 'Well done'];
-
 /** A cooking request for one plate line, e.g. "Less spicy, no onion". It goes to the kitchen with the order. */
 function NoteField({ line, onSave }: { line: PlateLine; onSave: (note: string) => void }) {
   const [open, setOpen] = useState(false);
   const [text, setText] = useState(line.note ?? '');
-  const commit = (v = text) => { const n = v.trim().slice(0, 120); setText(n); if (n !== (line.note ?? '')) onSave(n); };
-  const toggle = (c: string) => {
-    const parts = text.split(',').map(x => x.trim()).filter(Boolean), has = parts.some(x => x.toLowerCase() === c.toLowerCase());
-    const next = (has ? parts.filter(x => x.toLowerCase() !== c.toLowerCase()) : [...parts, c]).join(', ');
-    setText(next); onSave(next.slice(0, 120));
-  };
+  const commit = () => { const n = text.trim().slice(0, 120); setText(n); if (n !== (line.note ?? '')) onSave(n); };
   if (!open && !line.note) return (
     <div className="pnote"><button className="link-btn" onClick={() => setOpen(true)}><Icon name="edit" size={16} />Add note for the kitchen</button></div>
   );
   return (
     <div className="pnote">
-      <input className="input" value={text} maxLength={120} placeholder="e.g. less spicy, no onion" aria-label="Note for the kitchen"
-        onChange={e => setText(e.target.value)} onBlur={() => commit()} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); commit(); (e.target as HTMLInputElement).blur(); } }} autoFocus={!line.note} />
-      <div className="pchips" role="group" aria-label="Quick requests">
-        {QUICK.map(c => <button key={c} aria-pressed={text.toLowerCase().split(',').map(x => x.trim()).includes(c.toLowerCase())} onMouseDown={e => e.preventDefault()} onClick={() => toggle(c)}>{c}</button>)}
-      </div>
+      <textarea className="input" rows={2} value={text} maxLength={120} placeholder="e.g. less spicy, no onion" aria-label="Note for the kitchen"
+        onChange={e => setText(e.target.value)} onBlur={commit} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); e.currentTarget.blur(); } }} autoFocus={!line.note} />
     </div>
   );
 }
@@ -79,13 +69,13 @@ export function GuestPlate({ plate, tableId, tableName }: { plate: PlateLine[]; 
               <div className="caption muted">
                 {!takeout && <>{l.by}{l.by === me ? ' (you)' : ''} · </>}<span className="num">{peso(unitPrice(f, l.variantId) * l.qty)}</span> · <span className="num">{f.eta} min</span>
               </div>
-              <NoteField key={l.id + (l.note ?? '')} line={l} onSave={n => saveNote(l.id, n)} />
             </div>
             <div className="stepper">
               <button aria-label={`Remove one ${f.name}`} onClick={() => qty(l.id, -1)}><Icon name={l.qty > 1 ? 'minus' : 'trash'} size={20} /></button>
               <span className="num">{l.qty}</span>
               <button aria-label={`Add one ${f.name}`} onClick={() => qty(l.id, 1)}><Icon name="plus" size={20} /></button>
             </div>
+            <NoteField key={l.id + (l.note ?? '')} line={l} onSave={n => saveNote(l.id, n)} />
           </div>
         ))}
       </div>

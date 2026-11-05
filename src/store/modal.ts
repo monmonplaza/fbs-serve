@@ -6,6 +6,8 @@ export interface ModalSpec {
   /** Body and footer, including their `.m-body` / `.m-foot` wrappers (a form can wrap both). */
   content: ReactNode;
   wide?: boolean;
+  /** Icon name for the header. Guessed from the title when omitted. */
+  icon?: string;
 }
 interface ModalState { spec: ModalSpec | null; open: (s: ModalSpec) => void; close: () => void }
 

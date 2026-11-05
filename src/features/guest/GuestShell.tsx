@@ -18,6 +18,7 @@ import { GuestBill, GuestClosed } from './GuestBill';
 import { PickSheet } from './PickSheet';
 import { SendModal, TakeoutModal } from './GuestModals';
 import { useMyTakeouts } from './guestStore';
+import { PhoneLightbox } from '@/features/foods/Lightbox';
 
 type Tab = 'menu' | 'plate' | 'orders' | 'bill';
 
@@ -80,6 +81,7 @@ function Phone({ tableId }: { tableId: string }) {
         </>
       )}
       {pick && <PickSheet food={pick} onClose={() => setPick(null)} onAdd={vid => { add(pick, vid); setPick(null); }} />}
+      <PhoneLightbox />
     </div>
   );
 }
@@ -91,6 +93,8 @@ export function GuestShell() {
     if (!guestOnly) api.guest.demoTakeoutId().then(seed);
   }, [guestOnly, seed]);
   const takeout = guest.table === TO, t = takeout ? null : tables.find(x => x.id === guest.table);
+  // The preview starts on a default table id; with a real backend ids differ, so fall back to the first table.
+  useEffect(() => { if (!guestOnly && !takeout && !t && tables.length) setGuest({ table: tables[0].id }); }, [guestOnly, takeout, t, tables, setGuest]);
 
   if (!takeout && !t) {
     if (guestOnly) return (

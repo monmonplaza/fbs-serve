@@ -18,13 +18,21 @@ export interface Food {
   /** When set, `price` is the lowest variant price. */
   variants?: Variant[];
 }
-export interface PaymentMethod { id: string; name: string; details: string; active: boolean }
+export interface PaymentMethod {
+  id: string; name: string; details: string; active: boolean;
+  /** Digital methods (GCash, Maya, card): staff must enter it before confirming. */
+  needsRef?: boolean;
+  /** The restaurant's QR code for this method, as an image data URL. Printed on the bill and shown to the guest. */
+  qr?: string;
+}
 export interface Discount { id: string; name: string; pct: number; note: string; active: boolean }
 export interface Role { id: string; name: string; modules: ModuleId[] }
 export interface User { id: string; name: string; username: string; role: string; active: boolean; email?: string }
 export interface Floor { id: string; name: string }
 
-export interface TableBill { method: string; at: number }
+export interface TableBill {
+  method: string; at: number;
+}
 export interface DiningTable {
   id: string; name: string; seats: number; floor: string;
   /** Position on the floor plan, in percent. */
@@ -42,10 +50,19 @@ export interface OrderItem {
   /** Guest's cooking request for the kitchen, e.g. "Less spicy, no onion". */
   note?: string;
 }
-export interface Payment { method: string; amount: number }
+export interface Payment {
+  method: string; amount: number;
+  /** Transaction reference no. for a method that needs one. */
+  ref?: string;
+  /** Cash or card amount handed over by the customer (single payment only). Must be at least the amount due. */
+  received?: number;
+}
 export interface AppliedDiscount { name: string; pct: number }
 export interface Order {
+  /** Unique per round. With the HTTP backend one order (`code`) has several rounds, one per send to the kitchen. */
   id: string;
+  /** The order's single id (ORD-1001) and which send this is. Only set by the HTTP backend; the mock makes one order per send. */
+  code?: string; round?: number; rounds?: number;
   /** Table id, or null for takeout. */
   table: string | null;
   /** Table session token, or 'old' for history. Orders with the same table and session share one bill. */
@@ -60,6 +77,10 @@ export interface Order {
   /** Estimated minutes: the slowest dish. */
   eta: number;
   payment?: string; payments?: Payment[]; discount?: AppliedDiscount | null;
+  /** Amount the customer handed over and the change given back. Bill-level: the same on every order paid together. */
+  received?: number; change?: number;
+  /** Reference no. of the digital payment (several are joined with a comma). */
+  payRef?: string;
 }
 
 /** A guest's line on the shared plate, before it is sent to the kitchen. */

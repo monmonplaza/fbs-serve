@@ -4,11 +4,13 @@ import { NAV, KITCHEN } from '@/api/constants';
 import type { ModuleId } from '@/api/types';
 import { useOrders, useReservations, useTables, usePayments } from '@/api/queries';
 import { useUi } from '@/store/ui';
+import { printBill } from '@/store/print';
 import { useNow } from '@/lib/useNow';
 import { dueReservations, dueText } from '@/lib/reservations';
 import { mins, tm } from '@/lib/format';
 import { isTO } from '@/lib/domain';
 import { LOGO, TopBar } from './TopBar';
+import { useAllowed } from '@/lib/access';
 import { DashboardPage } from '@/features/dashboard/DashboardPage';
 import { OrdersPage, openPayTable } from '@/features/orders/OrdersPage';
 import { KitchenPage } from '@/features/kitchen/KitchenPage';
@@ -24,7 +26,10 @@ const PAGES: Record<ModuleId, ComponentType> = {
 };
 
 export function StaffShell() {
-  const { view, go } = useUi();
+  const { view: asked, go } = useUi();
+  const allowed = useAllowed();
+  // A module the role cannot open (stale hash, notification, menu) falls back to the first allowed one.
+  const view: ModuleId = allowed.includes(asked) ? asked : allowed[0] ?? 'guide';
   const now = useNow(15000);
   const orders = useOrders().data, tables = useTables().data, reservations = useReservations().data, payments = usePayments().data;
   const bills = tables.filter(t => t.status === 'billout');
@@ -41,7 +46,7 @@ export function StaffShell() {
     <div className="shell">
       <nav className="rail" aria-label="Modules" data-keep="rail">
         <div className="rail-brand">{LOGO}<span>FBS Serve<small>Restaurant manager</small></span></div>
-        {NAV.map(n => (
+        {NAV.filter(n => allowed.includes(n.id)).map(n => (
           <button key={n.id} className="nav" aria-current={view === n.id ? 'page' : undefined} onClick={() => go(n.id)}>
             <Icon name={n.ic} size={18} />{n.label}
             {badge[n.id] ? <span className="badge num" aria-label={`${badge[n.id]} waiting`}>{badge[n.id]}</span> : null}
@@ -51,14 +56,15 @@ export function StaffShell() {
       <main className="main">
         <TopBar brand={false} />
         <div className="wrap">
-          {bills.map(t => (
+          {allowed.includes('tables') && bills.map(t => (
             <div key={t.id} className="alert brand" role="alert">
               <Icon name="bell" />
               <p><b>{t.name} is asking for the bill.</b> Pays with {payName(t.bill?.method)} · {mins(t.bill?.at ?? now)} min ago</p>
+              <button className="btn btn-outline" onClick={() => printBill({ orders: orders.filter(o => o.table === t.id && o.session === t.token && o.status !== 'paid'), discount: null, payWith: payments.find(p => p.id === t.bill?.method) ?? null })}><Icon name="receipt" size={20} />Print bill</button>
               <button className="btn btn-primary" onClick={() => openPayTable(t)}>Receive payment</button>
             </div>
           ))}
-          {due.map(r => {
+          {allowed.includes('reservations') && due.map(r => {
             const tn = tables.find(t => t.id === r.tableId)?.name;
             return (
               <div key={r.id} className="alert rsv" role="alert">

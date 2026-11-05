@@ -3,7 +3,7 @@ import { ItemNote } from '@/components/ItemNote';
 import { KITCHEN, OSTAT } from '@/api/constants';
 import { useInvalidate, useOrders, useTables } from '@/api/queries';
 import type { Order } from '@/api/types';
-import { isTO } from '@/lib/domain';
+import { isTO, orderTag } from '@/lib/domain';
 import { mins } from '@/lib/format';
 import { useNow } from '@/lib/useNow';
 import { Icon } from '@/components/Icon';
@@ -30,7 +30,7 @@ export function KitchenPage() {
       } else {
         await api.kitchen.serve(o.id);
         await invalidate('orders', 'tables');
-        toast(`${o.id} served to ${tName(o.table)}`);
+        toast(`${orderTag(o)} served to ${tName(o.table)}`);
       }
     } catch (e) { toast((e as Error).message); }
   }
@@ -50,7 +50,7 @@ export function KitchenPage() {
                   <article className={`kcard${late ? ' overdue' : ''}`} key={o.id}>
                     <div className="kcard-top">
                       <div>
-                        <b className="num">{o.id}</b>
+                        <b className="num">{orderTag(o)}</b>
                         <div className="caption muted">{isTO(o) ? o.pickup : tName(o.table)} · {o.by}</div>
                         {isTO(o) && <ChannelTag o={o} extra="to-tag" />}
                       </div>

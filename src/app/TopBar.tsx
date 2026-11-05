@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useAllowed } from '@/lib/access';
 import { Icon } from '@/components/Icon';
 import { useUi } from '@/store/ui';
 import { useRoles, useUsers } from '@/api/queries';
@@ -31,7 +32,9 @@ function Bell() {
   const { notifs, go } = useUi();
   useNow(30000);
   const ref = useDismiss(open, () => setOpen(false));
-  const un = notifs.filter(n => !n.read).length;
+  const allowed = useAllowed();
+  const shown = notifs.filter(n => allowed.includes(n.view));
+  const un = shown.filter(n => !n.read).length;
   const mark = (fn: (n: typeof notifs[number]) => typeof notifs[number]) => useUi.setState({ notifs: useUi.getState().notifs.map(fn) });
   return (
     <div className="notif" ref={ref}>
@@ -47,7 +50,7 @@ function Bell() {
             <button onClick={() => { useUi.setState({ notifs: [] }); setOpen(false); }}>Clear</button>
           </div>
           <div className="nlist">
-            {notifs.length ? notifs.map(n => (
+            {shown.length ? shown.map(n => (
               <button key={n.id} className={`nitem ${n.read ? '' : 'unread'}`} onClick={() => { mark(x => (x.id === n.id ? { ...x, read: true } : x)); setOpen(false); go(n.view); }}>
                 <span className="nic"><Icon name={n.ic} size={18} /></span>
                 <span className="grow"><span className="nt">{n.text}</span><span className="nw">{ago(n.at)}</span></span>
@@ -65,6 +68,7 @@ function AccountMenu() {
   const [open, setOpen] = useState(false);
   const { meId, go } = useUi();
   const users = useUsers().data, roles = useRoles().data;
+  const allowed = useAllowed();
   const ref = useDismiss(open, () => setOpen(false));
   const me = users.find(u => u.id === meId) ?? users[0];
   if (!me) return null;
@@ -94,7 +98,7 @@ function AccountMenu() {
         <div className="umenu" role="menu" aria-label="Account">
           <div className="uinfo"><b>{me.name}</b></div>
           {item('user', 'Profile', () => openModal({ title: 'Profile', content: <ProfileModal user={me} role={role} /> }))}
-          {item('sliders', 'Settings', () => go('settings'))}
+          {allowed.includes('settings') && item('sliders', 'Settings', () => go('settings'))}
           {item('logout', 'Log out', logout, true)}
         </div>
       )}
@@ -104,14 +108,14 @@ function AccountMenu() {
 
 export function TopBar({ brand }: { brand: boolean }) {
   const { isDark, toggle } = useTheme();
-  const { mode, set } = useUi();
+  const { mode, set, view } = useUi();
   return (
     <header className="top">
       <div className="top-in">
         {brand && <span className="brand">{LOGO}FBS Serve <small>Restaurant manager</small></span>}
         <span className="spacer" />
         <span className="tools">
-          {!brand && <Bell />}
+          {!brand && view !== 'kitchen' && <Bell />}
           <button className="icon-btn" aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'} title={isDark ? 'Light mode' : 'Dark mode'} onClick={toggle}>
             <Icon name={isDark ? 'sun' : 'moon'} />
           </button>
