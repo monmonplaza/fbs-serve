@@ -1,4 +1,4 @@
-> **Note:** the app is now React + TypeScript in `src/` (see README.md and docs/PORTING.md). `prototype/index.html` is the original single-file version these notes describe; behavior is the same.
+> **Note:** the app is now Laravel + Inertia + React in `resources/js` (see README.md and docs/PORTING.md). `docs/prototype/index.html` is the original single-file version these notes describe; behavior is the same.
 
 # FBS Serve — Handoff
 

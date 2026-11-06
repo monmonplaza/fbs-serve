@@ -5,10 +5,10 @@ Section numbers below refer to that document.
 
 ## How the frontend connects
 
-`src/api/http/` is the section 5 data layer: `client.ts` (axios, CSRF, `ApiError`, `unwrap`), `crud.ts` (`createCrudResource`), `formData.ts`, `types.ts`.
-Set `VITE_API_URL` (see `.env.example`) and `src/api/index.ts` switches modules from the in-memory mock to HTTP. Done in `backend/`: foods, categories, orders, kitchen, tables, floors, guest ordering, payment methods and discounts
-(`catalog.http.ts`, `orders.http.ts`, `kitchen.http.ts`, `tables.http.ts`, `guest.http.ts`, `admin.http.ts`). Still on the mock: reservations, roles, users, the table timer. The compiler checks each HTTP module against its mock (`pick` in `src/api/index.ts`).
-Run it with `backend/README.md`.
+`resources/js/api-service/` is the section 5 data layer: `client.ts` (axios, CSRF, `ApiError`, `unwrap`), `http.ts` (`createCrudResource`), `form-data.ts`, and `types/reusable/pagination.ts`.
+Set `VITE_API_URL` (see `.env.example`) and `resources/js/api-service/index.ts` switches modules from the in-memory mock to HTTP. Done in the Laravel app at the repo root: foods, categories, orders, kitchen, tables, floors, guest ordering, payment methods and discounts
+(`<domain>/http.ts` for catalog, orders, kitchen, tables, guest, admin). Still on the mock: reservations, roles, users, the table timer. The compiler checks each HTTP module against its mock (`pick` in `resources/js/api-service/index.ts`).
+Run it with the README.
 
 ## Tables (section 11: literal `app_` names, explicit `$table`, full names in `exists:` / `unique:`)
 
@@ -59,7 +59,7 @@ Rules (status sync, split-bill settlement, one bill per session, guards) are lis
 
 ## Realtime
 
-Use Laravel Reverb (or Pusher) with Echo; broadcast `OrderCreated`, `OrderStatusChanged`, `BillRequested`, `PlateChanged`, `ReservationDue` and call `queryClient.invalidateQueries` in `src/app` on each event. Octane rules in section 10.5 apply (no per-request state in statics).
+Use Laravel Reverb (or Pusher) with Echo; broadcast `OrderCreated`, `OrderStatusChanged`, `BillRequested`, `PlateChanged`, `ReservationDue` and call `queryClient.invalidateQueries` in `resources/js/AppProviders.tsx` on each event. Octane rules in section 10.5 apply (no per-request state in statics).
 
 ## Environment
 

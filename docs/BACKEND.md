@@ -2,7 +2,7 @@
 
 Laravel mapping (tables, routes, realtime): `docs/LARAVEL.md`. Team conventions: `docs/reusable-components-in-all-projects.md`.
 
-The UI calls these methods (`src/api/*.ts`). Types are in `src/api/types.ts`. Every method is async; failures throw `ApiError(message)` and the UI shows the message in a toast.
+The UI calls these methods (`resources/js/api-service/<domain>/`). Types are in `resources/js/types/restaurant.ts`. Every method is async; failures throw `ApiError(message)` and the UI shows the message in a toast.
 Times are epoch milliseconds, money is a number in pesos (2 decimals), ids are strings.
 
 | Module | Methods |
@@ -32,7 +32,7 @@ Times are epoch milliseconds, money is a number in pesos (2 decimals), ids are s
 ## Realtime
 
 Guests on different phones share one plate, and staff need new orders and bill requests immediately. The mock has no push, so screens refetch on navigation (React Query
-`staleTime: 0`). Add WebSocket/SSE (for example Laravel Reverb) and call `queryClient.invalidateQueries` on events, or set `refetchInterval` on the hooks in `src/api/queries.ts`.
+`staleTime: 0`). Add WebSocket/SSE (for example Laravel Reverb) and call `queryClient.invalidateQueries` on events, or set `refetchInterval` on the hooks in `resources/js/hooks/useApi.ts`.
 Bell notifications (`useUi().notify`) are currently produced by the client after its own actions; the server should emit them as events instead.
 
 ## Not covered yet
