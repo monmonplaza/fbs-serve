@@ -9,7 +9,7 @@
   "7": "useApi.ts",
   "8": "compilerOptions",
   "9": "PaymentMethod",
-  "10": "Illuminate\\Database\\Eloquent\\Model",
+  "10": "FoodController",
   "11": "bootstrap/app.php",
   "12": "FBS Serve — Handoff",
   "13": "reservationActions.tsx",
@@ -29,7 +29,7 @@
   "27": "Reusable Component Boilerplate Report",
   "28": "seed.ts",
   "29": "reservations.ts",
-  "30": "FloorController",
+  "30": "Illuminate\\Database\\Eloquent\\Model",
   "31": "require-dev",
   "32": "seedData.ts",
   "33": "Lightbox.tsx",
@@ -39,7 +39,7 @@
   "37": "index.ts",
   "38": "settingsConfig.tsx",
   "39": "api.php",
-  "40": "DiscountController.php",
+  "40": "DiscountController",
   "41": "composer.json",
   "42": "_this",
   "43": "7. New CRUD module template",
@@ -83,7 +83,7 @@
   "81": "SettingsPage.tsx",
   "82": "TablesPage.tsx",
   "83": "Laravel Application",
-  "84": "PaymentMethodController",
+  "84": "PaymentMethodController.php",
   "85": "FBS Serve",
   "86": "6. Backend CRUD boilerplate",
   "87": "9. Conventions",
@@ -153,5 +153,6 @@
   "151": "queue.php",
   "152": "services.php",
   "153": "app.blade.php",
-  "154": "vite.config.ts"
+  "154": "vite.config.ts",
+  "155": "Illuminate\\Database\\Eloquent\\Relations\\HasMany"
 }
