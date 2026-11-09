@@ -1,0 +1,1 @@
+{"nodes": [{"id": "$graphify-root$_backend_vendor_league_uri_urlpattern_patterntype_php", "label": "PatternType.php", "file_type": "code", "source_file": "backend/vendor/league/uri/UrlPattern/PatternType.php", "source_location": "L1"}], "edges": [], "raw_calls": []}

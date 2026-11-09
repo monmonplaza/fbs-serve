@@ -7,6 +7,10 @@ use App\Http\Controllers\v1\Menu\FoodController;
 use App\Http\Controllers\v1\Orders\DiscountController;
 use App\Http\Controllers\v1\Orders\OrderController;
 use App\Http\Controllers\v1\Orders\PaymentMethodController;
+use App\Http\Controllers\v1\Reservations\ReservationController;
+use App\Http\Controllers\v1\Settings\SettingsController;
+use App\Http\Controllers\v1\Staff\RoleController;
+use App\Http\Controllers\v1\Staff\UserController;
 use App\Http\Controllers\v1\Tables\FloorController;
 use App\Http\Controllers\v1\Tables\TableController;
 use Illuminate\Support\Facades\Route;
@@ -31,6 +35,20 @@ Route::middleware('dev.open')->group(function () {
     Route::post('/tables/{id}/clean', [TableController::class, 'clean'])->whereNumber('id');
     Route::post('/tables/{id}/pay', [TableController::class, 'pay'])->whereNumber('id');
     Route::patch('/tables/{id}/position', [TableController::class, 'position'])->whereNumber('id');
+
+    Route::get('/settings', [SettingsController::class, 'show']);
+    Route::patch('/settings', [SettingsController::class, 'update']);
+
+    Route::patch('/reservations/{id}/move', [ReservationController::class, 'move'])->whereNumber('id');
+    Route::patch('/reservations/{id}/move-day', [ReservationController::class, 'moveToDay'])->whereNumber('id');
+    Route::patch('/reservations/{id}/cancel', [ReservationController::class, 'cancel'])->whereNumber('id');
+    Route::patch('/reservations/{id}/no-show', [ReservationController::class, 'noShow'])->whereNumber('id');
+    Route::patch('/reservations/{id}/restore', [ReservationController::class, 'restore'])->whereNumber('id');
+    Route::patch('/reservations/{id}/dismiss', [ReservationController::class, 'dismiss'])->whereNumber('id');
+    Route::post('/reservations/{id}/seat', [ReservationController::class, 'seat'])->whereNumber('id');
+    Route::crudModule('/reservations', ReservationController::class, 'reservations', ['index', 'store', 'update']);
+    Route::crudModule('/roles', RoleController::class, 'roles', ['index', 'store', 'update', 'destroy']);
+    Route::crudModule('/users', UserController::class, 'users', ['index', 'store', 'update', 'destroy']);
 
     Route::crudModule('/foods', FoodController::class, 'foods');
     Route::crudModule('/categories', CategoryController::class, 'categories');

@@ -68,7 +68,15 @@ export const admin = {
             const n = db.tables.filter((t) => t.floor === id).length;
             return n ? `${n} tables are on this floor. Move or delete them first.` : "";
         }
+        if (list === "payments") {
+            const n = db.orders.filter((o) => o.payment === id || o.payments?.some((p) => p.method === id)).length;
+            const asking = db.tables.filter((t) => t.bill?.method === id).length;
+            return n || asking
+                ? 'This payment method is already used in orders and cannot be deleted. Turn off "Guests can choose this" instead.'
+                : "";
+        }
         if (list === "roles") {
+            if (db.roles.find((r) => r.id === id)?.admin) return "The Admin role cannot be deleted.";
             const n = db.users.filter((u) => u.role === id).length;
             return n ? `${n} users have this role. Give them another role first.` : "";
         }

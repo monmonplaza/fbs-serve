@@ -12,7 +12,7 @@ export function useAllowed(): ModuleId[] {
     const meId = useUi((s) => s.meId);
     const me = useUsers().data.find((u) => u.id === meId);
     const role = useRoles().data.find((r) => r.id === me?.role);
-    if (me?.role === "admin") return NAV.map((n) => n.id);
+    if (role?.admin) return NAV.map((n) => n.id);
     const ids = role?.modules ?? [];
     return NAV.map((n) => n.id).filter((id) => ids.includes(id));
 }

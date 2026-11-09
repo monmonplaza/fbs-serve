@@ -1,5 +1,6 @@
 import { router } from "@inertiajs/react";
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import type { ModuleId } from "@/types/restaurant";
 import { TO } from "@/lib/constants";
 
@@ -30,23 +31,34 @@ interface UiState {
 }
 
 let seq = 0;
-export const useUi = create<UiState>((set, get) => ({
-    mode: "staff",
-    guestOnly: false,
-    view: "dashboard",
-    meId: "u1",
-    signedOut: true,
-    notifs: [],
-    guest: { table: "T3", name: "Guest 1", tab: "menu", cat: "all" },
-    set: (p) => set(p),
-    setGuest: (p) => set({ guest: { ...get().guest, ...p } }),
-    notify: (ic, text, view) =>
-        set({ notifs: [{ id: ++seq, ic, text, view, at: Date.now(), read: false }, ...get().notifs].slice(0, 40) }),
-    go: (view) => {
-        set({ view, mode: "staff" });
-        router.visit("/" + view);
-    },
-}));
+export const useUi = create<UiState>()(
+    persist(
+        (set, get) => ({
+            mode: "staff",
+            guestOnly: false,
+            view: "dashboard",
+            meId: "u1",
+            signedOut: true,
+            notifs: [],
+            guest: { table: "T3", name: "Guest 1", tab: "menu", cat: "all" },
+            set: (p) => set(p),
+            setGuest: (p) => set({ guest: { ...get().guest, ...p } }),
+            notify: (ic, text, view) =>
+                set({
+                    notifs: [{ id: ++seq, ic, text, view, at: Date.now(), read: false }, ...get().notifs].slice(0, 40),
+                }),
+            go: (view) => {
+                set({ view, mode: "staff" });
+                router.visit("/" + view);
+            },
+        }),
+        {
+            // Keeps the (mock) sign-in across a refresh. Nothing else is stored.
+            name: "fbs-auth",
+            partialize: (s) => ({ meId: s.meId, signedOut: s.signedOut }),
+        },
+    ),
+);
 
 // Opened from a table QR code (/guest#t=<table>&k=<token>) or the Takeout QR (/guest#takeout): show only the guest phone.
 export const bootFromHash = () => {

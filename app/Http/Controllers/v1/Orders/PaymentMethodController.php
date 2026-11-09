@@ -20,7 +20,14 @@ class PaymentMethodController extends BaseController
 
     protected string $sortBy = 'id';
 
+    protected array $inUseRelations = ['orders' => 'orders', 'payments' => 'payments', 'billRequests' => 'bill requests'];
+
     protected bool $requireInactiveBeforeDelete = false;
+
+    protected function inUseMessage(array $blocks): string
+    {
+        return 'This payment method is already used in orders and cannot be deleted. Turn off "Guests can choose this" instead.';
+    }
 
     protected function storeRules(): array
     {

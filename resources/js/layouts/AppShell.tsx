@@ -4,7 +4,7 @@ import { Icon } from "@/components/Icon";
 import { GuestShell } from "@/components/guest/GuestShell";
 import { NAV, KITCHEN } from "@/lib/constants";
 import type { ModuleId } from "@/types/restaurant";
-import { useOrders, useReservations, useTables, usePayments } from "@/hooks/useApi";
+import { useOrders, useReservations, useTables, usePayments, useRoles, useUsers } from "@/hooks/useApi";
 import { useUi } from "@/context/ui";
 import { printBill } from "@/context/print";
 import { useNow } from "@/hooks/useNow";
@@ -18,19 +18,27 @@ import { dismissReservation, openReservation, openSeatReservation } from "@/page
 
 /** Staff layout. Signed-out visitors go to /login; the guest phone preview replaces the staff screens while `mode` is 'guest'. */
 export function AppShell({ children }: { children: ReactNode }) {
-    const { mode, signedOut } = useUi();
+    const { mode, signedOut, meId } = useUi();
     const allowed = useAllowed();
     // The page component name is '<module>/<Module>Page'.
     const asked = usePage().component.split("/")[0] as ModuleId;
     // A module the role cannot open (typed URL, notification, menu) falls back to the first allowed one.
-    const view: ModuleId = allowed.includes(asked) ? asked : (allowed[0] ?? "guide");
+    // After a refresh the users and roles load a moment later: do not redirect until they are here.
+    const users = useUsers().data,
+        roles = useRoles().data;
+    const ready = users.length > 0 && roles.length > 0;
+    const view: ModuleId = !ready || allowed.includes(asked) ? asked : (allowed[0] ?? "guide");
     useEffect(() => {
         if (signedOut) router.visit("/login", { replace: true });
-        else if (view !== asked) router.visit("/" + view, { replace: true });
-    }, [signedOut, view, asked]);
+        else if (ready && view !== asked) router.visit("/" + view, { replace: true });
+    }, [signedOut, ready, view, asked]);
     useEffect(() => {
         useUi.setState({ view });
     }, [view]);
+    // A saved sign-in for a user that does not exist (any more) goes back to the login page.
+    useEffect(() => {
+        if (ready && !signedOut && !users.some((u) => u.id === meId)) useUi.setState({ signedOut: true });
+    }, [ready, signedOut, users, meId]);
     if (signedOut) return null;
     if (mode === "guest")
         return (

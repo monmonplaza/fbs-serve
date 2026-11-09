@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { router } from "@inertiajs/react";
 import { useUi } from "@/context/ui";
-import { useUsers } from "@/hooks/useApi";
+import { useRoles, useUsers } from "@/hooks/useApi";
 import { toast } from "@/context/toast";
 import { Icon } from "@/components/Icon";
 import { LOGO } from "@/components/TopBar";
@@ -54,7 +54,8 @@ function greeting() {
 }
 
 export default function LoginPage() {
-    const users = useUsers().data;
+    const users = useUsers().data,
+        roles = useRoles().data;
     const typed = useTyped();
     const [id, setId] = useState("");
     const [pw, setPw] = useState("");
@@ -269,7 +270,7 @@ export default function LoginPage() {
                                     onClick={() => enter(u)}
                                     title={u.active ? `Sign in as ${u.name}` : "Inactive account"}
                                 >
-                                    <b>{u.role}</b>
+                                    <b>{roles.find((r) => r.id === u.role)?.name ?? u.role}</b>
                                     {!u.active && <small>inactive</small>}
                                 </button>
                             ))}

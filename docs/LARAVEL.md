@@ -7,7 +7,7 @@ Section numbers below refer to that document.
 
 `resources/js/api-service/` is the section 5 data layer: `client.ts` (axios, CSRF, `ApiError`, `unwrap`), `http.ts` (`createCrudResource`), `form-data.ts`, and `types/reusable/pagination.ts`.
 Set `VITE_API_URL` (see `.env.example`) and `resources/js/api-service/index.ts` switches modules from the in-memory mock to HTTP. Done in the Laravel app at the repo root: foods, categories, orders, kitchen, tables, floors, guest ordering, payment methods and discounts
-(`<domain>/http.ts` for catalog, orders, kitchen, tables, guest, admin). Still on the mock: reservations, roles, users, the table timer. The compiler checks each HTTP module against its mock (`pick` in `resources/js/api-service/index.ts`).
+(`<domain>/http.ts` for catalog, orders, kitchen, tables, guest, admin). Every module has an HTTP twin now. The compiler checks each HTTP module against its mock (`pick` in `resources/js/api-service/index.ts`).
 Run it with the README.
 
 ## Tables (section 11: literal `app_` names, explicit `$table`, full names in `exists:` / `unique:`)
@@ -30,12 +30,13 @@ Framework and Spatie tables stay unprefixed (`users`, `roles`, `permissions`, ..
 | `app_order_items` | id, round_id FK, food_id FK null, variant_id null, name, price, qty, note (string 120, null) | name and price are snapshots |
 | `app_order_payments` | id, order_id FK, method, amount, reference null | several rows = split bill; each round's share is computed (`Settlement::shares`) |
 | `app_plate_lines` | id, session_id FK (or `takeout_token`), food_id FK, variant_id null, qty, added_by, note (string 120, null) | the shared plate before it is sent |
-| `app_reservations` | id, name, phone, pax, starts_at, table_id FK null, note, status, cancel_reason null, dismissed bool | |
+| `app_reservations` | id, name, phone, pax, starts_at, table_id FK null, note, status (`booked`/`arrived`/`cancelled`/`noshow`), cancel_reason null, dismissed bool | one live booking per table within 90 minutes; seats must fit |
+| `app_roles` | id, name (unique), modules json (module ids of the UI), is_admin bool | the built-in Admin role keeps every module and cannot be deleted |
 | `app_reservation_items` | id, reservation_id FK, food_id, variant_id null, name, price, qty | advance order, copied to the plate when seated |
 | `app_reservation_history` | id, reservation_id FK, at, text | |
-| `app_settings` | key (unique), value json | `table_timer_on`, `table_timer_mins` |
+| `app_settings` | id, table_timer_on bool, table_timer_mins (1 to 600) | one row, created on first read (`AppSetting::current()`) |
 
-Users and roles: use `users` plus Spatie `roles`; the module list a role can open (`Role.modules`) becomes Spatie permissions (`module.orders`, ...) checked by the policies and by `role:` route middleware.
+Users: the framework `users` table gained `username` (unique), `role_id` FK `app_roles` (restrict on delete), `active`; `email` and `password` are optional until login exists. When Sanctum login arrives, the role's `modules` become the policy/route-middleware check (the UI only hides modules today).
 Every table gets an explicit `$table`, short explicit index names for long composite keys (section 11.4), and foreign keys with `->constrained('app_...')`.
 
 ## Routes: standard CRUD plus actions
@@ -50,8 +51,8 @@ Register custom `POST` routes before `Route::crudModule` (section 6.1). `crudMod
 | `orders.placeTakeout`, `guest.placeTakeout` | `POST /takeout` (staff) and `POST /public/takeout` (QR) |
 | `kitchen.queue / next / toReady / serve` | `GET /kitchen/queue`, `PATCH /orders/{code}/advance`, `PATCH /orders/{code}/ready`, `PATCH /orders/{code}/serve` (`{code}` is the round code) |
 | `tables.*` | `crudModule('/tables')`, `crudModule('/floors')`, `POST /tables/{id}/activate`, `POST /tables/{id}/clean`, `PATCH /tables/{id}/position` |
-| `reservations.*` | `crudModule('/reservations')`, `PATCH /reservations/{id}/move`, `/cancel`, `/no-show`, `/restore`, `/dismiss`, `POST /reservations/{id}/seat` |
-| `admin.*` | `crudModule('/settings/payments')`, `/discounts`, `/roles`, `/users`; `GET/PUT /settings` |
+| `reservations.*` | `crudModule('/reservations', only index, store, update)`, `PATCH /reservations/{id}/move`, `/move-day`, `/cancel`, `/no-show`, `/restore`, `/dismiss`, `POST /reservations/{id}/seat` |
+| `admin.*` | `crudModule('/payment-methods')`, `/discounts`, `/roles`, `/users`; `GET/PATCH /settings` (`tableTimerOn`, `tableTimerMins`) |
 | `guest.*` | public, token-scoped: `GET /public/tables/{table}/session?k=` (join), `.../plate?k=`, `POST .../plate-lines`, `PATCH .../plate-lines/{id}` (`delta` or `note`), `POST .../send`, `POST .../bill-out`; Takeout QR uses table `__takeout` |
 
 Guest endpoints are unauthenticated: authorize by the table token in the query string and reject a closed or replaced session. Rate-limit them.

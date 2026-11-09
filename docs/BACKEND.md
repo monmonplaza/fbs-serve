@@ -26,8 +26,10 @@ Times are epoch milliseconds, money is a number in pesos (2 decimals), ids are s
 - **Amount received**: a single payment can carry `received` (cash handed over). It must be at least the amount due; the server stores `received` and `change` (received minus the due of the whole bill) on every order paid together.
 - **Takeout** (`type: 'takeout'`): pickup number `TO-001` per day, channels walk-in, GrabFood, Foodpanda (platform orders are paid in the app and handed to the rider). Status flow queued, cooking, plating, completed, ready, paid.
 - **Kitchen notes**: a plate line can carry a note (max 120 characters, e.g. "Less spicy, no onion"). Lines with different notes stay separate order items, and the note is shown on the kitchen card and order details.
+- **Reservations**: statuses `booked`, `arrived`, `cancelled`, `noshow`; every change adds a history line. The advance order keeps only food, variant and quantity from the client (names and prices come from the menu). `seat(id, tableId)` needs a booked reservation and an inactive table: it opens the table session with the party size, copies the advance order to the plate, marks the reservation `arrived` and returns the reservation and the table. `moveToDay` keeps the time of day.
+- **Roles and users**: a role has a name (unique) and the modules it can open; users have a unique username, a role and an active flag (email is optional, there is no password until login exists). Users and roles are listed in full by `roles()` / `users()`; the UI applies the role's modules, the server does not yet.
 - **Foods with variants**: `price` is the lowest variant price; variant names are unique per food.
-- **Guards**: a category used by foods and a role used by users cannot be deleted; a table with guests cannot be deleted; the last floor cannot be deleted; reservations cannot double-book a table within 90 minutes or exceed its seats.
+- **Guards**: a category used by foods and a role used by users cannot be deleted; a table with guests cannot be deleted; the last floor cannot be deleted; reservations cannot double-book a table within 90 minutes or exceed its seats; the Admin role cannot be deleted; the last active Admin user cannot be deleted, deactivated or moved to another role (so nobody is locked out of Settings).
 
 ## Realtime
 
@@ -37,4 +39,4 @@ Bell notifications (`useUi().notify`) are currently produced by the client after
 
 ## Not covered yet
 
-Authentication on the backend (staff routes answer 403 outside `local`/`testing` until Sanctum login and role policies exist; the login page is still a mock), server-side role enforcement (the UI hides modules, the API does not check yet), reservations, roles, users, settings and the table timer on HTTP, file uploads for food photos (stored as URLs or data URLs), a per-device plate for the Takeout QR (one shared plate today), realtime, receipts, reports, daily history seed data.
+Authentication on the backend (staff routes answer 403 outside `local`/`testing` until Sanctum login and role policies exist; the login page is still a mock), server-side role enforcement (the UI hides modules, the API does not check yet), file uploads for food photos (stored as URLs or data URLs), a per-device plate for the Takeout QR (one shared plate today), realtime, receipts, reports, daily history seed data.

@@ -1,0 +1,1 @@
+{"nodes": [{"id": "$graphify-root$_backend_vendor_laravel_framework_src_illuminate_collections_license_md", "label": "LICENSE.md", "file_type": "document", "node_kind": "page", "source_file": "backend/vendor/laravel/framework/src/Illuminate/Collections/LICENSE.md", "source_location": "L1"}], "edges": [], "input_tokens": 0, "output_tokens": 0}

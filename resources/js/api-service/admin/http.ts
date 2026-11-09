@@ -1,17 +1,18 @@
 /**
  * @file api-service/admin/http.ts
- * Settings lists that the Laravel backend owns (payment methods, discounts, categories, tables, floors).
+ * Settings lists that the Laravel backend owns: payment methods, discounts, roles, users, categories, tables, floors and the table timer.
  */
 
-// Settings lists that the Laravel backend owns (payment methods, discounts, categories, tables, floors).
-// Roles, users and the table timer are not on the backend yet and stay on the mock, so this module wraps the mock and overrides only those lists.
+// Every list has an endpoint now; the mock spread only keeps the list type and `foodCounts` shape in one place.
 import { http, unwrap } from "@/api-service/client";
 import { admin as mock, type SettingsList } from "@/api-service/admin/mock";
-import type { Discount, Food, PaymentMethod } from "@/types/restaurant";
+import type { AppSettings, Discount, Food, PaymentMethod, Role, User } from "@/types/restaurant";
 
 const PATH: Partial<Record<SettingsList, string>> = {
     payments: "/payment-methods",
     discounts: "/discounts",
+    roles: "/roles",
+    users: "/users",
     categories: "/categories",
     tables: "/tables",
     floors: "/floors",
@@ -31,7 +32,12 @@ function body(list: SettingsList, v: Record<string, unknown>) {
 export const adminHttp = {
     ...mock,
     payments: async () => unwrap<PaymentMethod[]>(await http.get("/payment-methods")),
+    roles: async () => unwrap<Role[]>(await http.get("/roles")),
+    users: async () => unwrap<User[]>(await http.get("/users")),
+    updateProfile: async (id: string, p: { name: string }) => unwrap<User>(await http.post(`/users/${id}`, p)),
     discounts: async () => unwrap<Discount[]>(await http.get("/discounts")),
+    settings: async () => unwrap<AppSettings>(await http.get("/settings")),
+    saveSettings: async (p: Partial<AppSettings>) => unwrap<AppSettings>(await http.patch("/settings", p)),
     saveSetting: async (list: SettingsList, id: string | null, v: Record<string, unknown>) => {
         const path = PATH[list];
         if (!path) return mock.saveSetting(list, id, v);

@@ -54,6 +54,8 @@ export interface Role {
     id: string;
     name: string;
     modules: ModuleId[];
+    /** The built-in Admin role: always keeps every module and cannot be deleted. */
+    admin?: boolean;
 }
 export interface User {
     id: string;

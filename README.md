@@ -16,7 +16,7 @@ npm run dev                                        # Vite, in one terminal
 php artisan serve                                  # the app, in another
 ```
 
-By default the pages run on the in-memory mock API (`resources/js/api-service/mock`), which resets on reload. Set `VITE_API_URL=/api` in `.env` (and restart Vite) to use the Laravel API instead; reservations, roles, users, settings and the table timer still use the mock.
+By default the pages run on the in-memory mock API (`resources/js/api-service/mock`), which resets on reload. Set `VITE_API_URL=/api` in `.env` (and restart Vite) to use the Laravel API instead; every module then runs on it (the demo roles, users and a few bookings come from `RestaurantSeeder`).
 
 Guest QR for the seeded table: `/guest#t=4&k=abc123`. Takeout QR: `/guest#takeout`.
 

@@ -173,3 +173,34 @@ it('staff routes are closed outside local and testing', function () {
     $this->app['env'] = 'production';
     $this->getJson('/api/orders')->assertForbidden();
 });
+
+it('a payment method used in an order cannot be deleted', function () {
+    $this->add('Garlic Rice', 'Guest 1');
+    $a = $this->postJson($this->url('send'), ['by' => 'Guest 1'])->json('data.id');
+    foreach (range(1, 3) as $_) {
+        $this->patchJson("/api/orders/{$a}/advance");
+    }
+    $this->patchJson("/api/orders/{$a}/serve")->assertOk();
+    $cash = (string) PaymentMethod::where('name', 'Cash')->value('id');
+    $maya = (string) PaymentMethod::where('name', 'Maya')->value('id');
+
+    // Asking for the bill with it already blocks the delete.
+    $this->postJson($this->url('bill-out'), ['method' => $cash])->assertOk();
+    $this->deleteJson("/api/payment-methods/{$cash}")->assertUnprocessable()->assertJsonPath('success', false);
+
+    $this->postJson("/api/tables/{$this->table->id}/pay", ['pays' => [['method' => $cash, 'amount' => 65]]])->assertOk();
+    $this->deleteJson("/api/payment-methods/{$cash}")->assertUnprocessable();
+    $this->assertNotNull(PaymentMethod::find($cash));
+
+    // One that no order used can still go.
+    $this->deleteJson("/api/payment-methods/{$maya}")->assertNoContent();
+});
+
+it('keeps the table stay timer settings', function () {
+    $this->getJson('/api/settings')->assertOk()->assertJsonPath('data.tableTimerOn', false)->assertJsonPath('data.tableTimerMins', 90);
+    $this->patchJson('/api/settings', ['tableTimerOn' => true])->assertOk()->assertJsonPath('data.tableTimerOn', true)->assertJsonPath('data.tableTimerMins', 90);
+    $this->patchJson('/api/settings', ['tableTimerMins' => 45])->assertOk();
+    $this->getJson('/api/settings')->assertJsonPath('data.tableTimerOn', true)->assertJsonPath('data.tableTimerMins', 45);
+    $this->patchJson('/api/settings', ['tableTimerMins' => 0])->assertUnprocessable();
+    $this->patchJson('/api/settings', ['tableTimerMins' => 601])->assertUnprocessable();
+});

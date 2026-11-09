@@ -1,0 +1,1 @@
+{"nodes": [{"id": "$graphify-root$_backend_vendor_symfony_polyfill_php82_resources_stubs_random_cryptosafeengine_php", "label": "CryptoSafeEngine.php", "file_type": "code", "source_file": "backend/vendor/symfony/polyfill-php82/Resources/stubs/Random/CryptoSafeEngine.php", "source_location": "L1"}], "edges": [], "raw_calls": []}
