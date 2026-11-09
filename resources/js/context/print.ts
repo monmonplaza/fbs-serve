@@ -5,7 +5,7 @@ import type { AppliedDiscount, Order, PaymentMethod } from "@/types/restaurant";
 export interface PrintJob {
     orders: Order[];
     discount: AppliedDiscount | null;
-    /** The method the guest will pay with. Its QR code is printed on an unpaid bill. */
+    /** The method the guest pays (or paid) with. When it has a QR code (GCash, Maya), the QR is printed on the bill. */
     payWith?: PaymentMethod | null;
 }
 

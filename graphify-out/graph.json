@@ -4,19 +4,6 @@
   "graph": {},
   "nodes": [
     {
-      "id": "app_models_discount_discount",
-      "label": "Discount",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "Order",
-      "file_type": "code",
-      "norm_label": "discount",
-      "source_file": "app/Models/Discount.php",
-      "source_location": "L7"
-    },
-    {
       "id": "app_models_order_order",
       "label": "Order",
       "_callable": true,
@@ -95,42 +82,16 @@
       "source_location": "L5"
     },
     {
-      "id": "app_exceptions_apiexception_apiexception",
-      "label": "ApiException",
+      "id": "app_models_paymentmethod_paymentmethod",
+      "label": "PaymentMethod",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
       "community": 105,
-      "community_name": "ApiException",
+      "community_name": "Illuminate\\Database\\Eloquent\\Relations\\HasMany",
       "file_type": "code",
-      "norm_label": "apiexception",
-      "source_file": "app/Exceptions/ApiException.php",
-      "source_location": "L9"
-    },
-    {
-      "id": "app_http_resources_reservationresource_reservationresource",
-      "label": "ReservationResource",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 105,
-      "community_name": "ApiException",
-      "file_type": "code",
-      "norm_label": "reservationresource",
-      "source_file": "app/Http/Resources/ReservationResource.php",
-      "source_location": "L8"
-    },
-    {
-      "id": "app_http_resources_tableresource_tableresource",
-      "label": "TableResource",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 105,
-      "community_name": "ApiException",
-      "file_type": "code",
-      "norm_label": "tableresource",
-      "source_file": "app/Http/Resources/TableResource.php",
+      "norm_label": "paymentmethod",
+      "source_file": "app/Models/PaymentMethod.php",
       "source_location": "L8"
     },
     {
@@ -238,17 +199,17 @@
       "source_location": "L53"
     },
     {
-      "id": "app_http_controllers_v1_orders_discountcontroller_discountcontroller",
-      "label": "DiscountController",
+      "id": "app_http_controllers_v1_menu_foodcontroller_foodcontroller",
+      "label": "FoodController",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
       "community": 14,
-      "community_name": "DiscountController.php",
+      "community_name": "FoodController",
       "file_type": "code",
-      "norm_label": "discountcontroller",
-      "source_file": "app/Http/Controllers/v1/Orders/DiscountController.php",
-      "source_location": "L11"
+      "norm_label": "foodcontroller",
+      "source_file": "app/Http/Controllers/v1/Menu/FoodController.php",
+      "source_location": "L14"
     },
     {
       "id": "resources_js_vite_env_d_importmetaenv",
@@ -277,13 +238,26 @@
       "source_location": "L20"
     },
     {
+      "id": "app_exceptions_apiexception_apiexception",
+      "label": "ApiException",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 155,
+      "community_name": "ApiException",
+      "file_type": "code",
+      "norm_label": "apiexception",
+      "source_file": "app/Exceptions/ApiException.php",
+      "source_location": "L9"
+    },
+    {
       "id": "app_http_controllers_v1_orders_ordercontroller_ordercontroller",
       "label": "OrderController",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
       "community": 155,
-      "community_name": "Settlement",
+      "community_name": "ApiException",
       "file_type": "code",
       "norm_label": "ordercontroller",
       "source_file": "app/Http/Controllers/v1/Orders/OrderController.php",
@@ -296,7 +270,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 155,
-      "community_name": "Settlement",
+      "community_name": "ApiException",
       "file_type": "code",
       "norm_label": "orderroundresource",
       "source_file": "app/Http/Resources/OrderRoundResource.php",
@@ -309,7 +283,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 155,
-      "community_name": "Settlement",
+      "community_name": "ApiException",
       "file_type": "code",
       "norm_label": "settlement",
       "source_file": "app/Support/Settlement.php",
@@ -329,6 +303,19 @@
       "source_location": "L12"
     },
     {
+      "id": "app_http_resources_floorresource_floorresource",
+      "label": "FloorResource",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 156,
+      "community_name": "FloorController",
+      "file_type": "code",
+      "norm_label": "floorresource",
+      "source_file": "app/Http/Resources/FloorResource.php",
+      "source_location": "L8"
+    },
+    {
       "id": "app_models_floor_floor",
       "label": "Floor",
       "_callable": true,
@@ -342,17 +329,17 @@
       "source_location": "L8"
     },
     {
-      "id": "app_models_role_role",
-      "label": "Role",
+      "id": "app_models_discount_discount",
+      "label": "Discount",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
       "community": 157,
       "community_name": "RestaurantSeeder.php",
       "file_type": "code",
-      "norm_label": "role",
-      "source_file": "app/Models/Role.php",
-      "source_location": "L9"
+      "norm_label": "discount",
+      "source_file": "app/Models/Discount.php",
+      "source_location": "L7"
     },
     {
       "id": "database_seeders_databaseseeder_databaseseeder",
@@ -550,6 +537,19 @@
       "source_location": "L12"
     },
     {
+      "id": "app_http_controllers_v1_menu_categorycontroller_categorycontroller",
+      "label": "CategoryController",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 166,
+      "community_name": "CategoryController",
+      "file_type": "code",
+      "norm_label": "categorycontroller",
+      "source_file": "app/Http/Controllers/v1/Menu/CategoryController.php",
+      "source_location": "L11"
+    },
+    {
       "id": "resources_js_lib_constants_orderstatusmeta",
       "label": "OrderStatusMeta",
       "_callable": true,
@@ -560,7 +560,7 @@
       "file_type": "code",
       "norm_label": "orderstatusmeta",
       "source_file": "resources/js/lib/constants.ts",
-      "source_location": "L33"
+      "source_location": "L35"
     },
     {
       "id": "resources_js_lib_constants_statusmeta",
@@ -602,16 +602,16 @@
       "source_location": "L75"
     },
     {
-      "id": "app_http_controllers_v1_menu_categorycontroller_categorycontroller",
-      "label": "CategoryController",
+      "id": "app_http_controllers_v1_orders_discountcontroller_discountcontroller",
+      "label": "DiscountController",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
       "community": 23,
       "community_name": "Illuminate\\Database\\Eloquent\\Model",
       "file_type": "code",
-      "norm_label": "categorycontroller",
-      "source_file": "app/Http/Controllers/v1/Menu/CategoryController.php",
+      "norm_label": "discountcontroller",
+      "source_file": "app/Http/Controllers/v1/Orders/DiscountController.php",
       "source_location": "L11"
     },
     {
@@ -691,6 +691,19 @@
       "norm_label": "reservationitem",
       "source_file": "app/Models/ReservationItem.php",
       "source_location": "L7"
+    },
+    {
+      "id": "app_models_role_role",
+      "label": "Role",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "Illuminate\\Database\\Eloquent\\Model",
+      "file_type": "code",
+      "norm_label": "role",
+      "source_file": "app/Models/Role.php",
+      "source_location": "L9"
     },
     {
       "id": "app_models_category_category",
@@ -1044,19 +1057,6 @@
       "source_location": "L18"
     },
     {
-      "id": "app_http_controllers_v1_menu_foodcontroller_foodcontroller",
-      "label": "FoodController",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 30,
-      "community_name": "StoredFile",
-      "file_type": "code",
-      "norm_label": "foodcontroller",
-      "source_file": "app/Http/Controllers/v1/Menu/FoodController.php",
-      "source_location": "L14"
-    },
-    {
       "id": "app_http_controllers_v1_orders_paymentmethodcontroller_paymentmethodcontroller",
       "label": "PaymentMethodController",
       "_callable": true,
@@ -1206,7 +1206,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 39,
-      "community_name": "AppServiceProvider",
+      "community_name": "api.php",
       "file_type": "code",
       "norm_label": "appserviceprovider",
       "source_file": "app/Providers/AppServiceProvider.php",
@@ -1590,19 +1590,6 @@
       "source_location": "L8"
     },
     {
-      "id": "app_http_resources_floorresource_floorresource",
-      "label": "FloorResource",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 84,
-      "community_name": "Illuminate\\Http\\Resources\\Json\\JsonResource",
-      "file_type": "code",
-      "norm_label": "floorresource",
-      "source_file": "app/Http/Resources/FloorResource.php",
-      "source_location": "L8"
-    },
-    {
       "id": "app_http_resources_platelineresource_platelineresource",
       "label": "PlateLineResource",
       "_callable": true,
@@ -1613,6 +1600,19 @@
       "file_type": "code",
       "norm_label": "platelineresource",
       "source_file": "app/Http/Resources/PlateLineResource.php",
+      "source_location": "L8"
+    },
+    {
+      "id": "app_http_resources_reservationresource_reservationresource",
+      "label": "ReservationResource",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 84,
+      "community_name": "Illuminate\\Http\\Resources\\Json\\JsonResource",
+      "file_type": "code",
+      "norm_label": "reservationresource",
+      "source_file": "app/Http/Resources/ReservationResource.php",
       "source_location": "L8"
     },
     {
@@ -1629,30 +1629,30 @@
       "source_location": "L8"
     },
     {
+      "id": "app_http_resources_tableresource_tableresource",
+      "label": "TableResource",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 84,
+      "community_name": "Illuminate\\Http\\Resources\\Json\\JsonResource",
+      "file_type": "code",
+      "norm_label": "tableresource",
+      "source_file": "app/Http/Resources/TableResource.php",
+      "source_location": "L8"
+    },
+    {
       "id": "app_models_food_food",
       "label": "Food",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
       "community": 9,
-      "community_name": "Illuminate\\Database\\Eloquent\\Relations\\HasMany",
+      "community_name": "Food",
       "file_type": "code",
       "norm_label": "food",
       "source_file": "app/Models/Food.php",
       "source_location": "L9"
-    },
-    {
-      "id": "app_models_paymentmethod_paymentmethod",
-      "label": "PaymentMethod",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "Illuminate\\Database\\Eloquent\\Relations\\HasMany",
-      "file_type": "code",
-      "norm_label": "paymentmethod",
-      "source_file": "app/Models/PaymentMethod.php",
-      "source_location": "L8"
     },
     {
       "id": "resources_js_api_service_catalog_mock_foodinput",
@@ -1780,6 +1780,18 @@
       "source_location": "L31"
     },
     {
+      "id": "app_models_order_order_table",
+      "label": ".table()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "Order",
+      "file_type": "code",
+      "norm_label": ".table()",
+      "source_file": "app/Models/Order.php",
+      "source_location": "L36"
+    },
+    {
       "id": "app_support_money_money_peso",
       "label": ".peso()",
       "_callable": true,
@@ -1826,18 +1838,6 @@
       "norm_label": ".due()",
       "source_file": "app/Support/Settlement.php",
       "source_location": "L20"
-    },
-    {
-      "id": "app_support_settlement_settlement_pay",
-      "label": ".pay()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "Order",
-      "file_type": "code",
-      "norm_label": ".pay()",
-      "source_file": "app/Support/Settlement.php",
-      "source_location": "L30"
     },
     {
       "id": "app_support_settlement_settlement_shares",
@@ -1960,52 +1960,52 @@
       "source_location": "L122"
     },
     {
-      "id": "app_exceptions_apiexception_apiexception_construct",
-      "label": ".__construct()",
+      "id": "app_models_diningtable_diningtable_sessions",
+      "label": ".sessions()",
       "_callable": true,
       "_origin": "ast",
       "community": 105,
-      "community_name": "ApiException",
+      "community_name": "Illuminate\\Database\\Eloquent\\Relations\\HasMany",
       "file_type": "code",
-      "norm_label": ".__construct()",
-      "source_file": "app/Exceptions/ApiException.php",
-      "source_location": "L11"
+      "norm_label": ".sessions()",
+      "source_file": "app/Models/DiningTable.php",
+      "source_location": "L23"
     },
     {
-      "id": "app_exceptions_apiexception_apiexception_render",
-      "label": ".render()",
+      "id": "app_models_paymentmethod_paymentmethod_billrequests",
+      "label": ".billRequests()",
       "_callable": true,
       "_origin": "ast",
       "community": 105,
-      "community_name": "ApiException",
+      "community_name": "Illuminate\\Database\\Eloquent\\Relations\\HasMany",
       "file_type": "code",
-      "norm_label": ".render()",
-      "source_file": "app/Exceptions/ApiException.php",
-      "source_location": "L16"
+      "norm_label": ".billrequests()",
+      "source_file": "app/Models/PaymentMethod.php",
+      "source_location": "L28"
     },
     {
-      "id": "app_http_resources_reservationresource_reservationresource_toarray",
-      "label": ".toArray()",
+      "id": "app_models_paymentmethod_paymentmethod_orders",
+      "label": ".orders()",
       "_callable": true,
       "_origin": "ast",
       "community": 105,
-      "community_name": "ApiException",
+      "community_name": "Illuminate\\Database\\Eloquent\\Relations\\HasMany",
       "file_type": "code",
-      "norm_label": ".toarray()",
-      "source_file": "app/Http/Resources/ReservationResource.php",
-      "source_location": "L10"
+      "norm_label": ".orders()",
+      "source_file": "app/Models/PaymentMethod.php",
+      "source_location": "L17"
     },
     {
-      "id": "app_http_resources_tableresource_tableresource_toarray",
-      "label": ".toArray()",
+      "id": "app_models_paymentmethod_paymentmethod_payments",
+      "label": ".payments()",
       "_callable": true,
       "_origin": "ast",
       "community": 105,
-      "community_name": "ApiException",
+      "community_name": "Illuminate\\Database\\Eloquent\\Relations\\HasMany",
       "file_type": "code",
-      "norm_label": ".toarray()",
-      "source_file": "app/Http/Resources/TableResource.php",
-      "source_location": "L10"
+      "norm_label": ".payments()",
+      "source_file": "app/Models/PaymentMethod.php",
+      "source_location": "L22"
     },
     {
       "id": "app_http_controllers_public_guestcontroller_guestcontroller_addline",
@@ -2413,7 +2413,7 @@
       "file_type": "code",
       "norm_label": "billprinthost()",
       "source_file": "resources/js/components/BillPrintHost.tsx",
-      "source_location": "L12"
+      "source_location": "L13"
     },
     {
       "id": "resources_js_lib_reservationactions_attempt",
@@ -2752,40 +2752,112 @@
       "source_location": "L11"
     },
     {
-      "id": "app_http_controllers_v1_orders_discountcontroller_discountcontroller_beforesave",
+      "id": "app_http_controllers_v1_menu_foodcontroller_foodcontroller_aftercreate",
+      "label": ".afterCreate()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 14,
+      "community_name": "FoodController",
+      "file_type": "code",
+      "norm_label": ".aftercreate()",
+      "source_file": "app/Http/Controllers/v1/Menu/FoodController.php",
+      "source_location": "L97"
+    },
+    {
+      "id": "app_http_controllers_v1_menu_foodcontroller_foodcontroller_afterupdate",
+      "label": ".afterUpdate()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 14,
+      "community_name": "FoodController",
+      "file_type": "code",
+      "norm_label": ".afterupdate()",
+      "source_file": "app/Http/Controllers/v1/Menu/FoodController.php",
+      "source_location": "L102"
+    },
+    {
+      "id": "app_http_controllers_v1_menu_foodcontroller_foodcontroller_beforedelete",
+      "label": ".beforeDelete()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 14,
+      "community_name": "FoodController",
+      "file_type": "code",
+      "norm_label": ".beforedelete()",
+      "source_file": "app/Http/Controllers/v1/Menu/FoodController.php",
+      "source_location": "L123"
+    },
+    {
+      "id": "app_http_controllers_v1_menu_foodcontroller_foodcontroller_beforesave",
       "label": ".beforeSave()",
       "_callable": true,
       "_origin": "ast",
       "community": 14,
-      "community_name": "DiscountController.php",
+      "community_name": "FoodController",
       "file_type": "code",
       "norm_label": ".beforesave()",
-      "source_file": "app/Http/Controllers/v1/Orders/DiscountController.php",
-      "source_location": "L40"
+      "source_file": "app/Http/Controllers/v1/Menu/FoodController.php",
+      "source_location": "L73"
     },
     {
-      "id": "app_http_controllers_v1_orders_discountcontroller_discountcontroller_storerules",
+      "id": "app_http_controllers_v1_menu_foodcontroller_foodcontroller_cleanvariants",
+      "label": ".cleanVariants()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 14,
+      "community_name": "FoodController",
+      "file_type": "code",
+      "norm_label": ".cleanvariants()",
+      "source_file": "app/Http/Controllers/v1/Menu/FoodController.php",
+      "source_location": "L108"
+    },
+    {
+      "id": "app_http_controllers_v1_menu_foodcontroller_foodcontroller_rules",
+      "label": ".rules()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 14,
+      "community_name": "FoodController",
+      "file_type": "code",
+      "norm_label": ".rules()",
+      "source_file": "app/Http/Controllers/v1/Menu/FoodController.php",
+      "source_location": "L51"
+    },
+    {
+      "id": "app_http_controllers_v1_menu_foodcontroller_foodcontroller_storerules",
       "label": ".storeRules()",
       "_callable": true,
       "_origin": "ast",
       "community": 14,
-      "community_name": "DiscountController.php",
+      "community_name": "FoodController",
       "file_type": "code",
       "norm_label": ".storerules()",
-      "source_file": "app/Http/Controllers/v1/Orders/DiscountController.php",
-      "source_location": "L25"
+      "source_file": "app/Http/Controllers/v1/Menu/FoodController.php",
+      "source_location": "L41"
     },
     {
-      "id": "app_http_controllers_v1_orders_discountcontroller_discountcontroller_updaterules",
+      "id": "app_http_controllers_v1_menu_foodcontroller_foodcontroller_syncchildren",
+      "label": ".syncChildren()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 14,
+      "community_name": "FoodController",
+      "file_type": "code",
+      "norm_label": ".syncchildren()",
+      "source_file": "app/Http/Controllers/v1/Menu/FoodController.php",
+      "source_location": "L128"
+    },
+    {
+      "id": "app_http_controllers_v1_menu_foodcontroller_foodcontroller_updaterules",
       "label": ".updateRules()",
       "_callable": true,
       "_origin": "ast",
       "community": 14,
-      "community_name": "DiscountController.php",
+      "community_name": "FoodController",
       "file_type": "code",
       "norm_label": ".updaterules()",
-      "source_file": "app/Http/Controllers/v1/Orders/DiscountController.php",
-      "source_location": "L35"
+      "source_file": "app/Http/Controllers/v1/Menu/FoodController.php",
+      "source_location": "L46"
     },
     {
       "id": "resources_js_lib_dashboardhelpers_sessionordersof",
@@ -2884,18 +2956,6 @@
       "source_location": "L78"
     },
     {
-      "id": "app_http_controllers_v1_basecontroller_basecontroller_afterupdate",
-      "label": ".afterUpdate()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 15,
-      "community_name": "BaseController",
-      "file_type": "code",
-      "norm_label": ".afterupdate()",
-      "source_file": "app/Http/Controllers/v1/BaseController.php",
-      "source_location": "L80"
-    },
-    {
       "id": "app_http_controllers_v1_basecontroller_basecontroller_applyfilters",
       "label": ".applyFilters()",
       "_callable": true,
@@ -2944,18 +3004,6 @@
       "source_location": "L191"
     },
     {
-      "id": "app_http_controllers_v1_basecontroller_basecontroller_beforedelete",
-      "label": ".beforeDelete()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 15,
-      "community_name": "BaseController",
-      "file_type": "code",
-      "norm_label": ".beforedelete()",
-      "source_file": "app/Http/Controllers/v1/BaseController.php",
-      "source_location": "L225"
-    },
-    {
       "id": "app_http_controllers_v1_basecontroller_basecontroller_beforesave",
       "label": ".beforeSave()",
       "_callable": true,
@@ -2966,18 +3014,6 @@
       "norm_label": ".beforesave()",
       "source_file": "app/Http/Controllers/v1/BaseController.php",
       "source_location": "L73"
-    },
-    {
-      "id": "app_http_controllers_v1_basecontroller_basecontroller_destroy",
-      "label": ".destroy()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 15,
-      "community_name": "BaseController",
-      "file_type": "code",
-      "norm_label": ".destroy()",
-      "source_file": "app/Http/Controllers/v1/BaseController.php",
-      "source_location": "L207"
     },
     {
       "id": "app_http_controllers_v1_basecontroller_basecontroller_fresh",
@@ -3002,30 +3038,6 @@
       "norm_label": ".index()",
       "source_file": "app/Http/Controllers/v1/BaseController.php",
       "source_location": "L109"
-    },
-    {
-      "id": "app_http_controllers_v1_basecontroller_basecontroller_inuse",
-      "label": ".inUse()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 15,
-      "community_name": "BaseController",
-      "file_type": "code",
-      "norm_label": ".inuse()",
-      "source_file": "app/Http/Controllers/v1/BaseController.php",
-      "source_location": "L160"
-    },
-    {
-      "id": "app_http_controllers_v1_basecontroller_basecontroller_inusemessage",
-      "label": ".inUseMessage()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 15,
-      "community_name": "BaseController",
-      "file_type": "code",
-      "norm_label": ".inusemessage()",
-      "source_file": "app/Http/Controllers/v1/BaseController.php",
-      "source_location": "L87"
     },
     {
       "id": "app_http_controllers_v1_basecontroller_basecontroller_lookup",
@@ -3172,18 +3184,6 @@
       "source_location": "L63"
     },
     {
-      "id": "app_http_controllers_v1_basecontroller_basecontroller_usage",
-      "label": ".usage()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 15,
-      "community_name": "BaseController",
-      "file_type": "code",
-      "norm_label": ".usage()",
-      "source_file": "app/Http/Controllers/v1/BaseController.php",
-      "source_location": "L229"
-    },
-    {
       "id": "app_http_controllers_v1_basecontroller_basecontroller_validated",
       "label": ".validated()",
       "_callable": true,
@@ -3208,28 +3208,40 @@
       "source_location": "L68"
     },
     {
+      "id": "app_exceptions_apiexception_apiexception_construct",
+      "label": ".__construct()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 155,
+      "community_name": "ApiException",
+      "file_type": "code",
+      "norm_label": ".__construct()",
+      "source_file": "app/Exceptions/ApiException.php",
+      "source_location": "L11"
+    },
+    {
+      "id": "app_exceptions_apiexception_apiexception_render",
+      "label": ".render()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 155,
+      "community_name": "ApiException",
+      "file_type": "code",
+      "norm_label": ".render()",
+      "source_file": "app/Exceptions/ApiException.php",
+      "source_location": "L16"
+    },
+    {
       "id": "app_http_controllers_v1_orders_ordercontroller_ordercontroller_handover",
       "label": ".handover()",
       "_callable": true,
       "_origin": "ast",
       "community": 155,
-      "community_name": "Settlement",
+      "community_name": "ApiException",
       "file_type": "code",
       "norm_label": ".handover()",
       "source_file": "app/Http/Controllers/v1/Orders/OrderController.php",
       "source_location": "L65"
-    },
-    {
-      "id": "app_http_controllers_v1_orders_ordercontroller_ordercontroller_index",
-      "label": ".index()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 155,
-      "community_name": "Settlement",
-      "file_type": "code",
-      "norm_label": ".index()",
-      "source_file": "app/Http/Controllers/v1/Orders/OrderController.php",
-      "source_location": "L20"
     },
     {
       "id": "app_http_controllers_v1_orders_ordercontroller_ordercontroller_pay",
@@ -3237,7 +3249,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 155,
-      "community_name": "Settlement",
+      "community_name": "ApiException",
       "file_type": "code",
       "norm_label": ".pay()",
       "source_file": "app/Http/Controllers/v1/Orders/OrderController.php",
@@ -3249,7 +3261,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 155,
-      "community_name": "Settlement",
+      "community_name": "ApiException",
       "file_type": "code",
       "norm_label": ".pickup()",
       "source_file": "app/Http/Controllers/v1/Orders/OrderController.php",
@@ -3261,7 +3273,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 155,
-      "community_name": "Settlement",
+      "community_name": "ApiException",
       "file_type": "code",
       "norm_label": ".takeout()",
       "source_file": "app/Http/Controllers/v1/Orders/OrderController.php",
@@ -3273,7 +3285,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 155,
-      "community_name": "Settlement",
+      "community_name": "ApiException",
       "file_type": "code",
       "norm_label": ".toarray()",
       "source_file": "app/Http/Resources/OrderRoundResource.php",
@@ -3340,6 +3352,18 @@
       "source_location": "L33"
     },
     {
+      "id": "app_http_resources_floorresource_floorresource_toarray",
+      "label": ".toArray()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 156,
+      "community_name": "FloorController",
+      "file_type": "code",
+      "norm_label": ".toarray()",
+      "source_file": "app/Http/Resources/FloorResource.php",
+      "source_location": "L10"
+    },
+    {
       "id": "app_models_floor_floor_tables",
       "label": ".tables()",
       "_callable": true,
@@ -3352,16 +3376,16 @@
       "source_location": "L14"
     },
     {
-      "id": "app_models_role_role_users",
-      "label": ".users()",
+      "id": "app_support_settlement_settlement_pay",
+      "label": ".pay()",
       "_callable": true,
       "_origin": "ast",
       "community": 157,
       "community_name": "RestaurantSeeder.php",
       "file_type": "code",
-      "norm_label": ".users()",
-      "source_file": "app/Models/Role.php",
-      "source_location": "L17"
+      "norm_label": ".pay()",
+      "source_file": "app/Support/Settlement.php",
+      "source_location": "L30"
     },
     {
       "id": "database_seeders_databaseseeder_databaseseeder_run",
@@ -3412,18 +3436,6 @@
       "source_location": "L69"
     },
     {
-      "id": "tests_feature_staffandreservationstest_booking",
-      "label": "booking()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 157,
-      "community_name": "RestaurantSeeder.php",
-      "file_type": "code",
-      "norm_label": "booking()",
-      "source_file": "tests/Feature/StaffAndReservationsTest.php",
-      "source_location": "L62"
-    },
-    {
       "id": "app_models_diningtable_diningtable_floor",
       "label": ".floor()",
       "_callable": true,
@@ -3448,30 +3460,6 @@
       "source_location": "L28"
     },
     {
-      "id": "app_models_food_food_category",
-      "label": ".category()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 158,
-      "community_name": "Illuminate\\Database\\Eloquent\\Relations\\BelongsTo",
-      "file_type": "code",
-      "norm_label": ".category()",
-      "source_file": "app/Models/Food.php",
-      "source_location": "L17"
-    },
-    {
-      "id": "app_models_order_order_table",
-      "label": ".table()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 158,
-      "community_name": "Illuminate\\Database\\Eloquent\\Relations\\BelongsTo",
-      "file_type": "code",
-      "norm_label": ".table()",
-      "source_file": "app/Models/Order.php",
-      "source_location": "L36"
-    },
-    {
       "id": "app_models_plateline_plateline_food",
       "label": ".food()",
       "_callable": true,
@@ -3482,6 +3470,18 @@
       "norm_label": ".food()",
       "source_file": "app/Models/PlateLine.php",
       "source_location": "L14"
+    },
+    {
+      "id": "app_models_reservation_reservation_table",
+      "label": ".table()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 158,
+      "community_name": "Illuminate\\Database\\Eloquent\\Relations\\BelongsTo",
+      "file_type": "code",
+      "norm_label": ".table()",
+      "source_file": "app/Models/Reservation.php",
+      "source_location": "L22"
     },
     {
       "id": "app_models_tablesession_tablesession_order",
@@ -3686,6 +3686,18 @@
       "norm_label": ".serve()",
       "source_file": "app/Http/Controllers/v1/Kitchen/KitchenController.php",
       "source_location": "L51"
+    },
+    {
+      "id": "app_http_controllers_v1_orders_ordercontroller_ordercontroller_index",
+      "label": ".index()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 16,
+      "community_name": "OrderService",
+      "file_type": "code",
+      "norm_label": ".index()",
+      "source_file": "app/Http/Controllers/v1/Orders/OrderController.php",
+      "source_location": "L20"
     },
     {
       "id": "app_http_controllers_v1_reservations_reservationcontroller_reservationcontroller_seat",
@@ -3938,6 +3950,126 @@
       "norm_label": "body()",
       "source_file": "resources/js/api-service/reservations/http.ts",
       "source_location": "L11"
+    },
+    {
+      "id": "app_http_controllers_v1_basecontroller_basecontroller_beforedelete",
+      "label": ".beforeDelete()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 165,
+      "community_name": ".destroy",
+      "file_type": "code",
+      "norm_label": ".beforedelete()",
+      "source_file": "app/Http/Controllers/v1/BaseController.php",
+      "source_location": "L225"
+    },
+    {
+      "id": "app_http_controllers_v1_basecontroller_basecontroller_destroy",
+      "label": ".destroy()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 165,
+      "community_name": ".destroy",
+      "file_type": "code",
+      "norm_label": ".destroy()",
+      "source_file": "app/Http/Controllers/v1/BaseController.php",
+      "source_location": "L207"
+    },
+    {
+      "id": "app_http_controllers_v1_basecontroller_basecontroller_inuse",
+      "label": ".inUse()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 165,
+      "community_name": ".destroy",
+      "file_type": "code",
+      "norm_label": ".inuse()",
+      "source_file": "app/Http/Controllers/v1/BaseController.php",
+      "source_location": "L160"
+    },
+    {
+      "id": "app_http_controllers_v1_basecontroller_basecontroller_inusemessage",
+      "label": ".inUseMessage()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 165,
+      "community_name": ".destroy",
+      "file_type": "code",
+      "norm_label": ".inusemessage()",
+      "source_file": "app/Http/Controllers/v1/BaseController.php",
+      "source_location": "L87"
+    },
+    {
+      "id": "app_http_controllers_v1_basecontroller_basecontroller_usage",
+      "label": ".usage()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 165,
+      "community_name": ".destroy",
+      "file_type": "code",
+      "norm_label": ".usage()",
+      "source_file": "app/Http/Controllers/v1/BaseController.php",
+      "source_location": "L229"
+    },
+    {
+      "id": "app_http_controllers_v1_menu_categorycontroller_categorycontroller_beforesave",
+      "label": ".beforeSave()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 166,
+      "community_name": "CategoryController",
+      "file_type": "code",
+      "norm_label": ".beforesave()",
+      "source_file": "app/Http/Controllers/v1/Menu/CategoryController.php",
+      "source_location": "L37"
+    },
+    {
+      "id": "app_http_controllers_v1_menu_categorycontroller_categorycontroller_inusemessage",
+      "label": ".inUseMessage()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 166,
+      "community_name": "CategoryController",
+      "file_type": "code",
+      "norm_label": ".inusemessage()",
+      "source_file": "app/Http/Controllers/v1/Menu/CategoryController.php",
+      "source_location": "L42"
+    },
+    {
+      "id": "app_http_controllers_v1_menu_categorycontroller_categorycontroller_storerules",
+      "label": ".storeRules()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 166,
+      "community_name": "CategoryController",
+      "file_type": "code",
+      "norm_label": ".storerules()",
+      "source_file": "app/Http/Controllers/v1/Menu/CategoryController.php",
+      "source_location": "L27"
+    },
+    {
+      "id": "app_http_controllers_v1_menu_categorycontroller_categorycontroller_updaterules",
+      "label": ".updateRules()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 166,
+      "community_name": "CategoryController",
+      "file_type": "code",
+      "norm_label": ".updaterules()",
+      "source_file": "app/Http/Controllers/v1/Menu/CategoryController.php",
+      "source_location": "L32"
+    },
+    {
+      "id": "tests_feature_uploadstest_upload",
+      "label": "upload()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 167,
+      "community_name": "UploadsTest.php",
+      "file_type": "code",
+      "norm_label": "upload()",
+      "source_file": "tests/Feature/UploadsTest.php",
+      "source_location": "L15"
     },
     {
       "id": "resources_js_lib_domain_aggregate",
@@ -4756,67 +4888,7 @@
       "source_location": "L17"
     },
     {
-      "id": "app_http_controllers_v1_menu_categorycontroller_categorycontroller_beforesave",
-      "label": ".beforeSave()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "Illuminate\\Database\\Eloquent\\Model",
-      "file_type": "code",
-      "norm_label": ".beforesave()",
-      "source_file": "app/Http/Controllers/v1/Menu/CategoryController.php",
-      "source_location": "L37"
-    },
-    {
-      "id": "app_http_controllers_v1_menu_categorycontroller_categorycontroller_inusemessage",
-      "label": ".inUseMessage()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "Illuminate\\Database\\Eloquent\\Model",
-      "file_type": "code",
-      "norm_label": ".inusemessage()",
-      "source_file": "app/Http/Controllers/v1/Menu/CategoryController.php",
-      "source_location": "L42"
-    },
-    {
-      "id": "app_http_controllers_v1_menu_categorycontroller_categorycontroller_storerules",
-      "label": ".storeRules()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "Illuminate\\Database\\Eloquent\\Model",
-      "file_type": "code",
-      "norm_label": ".storerules()",
-      "source_file": "app/Http/Controllers/v1/Menu/CategoryController.php",
-      "source_location": "L27"
-    },
-    {
-      "id": "app_http_controllers_v1_menu_categorycontroller_categorycontroller_updaterules",
-      "label": ".updateRules()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "Illuminate\\Database\\Eloquent\\Model",
-      "file_type": "code",
-      "norm_label": ".updaterules()",
-      "source_file": "app/Http/Controllers/v1/Menu/CategoryController.php",
-      "source_location": "L32"
-    },
-    {
-      "id": "app_http_controllers_v1_reservations_reservationcontroller_reservationcontroller_aftercreate",
-      "label": ".afterCreate()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 23,
-      "community_name": "Illuminate\\Database\\Eloquent\\Model",
-      "file_type": "code",
-      "norm_label": ".aftercreate()",
-      "source_file": "app/Http/Controllers/v1/Reservations/ReservationController.php",
-      "source_location": "L74"
-    },
-    {
-      "id": "app_http_controllers_v1_reservations_reservationcontroller_reservationcontroller_afterupdate",
+      "id": "app_http_controllers_v1_basecontroller_basecontroller_afterupdate",
       "label": ".afterUpdate()",
       "_callable": true,
       "_origin": "ast",
@@ -4824,20 +4896,44 @@
       "community_name": "Illuminate\\Database\\Eloquent\\Model",
       "file_type": "code",
       "norm_label": ".afterupdate()",
-      "source_file": "app/Http/Controllers/v1/Reservations/ReservationController.php",
+      "source_file": "app/Http/Controllers/v1/BaseController.php",
       "source_location": "L80"
     },
     {
-      "id": "app_http_controllers_v1_reservations_reservationcontroller_reservationcontroller_syncitems",
-      "label": ".syncItems()",
+      "id": "app_http_controllers_v1_orders_discountcontroller_discountcontroller_beforesave",
+      "label": ".beforeSave()",
       "_callable": true,
       "_origin": "ast",
       "community": 23,
       "community_name": "Illuminate\\Database\\Eloquent\\Model",
       "file_type": "code",
-      "norm_label": ".syncitems()",
-      "source_file": "app/Http/Controllers/v1/Reservations/ReservationController.php",
-      "source_location": "L195"
+      "norm_label": ".beforesave()",
+      "source_file": "app/Http/Controllers/v1/Orders/DiscountController.php",
+      "source_location": "L40"
+    },
+    {
+      "id": "app_http_controllers_v1_orders_discountcontroller_discountcontroller_storerules",
+      "label": ".storeRules()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "Illuminate\\Database\\Eloquent\\Model",
+      "file_type": "code",
+      "norm_label": ".storerules()",
+      "source_file": "app/Http/Controllers/v1/Orders/DiscountController.php",
+      "source_location": "L25"
+    },
+    {
+      "id": "app_http_controllers_v1_orders_discountcontroller_discountcontroller_updaterules",
+      "label": ".updateRules()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "Illuminate\\Database\\Eloquent\\Model",
+      "file_type": "code",
+      "norm_label": ".updaterules()",
+      "source_file": "app/Http/Controllers/v1/Orders/DiscountController.php",
+      "source_location": "L35"
     },
     {
       "id": "app_http_controllers_v1_tables_tablecontroller_tablecontroller_beforedelete",
@@ -4862,6 +4958,18 @@
       "norm_label": ".updaterules()",
       "source_file": "app/Http/Controllers/v1/Tables/TableController.php",
       "source_location": "L43"
+    },
+    {
+      "id": "app_models_role_role_users",
+      "label": ".users()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "Illuminate\\Database\\Eloquent\\Model",
+      "file_type": "code",
+      "norm_label": ".users()",
+      "source_file": "app/Models/Role.php",
+      "source_location": "L17"
     },
     {
       "id": "resources_js_components_reservations_reservationmodals_advsummary",
@@ -5188,114 +5296,6 @@
       "source_location": "L41"
     },
     {
-      "id": "app_http_controllers_v1_menu_foodcontroller_foodcontroller_aftercreate",
-      "label": ".afterCreate()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 30,
-      "community_name": "StoredFile",
-      "file_type": "code",
-      "norm_label": ".aftercreate()",
-      "source_file": "app/Http/Controllers/v1/Menu/FoodController.php",
-      "source_location": "L97"
-    },
-    {
-      "id": "app_http_controllers_v1_menu_foodcontroller_foodcontroller_afterupdate",
-      "label": ".afterUpdate()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 30,
-      "community_name": "StoredFile",
-      "file_type": "code",
-      "norm_label": ".afterupdate()",
-      "source_file": "app/Http/Controllers/v1/Menu/FoodController.php",
-      "source_location": "L102"
-    },
-    {
-      "id": "app_http_controllers_v1_menu_foodcontroller_foodcontroller_beforedelete",
-      "label": ".beforeDelete()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 30,
-      "community_name": "StoredFile",
-      "file_type": "code",
-      "norm_label": ".beforedelete()",
-      "source_file": "app/Http/Controllers/v1/Menu/FoodController.php",
-      "source_location": "L123"
-    },
-    {
-      "id": "app_http_controllers_v1_menu_foodcontroller_foodcontroller_beforesave",
-      "label": ".beforeSave()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 30,
-      "community_name": "StoredFile",
-      "file_type": "code",
-      "norm_label": ".beforesave()",
-      "source_file": "app/Http/Controllers/v1/Menu/FoodController.php",
-      "source_location": "L73"
-    },
-    {
-      "id": "app_http_controllers_v1_menu_foodcontroller_foodcontroller_cleanvariants",
-      "label": ".cleanVariants()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 30,
-      "community_name": "StoredFile",
-      "file_type": "code",
-      "norm_label": ".cleanvariants()",
-      "source_file": "app/Http/Controllers/v1/Menu/FoodController.php",
-      "source_location": "L108"
-    },
-    {
-      "id": "app_http_controllers_v1_menu_foodcontroller_foodcontroller_rules",
-      "label": ".rules()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 30,
-      "community_name": "StoredFile",
-      "file_type": "code",
-      "norm_label": ".rules()",
-      "source_file": "app/Http/Controllers/v1/Menu/FoodController.php",
-      "source_location": "L51"
-    },
-    {
-      "id": "app_http_controllers_v1_menu_foodcontroller_foodcontroller_storerules",
-      "label": ".storeRules()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 30,
-      "community_name": "StoredFile",
-      "file_type": "code",
-      "norm_label": ".storerules()",
-      "source_file": "app/Http/Controllers/v1/Menu/FoodController.php",
-      "source_location": "L41"
-    },
-    {
-      "id": "app_http_controllers_v1_menu_foodcontroller_foodcontroller_syncchildren",
-      "label": ".syncChildren()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 30,
-      "community_name": "StoredFile",
-      "file_type": "code",
-      "norm_label": ".syncchildren()",
-      "source_file": "app/Http/Controllers/v1/Menu/FoodController.php",
-      "source_location": "L128"
-    },
-    {
-      "id": "app_http_controllers_v1_menu_foodcontroller_foodcontroller_updaterules",
-      "label": ".updateRules()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 30,
-      "community_name": "StoredFile",
-      "file_type": "code",
-      "norm_label": ".updaterules()",
-      "source_file": "app/Http/Controllers/v1/Menu/FoodController.php",
-      "source_location": "L46"
-    },
-    {
       "id": "app_http_controllers_v1_orders_paymentmethodcontroller_paymentmethodcontroller_beforedelete",
       "label": ".beforeDelete()",
       "_callable": true,
@@ -5498,18 +5498,6 @@
       "norm_label": "storeuploadedfile()",
       "source_file": "app/Traits/HandlesFileUploads.php",
       "source_location": "L12"
-    },
-    {
-      "id": "tests_feature_uploadstest_upload",
-      "label": "upload()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 30,
-      "community_name": "StoredFile",
-      "file_type": "code",
-      "norm_label": "upload()",
-      "source_file": "tests/Feature/UploadsTest.php",
-      "source_location": "L15"
     },
     {
       "id": "resources_js_components_foods_lightbox_closegallery",
@@ -5889,7 +5877,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 39,
-      "community_name": "AppServiceProvider",
+      "community_name": "api.php",
       "file_type": "code",
       "norm_label": ".boot()",
       "source_file": "app/Providers/AppServiceProvider.php",
@@ -5901,7 +5889,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 39,
-      "community_name": "AppServiceProvider",
+      "community_name": "api.php",
       "file_type": "code",
       "norm_label": ".register()",
       "source_file": "app/Providers/AppServiceProvider.php",
@@ -6448,6 +6436,30 @@
       "source_location": "L34"
     },
     {
+      "id": "app_http_controllers_v1_reservations_reservationcontroller_reservationcontroller_aftercreate",
+      "label": ".afterCreate()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 53,
+      "community_name": "ReservationController",
+      "file_type": "code",
+      "norm_label": ".aftercreate()",
+      "source_file": "app/Http/Controllers/v1/Reservations/ReservationController.php",
+      "source_location": "L74"
+    },
+    {
+      "id": "app_http_controllers_v1_reservations_reservationcontroller_reservationcontroller_afterupdate",
+      "label": ".afterUpdate()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 53,
+      "community_name": "ReservationController",
+      "file_type": "code",
+      "norm_label": ".afterupdate()",
+      "source_file": "app/Http/Controllers/v1/Reservations/ReservationController.php",
+      "source_location": "L80"
+    },
+    {
       "id": "app_http_controllers_v1_reservations_reservationcontroller_reservationcontroller_beforesave",
       "label": ".beforeSave()",
       "_callable": true,
@@ -6544,6 +6556,18 @@
       "source_location": "L35"
     },
     {
+      "id": "app_http_controllers_v1_reservations_reservationcontroller_reservationcontroller_syncitems",
+      "label": ".syncItems()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 53,
+      "community_name": "ReservationController",
+      "file_type": "code",
+      "norm_label": ".syncitems()",
+      "source_file": "app/Http/Controllers/v1/Reservations/ReservationController.php",
+      "source_location": "L195"
+    },
+    {
       "id": "app_http_controllers_v1_reservations_reservationcontroller_reservationcontroller_validationmessages",
       "label": ".validationMessages()",
       "_callable": true,
@@ -6604,16 +6628,16 @@
       "source_location": "L37"
     },
     {
-      "id": "app_models_reservation_reservation_table",
-      "label": ".table()",
+      "id": "tests_feature_staffandreservationstest_booking",
+      "label": "booking()",
       "_callable": true,
       "_origin": "ast",
       "community": 53,
       "community_name": "ReservationController",
       "file_type": "code",
-      "norm_label": ".table()",
-      "source_file": "app/Models/Reservation.php",
-      "source_location": "L22"
+      "norm_label": "booking()",
+      "source_file": "tests/Feature/StaffAndReservationsTest.php",
+      "source_location": "L62"
     },
     {
       "id": "resources_js_api_service_client_cookie",
@@ -7468,18 +7492,6 @@
       "source_location": "L10"
     },
     {
-      "id": "app_http_resources_floorresource_floorresource_toarray",
-      "label": ".toArray()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 84,
-      "community_name": "Illuminate\\Http\\Resources\\Json\\JsonResource",
-      "file_type": "code",
-      "norm_label": ".toarray()",
-      "source_file": "app/Http/Resources/FloorResource.php",
-      "source_location": "L10"
-    },
-    {
       "id": "app_http_resources_platelineresource_platelineresource_toarray",
       "label": ".toArray()",
       "_callable": true,
@@ -7489,6 +7501,18 @@
       "file_type": "code",
       "norm_label": ".toarray()",
       "source_file": "app/Http/Resources/PlateLineResource.php",
+      "source_location": "L10"
+    },
+    {
+      "id": "app_http_resources_reservationresource_reservationresource_toarray",
+      "label": ".toArray()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 84,
+      "community_name": "Illuminate\\Http\\Resources\\Json\\JsonResource",
+      "file_type": "code",
+      "norm_label": ".toarray()",
+      "source_file": "app/Http/Resources/ReservationResource.php",
       "source_location": "L10"
     },
     {
@@ -7504,6 +7528,18 @@
       "source_location": "L10"
     },
     {
+      "id": "app_http_resources_tableresource_tableresource_toarray",
+      "label": ".toArray()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 84,
+      "community_name": "Illuminate\\Http\\Resources\\Json\\JsonResource",
+      "file_type": "code",
+      "norm_label": ".toarray()",
+      "source_file": "app/Http/Resources/TableResource.php",
+      "source_location": "L10"
+    },
+    {
       "id": "resources_js_api_service_admin_http_body",
       "label": "body()",
       "_callable": true,
@@ -7516,16 +7552,16 @@
       "source_location": "L22"
     },
     {
-      "id": "app_models_diningtable_diningtable_sessions",
-      "label": ".sessions()",
+      "id": "app_models_food_food_category",
+      "label": ".category()",
       "_callable": true,
       "_origin": "ast",
       "community": 9,
-      "community_name": "Illuminate\\Database\\Eloquent\\Relations\\HasMany",
+      "community_name": "Food",
       "file_type": "code",
-      "norm_label": ".sessions()",
-      "source_file": "app/Models/DiningTable.php",
-      "source_location": "L23"
+      "norm_label": ".category()",
+      "source_file": "app/Models/Food.php",
+      "source_location": "L17"
     },
     {
       "id": "app_models_food_food_itemname",
@@ -7533,7 +7569,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 9,
-      "community_name": "Illuminate\\Database\\Eloquent\\Relations\\HasMany",
+      "community_name": "Food",
       "file_type": "code",
       "norm_label": ".itemname()",
       "source_file": "app/Models/Food.php",
@@ -7545,7 +7581,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 9,
-      "community_name": "Illuminate\\Database\\Eloquent\\Relations\\HasMany",
+      "community_name": "Food",
       "file_type": "code",
       "norm_label": ".photos()",
       "source_file": "app/Models/Food.php",
@@ -7557,7 +7593,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 9,
-      "community_name": "Illuminate\\Database\\Eloquent\\Relations\\HasMany",
+      "community_name": "Food",
       "file_type": "code",
       "norm_label": ".unitprice()",
       "source_file": "app/Models/Food.php",
@@ -7569,46 +7605,10 @@
       "_callable": true,
       "_origin": "ast",
       "community": 9,
-      "community_name": "Illuminate\\Database\\Eloquent\\Relations\\HasMany",
+      "community_name": "Food",
       "file_type": "code",
       "norm_label": ".variants()",
       "source_file": "app/Models/Food.php",
-      "source_location": "L22"
-    },
-    {
-      "id": "app_models_paymentmethod_paymentmethod_billrequests",
-      "label": ".billRequests()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "Illuminate\\Database\\Eloquent\\Relations\\HasMany",
-      "file_type": "code",
-      "norm_label": ".billrequests()",
-      "source_file": "app/Models/PaymentMethod.php",
-      "source_location": "L28"
-    },
-    {
-      "id": "app_models_paymentmethod_paymentmethod_orders",
-      "label": ".orders()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "Illuminate\\Database\\Eloquent\\Relations\\HasMany",
-      "file_type": "code",
-      "norm_label": ".orders()",
-      "source_file": "app/Models/PaymentMethod.php",
-      "source_location": "L17"
-    },
-    {
-      "id": "app_models_paymentmethod_paymentmethod_payments",
-      "label": ".payments()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "Illuminate\\Database\\Eloquent\\Relations\\HasMany",
-      "file_type": "code",
-      "norm_label": ".payments()",
-      "source_file": "app/Models/PaymentMethod.php",
       "source_location": "L22"
     },
     {
@@ -7617,7 +7617,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 9,
-      "community_name": "Illuminate\\Database\\Eloquent\\Relations\\HasMany",
+      "community_name": "Food",
       "file_type": "code",
       "norm_label": ".builditems()",
       "source_file": "app/Support/OrderService.php",
@@ -7629,7 +7629,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 9,
-      "community_name": "Illuminate\\Database\\Eloquent\\Relations\\HasMany",
+      "community_name": "Food",
       "file_type": "code",
       "norm_label": "add()",
       "source_file": "tests/Support/OrderingHelpers.php",
@@ -7641,7 +7641,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 9,
-      "community_name": "Illuminate\\Database\\Eloquent\\Relations\\HasMany",
+      "community_name": "Food",
       "file_type": "code",
       "norm_label": "url()",
       "source_file": "tests/Support/OrderingHelpers.php",
@@ -7910,17 +7910,6 @@
       "norm_label": "modalicon()",
       "source_file": "resources/js/components/ModalHost.tsx",
       "source_location": "L22"
-    },
-    {
-      "id": "app_models_discount",
-      "label": "Discount.php",
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "Order",
-      "file_type": "code",
-      "norm_label": "discount.php",
-      "source_file": "app/Models/Discount.php",
-      "source_location": "L1"
     },
     {
       "id": "app_support_money",
@@ -8649,169 +8638,26 @@
       "source_location": "L113"
     },
     {
-      "id": "app_exceptions_apiexception",
-      "label": "ApiException.php",
+      "id": "app_models_paymentmethod",
+      "label": "PaymentMethod.php",
       "_origin": "ast",
       "community": 105,
-      "community_name": "ApiException",
+      "community_name": "Illuminate\\Database\\Eloquent\\Relations\\HasMany",
       "file_type": "code",
-      "norm_label": "apiexception.php",
-      "source_file": "app/Exceptions/ApiException.php",
+      "norm_label": "paymentmethod.php",
+      "source_file": "app/Models/PaymentMethod.php",
       "source_location": "L1"
     },
     {
-      "id": "app_http_controllers_v1_basecontroller",
-      "label": "BaseController.php",
+      "id": "illuminate_database_eloquent_relations_hasmany",
+      "label": "Illuminate\\Database\\Eloquent\\Relations\\HasMany",
       "_origin": "ast",
       "community": 105,
-      "community_name": "ApiException",
+      "community_name": "Illuminate\\Database\\Eloquent\\Relations\\HasMany",
       "file_type": "code",
-      "norm_label": "basecontroller.php",
-      "source_file": "app/Http/Controllers/v1/BaseController.php",
-      "source_location": "L1"
-    },
-    {
-      "id": "app_http_controllers_v1_menu_foodcontroller",
-      "label": "FoodController.php",
-      "_origin": "ast",
-      "community": 105,
-      "community_name": "ApiException",
-      "file_type": "code",
-      "norm_label": "foodcontroller.php",
-      "source_file": "app/Http/Controllers/v1/Menu/FoodController.php",
-      "source_location": "L1"
-    },
-    {
-      "id": "app_http_controllers_v1_orders_ordercontroller",
-      "label": "OrderController.php",
-      "_origin": "ast",
-      "community": 105,
-      "community_name": "ApiException",
-      "file_type": "code",
-      "norm_label": "ordercontroller.php",
-      "source_file": "app/Http/Controllers/v1/Orders/OrderController.php",
-      "source_location": "L1"
-    },
-    {
-      "id": "app_http_controllers_v1_reservations_reservationcontroller",
-      "label": "ReservationController.php",
-      "_origin": "ast",
-      "community": 105,
-      "community_name": "ApiException",
-      "file_type": "code",
-      "norm_label": "reservationcontroller.php",
-      "source_file": "app/Http/Controllers/v1/Reservations/ReservationController.php",
-      "source_location": "L1"
-    },
-    {
-      "id": "app_http_controllers_v1_staff_rolecontroller",
-      "label": "RoleController.php",
-      "_origin": "ast",
-      "community": 105,
-      "community_name": "ApiException",
-      "file_type": "code",
-      "norm_label": "rolecontroller.php",
-      "source_file": "app/Http/Controllers/v1/Staff/RoleController.php",
-      "source_location": "L1"
-    },
-    {
-      "id": "app_http_controllers_v1_tables_tablecontroller",
-      "label": "TableController.php",
-      "_origin": "ast",
-      "community": 105,
-      "community_name": "ApiException",
-      "file_type": "code",
-      "norm_label": "tablecontroller.php",
-      "source_file": "app/Http/Controllers/v1/Tables/TableController.php",
-      "source_location": "L1"
-    },
-    {
-      "id": "app_http_resources_reservationresource",
-      "label": "ReservationResource.php",
-      "_origin": "ast",
-      "community": 105,
-      "community_name": "ApiException",
-      "file_type": "code",
-      "norm_label": "reservationresource.php",
-      "source_file": "app/Http/Resources/ReservationResource.php",
-      "source_location": "L1"
-    },
-    {
-      "id": "app_http_resources_tableresource",
-      "label": "TableResource.php",
-      "_origin": "ast",
-      "community": 105,
-      "community_name": "ApiException",
-      "file_type": "code",
-      "norm_label": "tableresource.php",
-      "source_file": "app/Http/Resources/TableResource.php",
-      "source_location": "L1"
-    },
-    {
-      "id": "app_support_settlement",
-      "label": "Settlement.php",
-      "_origin": "ast",
-      "community": 105,
-      "community_name": "ApiException",
-      "file_type": "code",
-      "norm_label": "settlement.php",
-      "source_file": "app/Support/Settlement.php",
-      "source_location": "L1"
-    },
-    {
-      "id": "illuminate_support_facades_db",
-      "label": "Illuminate\\Support\\Facades\\DB",
-      "_origin": "ast",
-      "community": 105,
-      "community_name": "ApiException",
-      "file_type": "code",
-      "norm_label": "illuminate\\support\\facades\\db",
+      "norm_label": "illuminate\\database\\eloquent\\relations\\hasmany",
       "source_file": "",
       "source_location": ""
-    },
-    {
-      "id": "illuminate_support_facades_validator",
-      "label": "Illuminate\\Support\\Facades\\Validator",
-      "_origin": "ast",
-      "community": 105,
-      "community_name": "ApiException",
-      "file_type": "code",
-      "norm_label": "illuminate\\support\\facades\\validator",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "illuminate_validation_rule",
-      "label": "Illuminate\\Validation\\Rule",
-      "_origin": "ast",
-      "community": 105,
-      "community_name": "ApiException",
-      "file_type": "code",
-      "norm_label": "illuminate\\validation\\rule",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "runtimeexception",
-      "label": "RuntimeException",
-      "_origin": "ast",
-      "community": 105,
-      "community_name": "ApiException",
-      "file_type": "code",
-      "norm_label": "runtimeexception",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "app_http_controllers_public_guestcontroller",
-      "label": "GuestController.php",
-      "_origin": "ast",
-      "community": 106,
-      "community_name": "Illuminate\\Http\\Request",
-      "file_type": "code",
-      "norm_label": "guestcontroller.php",
-      "source_file": "app/Http/Controllers/Public/GuestController.php",
-      "source_location": "L1"
     },
     {
       "id": "illuminate_http_request",
@@ -9756,17 +9602,6 @@
       "source_location": "L1"
     },
     {
-      "id": "app_http_controllers_v1_orders_discountcontroller",
-      "label": "DiscountController.php",
-      "_origin": "ast",
-      "community": 14,
-      "community_name": "DiscountController.php",
-      "file_type": "code",
-      "norm_label": "discountcontroller.php",
-      "source_file": "app/Http/Controllers/v1/Orders/DiscountController.php",
-      "source_location": "L1"
-    },
-    {
       "id": "resources_js_lib_dashboardhelpers",
       "label": "dashboardHelpers.ts",
       "_origin": "ast",
@@ -9943,15 +9778,81 @@
       "source_location": "L1"
     },
     {
+      "id": "app_exceptions_apiexception",
+      "label": "ApiException.php",
+      "_origin": "ast",
+      "community": 155,
+      "community_name": "ApiException",
+      "file_type": "code",
+      "norm_label": "apiexception.php",
+      "source_file": "app/Exceptions/ApiException.php",
+      "source_location": "L1"
+    },
+    {
+      "id": "app_http_controllers_public_guestcontroller",
+      "label": "GuestController.php",
+      "_origin": "ast",
+      "community": 155,
+      "community_name": "ApiException",
+      "file_type": "code",
+      "norm_label": "guestcontroller.php",
+      "source_file": "app/Http/Controllers/Public/GuestController.php",
+      "source_location": "L1"
+    },
+    {
+      "id": "app_http_controllers_v1_orders_ordercontroller",
+      "label": "OrderController.php",
+      "_origin": "ast",
+      "community": 155,
+      "community_name": "ApiException",
+      "file_type": "code",
+      "norm_label": "ordercontroller.php",
+      "source_file": "app/Http/Controllers/v1/Orders/OrderController.php",
+      "source_location": "L1"
+    },
+    {
       "id": "app_http_resources_orderroundresource",
       "label": "OrderRoundResource.php",
       "_origin": "ast",
       "community": 155,
-      "community_name": "Settlement",
+      "community_name": "ApiException",
       "file_type": "code",
       "norm_label": "orderroundresource.php",
       "source_file": "app/Http/Resources/OrderRoundResource.php",
       "source_location": "L1"
+    },
+    {
+      "id": "app_support_settlement",
+      "label": "Settlement.php",
+      "_origin": "ast",
+      "community": 155,
+      "community_name": "ApiException",
+      "file_type": "code",
+      "norm_label": "settlement.php",
+      "source_file": "app/Support/Settlement.php",
+      "source_location": "L1"
+    },
+    {
+      "id": "illuminate_support_facades_db",
+      "label": "Illuminate\\Support\\Facades\\DB",
+      "_origin": "ast",
+      "community": 155,
+      "community_name": "ApiException",
+      "file_type": "code",
+      "norm_label": "illuminate\\support\\facades\\db",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "runtimeexception",
+      "label": "RuntimeException",
+      "_origin": "ast",
+      "community": 155,
+      "community_name": "ApiException",
+      "file_type": "code",
+      "norm_label": "runtimeexception",
+      "source_file": "",
+      "source_location": ""
     },
     {
       "id": "app_http_controllers_v1_tables_floorcontroller",
@@ -9962,6 +9863,17 @@
       "file_type": "code",
       "norm_label": "floorcontroller.php",
       "source_file": "app/Http/Controllers/v1/Tables/FloorController.php",
+      "source_location": "L1"
+    },
+    {
+      "id": "app_http_resources_floorresource",
+      "label": "FloorResource.php",
+      "_origin": "ast",
+      "community": 156,
+      "community_name": "FloorController",
+      "file_type": "code",
+      "norm_label": "floorresource.php",
+      "source_file": "app/Http/Resources/FloorResource.php",
       "source_location": "L1"
     },
     {
@@ -9976,14 +9888,14 @@
       "source_location": "L1"
     },
     {
-      "id": "app_models_role",
-      "label": "Role.php",
+      "id": "app_models_discount",
+      "label": "Discount.php",
       "_origin": "ast",
       "community": 157,
       "community_name": "RestaurantSeeder.php",
       "file_type": "code",
-      "norm_label": "role.php",
-      "source_file": "app/Models/Role.php",
+      "norm_label": "discount.php",
+      "source_file": "app/Models/Discount.php",
       "source_location": "L1"
     },
     {
@@ -10020,17 +9932,6 @@
       "source_location": ""
     },
     {
-      "id": "tests_feature_staffandreservationstest",
-      "label": "StaffAndReservationsTest.php",
-      "_origin": "ast",
-      "community": 157,
-      "community_name": "RestaurantSeeder.php",
-      "file_type": "code",
-      "norm_label": "staffandreservationstest.php",
-      "source_file": "tests/Feature/StaffAndReservationsTest.php",
-      "source_location": "L1"
-    },
-    {
       "id": "app_models_diningtable",
       "label": "DiningTable.php",
       "_origin": "ast",
@@ -10039,6 +9940,17 @@
       "file_type": "code",
       "norm_label": "diningtable.php",
       "source_file": "app/Models/DiningTable.php",
+      "source_location": "L1"
+    },
+    {
+      "id": "app_models_food",
+      "label": "Food.php",
+      "_origin": "ast",
+      "community": 158,
+      "community_name": "Illuminate\\Database\\Eloquent\\Relations\\BelongsTo",
+      "file_type": "code",
+      "norm_label": "food.php",
+      "source_file": "app/Models/Food.php",
       "source_location": "L1"
     },
     {
@@ -10095,6 +10007,17 @@
       "norm_label": "illuminate\\database\\eloquent\\relations\\hasone",
       "source_file": "",
       "source_location": ""
+    },
+    {
+      "id": "app_http_controllers_v1_tables_tablecontroller",
+      "label": "TableController.php",
+      "_origin": "ast",
+      "community": 159,
+      "community_name": "DiningTable",
+      "file_type": "code",
+      "norm_label": "tablecontroller.php",
+      "source_file": "app/Http/Controllers/v1/Tables/TableController.php",
+      "source_location": "L1"
     },
     {
       "id": "app_http_controllers_v1_kitchen_kitchencontroller",
@@ -10163,6 +10086,17 @@
       "source_location": "L1"
     },
     {
+      "id": "app_http_controllers_v1_basecontroller",
+      "label": "BaseController.php",
+      "_origin": "ast",
+      "community": 160,
+      "community_name": "Illuminate\\Http\\JsonResponse",
+      "file_type": "code",
+      "norm_label": "basecontroller.php",
+      "source_file": "app/Http/Controllers/v1/BaseController.php",
+      "source_location": "L1"
+    },
+    {
       "id": "app_http_controllers_v1_files_uploadcontroller",
       "label": "UploadController.php",
       "_origin": "ast",
@@ -10207,15 +10141,15 @@
       "source_location": ""
     },
     {
-      "id": "routes_api",
-      "label": "api.php",
+      "id": "illuminate_support_facades_validator",
+      "label": "Illuminate\\Support\\Facades\\Validator",
       "_origin": "ast",
       "community": 160,
       "community_name": "Illuminate\\Http\\JsonResponse",
       "file_type": "code",
-      "norm_label": "api.php",
-      "source_file": "routes/api.php",
-      "source_location": "L1"
+      "norm_label": "illuminate\\support\\facades\\validator",
+      "source_file": "",
+      "source_location": ""
     },
     {
       "id": "resources_js_api_service_uploads_mock",
@@ -10282,6 +10216,39 @@
       "norm_label": "reservationshttp",
       "source_file": "resources/js/api-service/reservations/http.ts",
       "source_location": "L18"
+    },
+    {
+      "id": "illuminate_http_uploadedfile",
+      "label": "Illuminate\\Http\\UploadedFile",
+      "_origin": "ast",
+      "community": 167,
+      "community_name": "UploadsTest.php",
+      "file_type": "code",
+      "norm_label": "illuminate\\http\\uploadedfile",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "illuminate_support_facades_storage",
+      "label": "Illuminate\\Support\\Facades\\Storage",
+      "_origin": "ast",
+      "community": 167,
+      "community_name": "UploadsTest.php",
+      "file_type": "code",
+      "norm_label": "illuminate\\support\\facades\\storage",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "tests_feature_uploadstest",
+      "label": "UploadsTest.php",
+      "_origin": "ast",
+      "community": 167,
+      "community_name": "UploadsTest.php",
+      "file_type": "code",
+      "norm_label": "uploadstest.php",
+      "source_file": "tests/Feature/UploadsTest.php",
+      "source_location": "L1"
     },
     {
       "id": "tsconfig_node",
@@ -10468,7 +10435,7 @@
       "file_type": "code",
       "norm_label": "gstep_l",
       "source_file": "resources/js/lib/constants.ts",
-      "source_location": "L65"
+      "source_location": "L67"
     },
     {
       "id": "resources_js_lib_constants_gsteps",
@@ -10479,7 +10446,7 @@
       "file_type": "code",
       "norm_label": "gsteps",
       "source_file": "resources/js/lib/constants.ts",
-      "source_location": "L64"
+      "source_location": "L66"
     },
     {
       "id": "resources_js_lib_constants_kitchen",
@@ -10490,7 +10457,7 @@
       "file_type": "code",
       "norm_label": "kitchen",
       "source_file": "resources/js/lib/constants.ts",
-      "source_location": "L31"
+      "source_location": "L33"
     },
     {
       "id": "resources_js_lib_constants_nav",
@@ -10512,7 +10479,7 @@
       "file_type": "code",
       "norm_label": "ostat",
       "source_file": "resources/js/lib/constants.ts",
-      "source_location": "L38"
+      "source_location": "L40"
     },
     {
       "id": "resources_js_lib_constants_tags",
@@ -10523,7 +10490,7 @@
       "file_type": "code",
       "norm_label": "tags",
       "source_file": "resources/js/lib/constants.ts",
-      "source_location": "L89"
+      "source_location": "L91"
     },
     {
       "id": "resources_js_lib_constants_to",
@@ -10534,7 +10501,7 @@
       "file_type": "code",
       "norm_label": "to",
       "source_file": "resources/js/lib/constants.ts",
-      "source_location": "L71"
+      "source_location": "L73"
     },
     {
       "id": "resources_js_lib_constants_to_ostat",
@@ -10545,7 +10512,7 @@
       "file_type": "code",
       "norm_label": "to_ostat",
       "source_file": "resources/js/lib/constants.ts",
-      "source_location": "L72"
+      "source_location": "L74"
     },
     {
       "id": "resources_js_lib_constants_to_step_l",
@@ -10556,7 +10523,7 @@
       "file_type": "code",
       "norm_label": "to_step_l",
       "source_file": "resources/js/lib/constants.ts",
-      "source_location": "L88"
+      "source_location": "L90"
     },
     {
       "id": "resources_js_lib_constants_to_steps",
@@ -10567,7 +10534,7 @@
       "file_type": "code",
       "norm_label": "to_steps",
       "source_file": "resources/js/lib/constants.ts",
-      "source_location": "L87"
+      "source_location": "L89"
     },
     {
       "id": "resources_js_lib_constants_tstat",
@@ -10579,6 +10546,17 @@
       "norm_label": "tstat",
       "source_file": "resources/js/lib/constants.ts",
       "source_location": "L21"
+    },
+    {
+      "id": "resources_js_lib_constants_vat_rate",
+      "label": "VAT_RATE",
+      "_origin": "ast",
+      "community": 18,
+      "community_name": "constants.ts",
+      "file_type": "code",
+      "norm_label": "vat_rate",
+      "source_file": "resources/js/lib/constants.ts",
+      "source_location": "L32"
     },
     {
       "id": "resources_js_lib_domain",
@@ -10834,14 +10812,14 @@
       "source_location": "L1"
     },
     {
-      "id": "app_http_controllers_v1_menu_categorycontroller",
-      "label": "CategoryController.php",
+      "id": "app_http_controllers_v1_staff_rolecontroller",
+      "label": "RoleController.php",
       "_origin": "ast",
       "community": 23,
       "community_name": "Illuminate\\Database\\Eloquent\\Model",
       "file_type": "code",
-      "norm_label": "categorycontroller.php",
-      "source_file": "app/Http/Controllers/v1/Menu/CategoryController.php",
+      "norm_label": "rolecontroller.php",
+      "source_file": "app/Http/Controllers/v1/Staff/RoleController.php",
       "source_location": "L1"
     },
     {
@@ -10908,6 +10886,17 @@
       "file_type": "code",
       "norm_label": "reservationitem.php",
       "source_file": "app/Models/ReservationItem.php",
+      "source_location": "L1"
+    },
+    {
+      "id": "app_models_role",
+      "label": "Role.php",
+      "_origin": "ast",
+      "community": 23,
+      "community_name": "Illuminate\\Database\\Eloquent\\Model",
+      "file_type": "code",
+      "norm_label": "role.php",
+      "source_file": "app/Models/Role.php",
       "source_location": "L1"
     },
     {
@@ -11340,6 +11329,17 @@
       "source_location": "L1"
     },
     {
+      "id": "app_http_controllers_v1_menu_foodcontroller",
+      "label": "FoodController.php",
+      "_origin": "ast",
+      "community": 30,
+      "community_name": "StoredFile",
+      "file_type": "code",
+      "norm_label": "foodcontroller.php",
+      "source_file": "app/Http/Controllers/v1/Menu/FoodController.php",
+      "source_location": "L1"
+    },
+    {
       "id": "app_http_controllers_v1_orders_paymentmethodcontroller",
       "label": "PaymentMethodController.php",
       "_origin": "ast",
@@ -11395,17 +11395,6 @@
       "source_location": "L1"
     },
     {
-      "id": "illuminate_http_uploadedfile",
-      "label": "Illuminate\\Http\\UploadedFile",
-      "_origin": "ast",
-      "community": 30,
-      "community_name": "StoredFile",
-      "file_type": "code",
-      "norm_label": "illuminate\\http\\uploadedfile",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
       "id": "illuminate_support_facades_cache",
       "label": "Illuminate\\Support\\Facades\\Cache",
       "_origin": "ast",
@@ -11413,17 +11402,6 @@
       "community_name": "StoredFile",
       "file_type": "code",
       "norm_label": "illuminate\\support\\facades\\cache",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "illuminate_support_facades_storage",
-      "label": "Illuminate\\Support\\Facades\\Storage",
-      "_origin": "ast",
-      "community": 30,
-      "community_name": "StoredFile",
-      "file_type": "code",
-      "norm_label": "illuminate\\support\\facades\\storage",
       "source_file": "",
       "source_location": ""
     },
@@ -11437,17 +11415,6 @@
       "norm_label": "self",
       "source_file": "",
       "source_location": ""
-    },
-    {
-      "id": "tests_feature_uploadstest",
-      "label": "UploadsTest.php",
-      "_origin": "ast",
-      "community": 30,
-      "community_name": "StoredFile",
-      "file_type": "code",
-      "norm_label": "uploadstest.php",
-      "source_file": "tests/Feature/UploadsTest.php",
-      "source_location": "L1"
     },
     {
       "id": "composer_require_dev",
@@ -11916,7 +11883,7 @@
       "label": "AppServiceProvider.php",
       "_origin": "ast",
       "community": 39,
-      "community_name": "AppServiceProvider",
+      "community_name": "api.php",
       "file_type": "code",
       "norm_label": "appserviceprovider.php",
       "source_file": "app/Providers/AppServiceProvider.php",
@@ -11927,7 +11894,7 @@
       "label": "providers.php",
       "_origin": "ast",
       "community": 39,
-      "community_name": "AppServiceProvider",
+      "community_name": "api.php",
       "file_type": "code",
       "norm_label": "providers.php",
       "source_file": "bootstrap/providers.php",
@@ -11938,7 +11905,7 @@
       "label": "Illuminate\\Support\\Facades\\Route",
       "_origin": "ast",
       "community": 39,
-      "community_name": "AppServiceProvider",
+      "community_name": "api.php",
       "file_type": "code",
       "norm_label": "illuminate\\support\\facades\\route",
       "source_file": "",
@@ -11949,18 +11916,29 @@
       "label": "Illuminate\\Support\\ServiceProvider",
       "_origin": "ast",
       "community": 39,
-      "community_name": "AppServiceProvider",
+      "community_name": "api.php",
       "file_type": "code",
       "norm_label": "illuminate\\support\\serviceprovider",
       "source_file": "",
       "source_location": ""
     },
     {
+      "id": "routes_api",
+      "label": "api.php",
+      "_origin": "ast",
+      "community": 39,
+      "community_name": "api.php",
+      "file_type": "code",
+      "norm_label": "api.php",
+      "source_file": "routes/api.php",
+      "source_location": "L1"
+    },
+    {
       "id": "routes_web",
       "label": "web.php",
       "_origin": "ast",
       "community": 39,
-      "community_name": "AppServiceProvider",
+      "community_name": "api.php",
       "file_type": "code",
       "norm_label": "web.php",
       "source_file": "routes/web.php",
@@ -12977,6 +12955,17 @@
       "norm_label": "carbon\\carbon",
       "source_file": "",
       "source_location": ""
+    },
+    {
+      "id": "tests_feature_staffandreservationstest",
+      "label": "StaffAndReservationsTest.php",
+      "_origin": "ast",
+      "community": 53,
+      "community_name": "ReservationController",
+      "file_type": "code",
+      "norm_label": "staffandreservationstest.php",
+      "source_file": "tests/Feature/StaffAndReservationsTest.php",
+      "source_location": "L1"
     },
     {
       "id": "docs_reusable_components_in_all_projects_11_1_what_lss_v3_does_reported",
@@ -14635,6 +14624,39 @@
       "source_location": "L6"
     },
     {
+      "id": "app_http_controllers_v1_menu_categorycontroller",
+      "label": "CategoryController.php",
+      "_origin": "ast",
+      "community": 84,
+      "community_name": "Illuminate\\Http\\Resources\\Json\\JsonResource",
+      "file_type": "code",
+      "norm_label": "categorycontroller.php",
+      "source_file": "app/Http/Controllers/v1/Menu/CategoryController.php",
+      "source_location": "L1"
+    },
+    {
+      "id": "app_http_controllers_v1_orders_discountcontroller",
+      "label": "DiscountController.php",
+      "_origin": "ast",
+      "community": 84,
+      "community_name": "Illuminate\\Http\\Resources\\Json\\JsonResource",
+      "file_type": "code",
+      "norm_label": "discountcontroller.php",
+      "source_file": "app/Http/Controllers/v1/Orders/DiscountController.php",
+      "source_location": "L1"
+    },
+    {
+      "id": "app_http_controllers_v1_reservations_reservationcontroller",
+      "label": "ReservationController.php",
+      "_origin": "ast",
+      "community": 84,
+      "community_name": "Illuminate\\Http\\Resources\\Json\\JsonResource",
+      "file_type": "code",
+      "norm_label": "reservationcontroller.php",
+      "source_file": "app/Http/Controllers/v1/Reservations/ReservationController.php",
+      "source_location": "L1"
+    },
+    {
       "id": "app_http_resources_categoryresource",
       "label": "CategoryResource.php",
       "_origin": "ast",
@@ -14657,17 +14679,6 @@
       "source_location": "L1"
     },
     {
-      "id": "app_http_resources_floorresource",
-      "label": "FloorResource.php",
-      "_origin": "ast",
-      "community": 84,
-      "community_name": "Illuminate\\Http\\Resources\\Json\\JsonResource",
-      "file_type": "code",
-      "norm_label": "floorresource.php",
-      "source_file": "app/Http/Resources/FloorResource.php",
-      "source_location": "L1"
-    },
-    {
       "id": "app_http_resources_platelineresource",
       "label": "PlateLineResource.php",
       "_origin": "ast",
@@ -14676,6 +14687,17 @@
       "file_type": "code",
       "norm_label": "platelineresource.php",
       "source_file": "app/Http/Resources/PlateLineResource.php",
+      "source_location": "L1"
+    },
+    {
+      "id": "app_http_resources_reservationresource",
+      "label": "ReservationResource.php",
+      "_origin": "ast",
+      "community": 84,
+      "community_name": "Illuminate\\Http\\Resources\\Json\\JsonResource",
+      "file_type": "code",
+      "norm_label": "reservationresource.php",
+      "source_file": "app/Http/Resources/ReservationResource.php",
       "source_location": "L1"
     },
     {
@@ -14690,6 +14712,17 @@
       "source_location": "L1"
     },
     {
+      "id": "app_http_resources_tableresource",
+      "label": "TableResource.php",
+      "_origin": "ast",
+      "community": 84,
+      "community_name": "Illuminate\\Http\\Resources\\Json\\JsonResource",
+      "file_type": "code",
+      "norm_label": "tableresource.php",
+      "source_file": "app/Http/Resources/TableResource.php",
+      "source_location": "L1"
+    },
+    {
       "id": "illuminate_http_resources_json_jsonresource",
       "label": "Illuminate\\Http\\Resources\\Json\\JsonResource",
       "_origin": "ast",
@@ -14697,6 +14730,17 @@
       "community_name": "Illuminate\\Http\\Resources\\Json\\JsonResource",
       "file_type": "code",
       "norm_label": "illuminate\\http\\resources\\json\\jsonresource",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "illuminate_validation_rule",
+      "label": "Illuminate\\Validation\\Rule",
+      "_origin": "ast",
+      "community": 84,
+      "community_name": "Illuminate\\Http\\Resources\\Json\\JsonResource",
+      "file_type": "code",
+      "norm_label": "illuminate\\validation\\rule",
       "source_file": "",
       "source_location": ""
     },
@@ -14934,44 +14978,11 @@
       "source_location": "L10"
     },
     {
-      "id": "app_models_food",
-      "label": "Food.php",
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "Illuminate\\Database\\Eloquent\\Relations\\HasMany",
-      "file_type": "code",
-      "norm_label": "food.php",
-      "source_file": "app/Models/Food.php",
-      "source_location": "L1"
-    },
-    {
-      "id": "app_models_paymentmethod",
-      "label": "PaymentMethod.php",
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "Illuminate\\Database\\Eloquent\\Relations\\HasMany",
-      "file_type": "code",
-      "norm_label": "paymentmethod.php",
-      "source_file": "app/Models/PaymentMethod.php",
-      "source_location": "L1"
-    },
-    {
-      "id": "illuminate_database_eloquent_relations_hasmany",
-      "label": "Illuminate\\Database\\Eloquent\\Relations\\HasMany",
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "Illuminate\\Database\\Eloquent\\Relations\\HasMany",
-      "file_type": "code",
-      "norm_label": "illuminate\\database\\eloquent\\relations\\hasmany",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
       "id": "tests_feature_orderingflowtest",
       "label": "OrderingFlowTest.php",
       "_origin": "ast",
       "community": 9,
-      "community_name": "Illuminate\\Database\\Eloquent\\Relations\\HasMany",
+      "community_name": "Food",
       "file_type": "code",
       "norm_label": "orderingflowtest.php",
       "source_file": "tests/Feature/OrderingFlowTest.php",
@@ -14982,7 +14993,7 @@
       "label": "OrderingHelpers.php",
       "_origin": "ast",
       "community": 9,
-      "community_name": "Illuminate\\Database\\Eloquent\\Relations\\HasMany",
+      "community_name": "Food",
       "file_type": "code",
       "norm_label": "orderinghelpers.php",
       "source_file": "tests/Support/OrderingHelpers.php",
@@ -17434,7 +17445,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "resources/js/components/orders/PayModals.tsx",
-      "source_location": "L239",
+      "source_location": "L240",
       "weight": 1.0
     },
     {
@@ -17446,7 +17457,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "resources/js/components/orders/PayModals.tsx",
-      "source_location": "L241",
+      "source_location": "L242",
       "weight": 1.0
     },
     {
@@ -17458,7 +17469,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "resources/js/components/orders/PayModals.tsx",
-      "source_location": "L248",
+      "source_location": "L249",
       "weight": 1.0
     },
     {
@@ -17470,7 +17481,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "resources/js/components/orders/PayModals.tsx",
-      "source_location": "L369",
+      "source_location": "L370",
       "weight": 1.0
     },
     {
@@ -17482,7 +17493,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "resources/js/components/orders/PayModals.tsx",
-      "source_location": "L424",
+      "source_location": "L431",
       "weight": 1.0
     },
     {
@@ -25210,7 +25221,7 @@
       "confidence_score": 1.0,
       "context": "type",
       "source_file": "resources/js/lib/constants.ts",
-      "source_location": "L33",
+      "source_location": "L35",
       "weight": 1.0
     },
     {
@@ -29544,7 +29555,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "resources/js/components/BillPrintHost.tsx",
-      "source_location": "L12",
+      "source_location": "L13",
       "weight": 1.0
     },
     {
@@ -31232,18 +31243,18 @@
     },
     {
       "source": "resources_js_lib_constants",
-      "target": "resources_js_lib_constants_kitchen",
+      "target": "resources_js_lib_constants_vat_rate",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "resources/js/lib/constants.ts",
-      "source_location": "L31",
+      "source_location": "L32",
       "weight": 1.0
     },
     {
       "source": "resources_js_lib_constants",
-      "target": "resources_js_lib_constants_orderstatusmeta",
+      "target": "resources_js_lib_constants_kitchen",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -31254,13 +31265,13 @@
     },
     {
       "source": "resources_js_lib_constants",
-      "target": "resources_js_lib_constants_ostat",
+      "target": "resources_js_lib_constants_orderstatusmeta",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "resources/js/lib/constants.ts",
-      "source_location": "L38",
+      "source_location": "L35",
       "weight": 1.0
     },
     {
@@ -31276,13 +31287,24 @@
     },
     {
       "source": "resources_js_lib_constants",
+      "target": "resources_js_lib_constants_ostat",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "resources/js/lib/constants.ts",
+      "source_location": "L40",
+      "weight": 1.0
+    },
+    {
+      "source": "resources_js_lib_constants",
       "target": "resources_js_lib_constants_gsteps",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "resources/js/lib/constants.ts",
-      "source_location": "L64",
+      "source_location": "L66",
       "weight": 1.0
     },
     {
@@ -31293,7 +31315,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "resources/js/lib/constants.ts",
-      "source_location": "L65",
+      "source_location": "L67",
       "weight": 1.0
     },
     {
@@ -31304,7 +31326,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "resources/js/lib/constants.ts",
-      "source_location": "L71",
+      "source_location": "L73",
       "weight": 1.0
     },
     {
@@ -31315,7 +31337,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "resources/js/lib/constants.ts",
-      "source_location": "L72",
+      "source_location": "L74",
       "weight": 1.0
     },
     {
@@ -31326,7 +31348,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "resources/js/lib/constants.ts",
-      "source_location": "L87",
+      "source_location": "L89",
       "weight": 1.0
     },
     {
@@ -31337,7 +31359,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "resources/js/lib/constants.ts",
-      "source_location": "L88",
+      "source_location": "L90",
       "weight": 1.0
     },
     {
@@ -31348,7 +31370,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "resources/js/lib/constants.ts",
-      "source_location": "L89",
+      "source_location": "L91",
       "weight": 1.0
     },
     {
@@ -36766,5 +36788,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "b8ee099042e3e923aaa4d56be93493518a9a0ec8"
+  "built_at_commit": "7767d5aaebccf3d59d272e610270f8020add03aa"
 }

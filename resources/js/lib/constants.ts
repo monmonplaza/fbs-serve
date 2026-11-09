@@ -28,6 +28,8 @@ export const TSTAT: Record<TableStatus, StatusMeta> = {
 };
 
 /** Statuses the kitchen is still working on. */
+/** Philippine VAT. Menu prices already include it; the bill shows the VAT part. */
+export const VAT_RATE = 0.12;
 export const KITCHEN: OrderStatus[] = ["queued", "cooking", "plating", "completed"];
 
 export interface OrderStatusMeta extends StatusMeta {

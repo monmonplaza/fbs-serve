@@ -236,6 +236,7 @@ export function HandoverModal({ id }: { id: string }) {
 
 /** One order or a whole table bill. A served dine-in bill can be paid right here. */
 export function OrderModal({ id, solo = false }: { id: string; solo?: boolean }) {
+    const allMethods = usePayments().data;
     const { o, grp: bill } = useBill(id);
     const tables = useTables().data;
     const methods = useMethods(true);
@@ -414,7 +415,13 @@ export function OrderModal({ id, solo = false }: { id: string; solo?: boolean })
                 {grp.every((x) => x.status === "paid") ? (
                     <button
                         className="btn btn-outline"
-                        onClick={() => printBill({ orders: grp, discount: o.discount ?? null })}
+                        onClick={() =>
+                            printBill({
+                                orders: grp,
+                                discount: o.discount ?? null,
+                                payWith: allMethods.find((m) => m.id === o.payment && m.qr) ?? null,
+                            })
+                        }
                     >
                         <Icon name="receipt" size={20} />
                         Print receipt
