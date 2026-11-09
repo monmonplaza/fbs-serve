@@ -30,6 +30,10 @@ export const reservationsHttp = {
         unwrap<Reservation>(await http.patch(`/reservations/${id}/cancel`, { reason })),
     noShow: async (id: string) => unwrap<Reservation>(await http.patch(`/reservations/${id}/no-show`)),
     restore: async (id: string) => unwrap<Reservation>(await http.patch(`/reservations/${id}/restore`)),
+    remove: async (id: string) => {
+        await http.delete(`/reservations/${id}`);
+    },
+
     dismiss: async (id: string) => {
         await http.patch(`/reservations/${id}/dismiss`);
     },

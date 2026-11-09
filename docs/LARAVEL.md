@@ -19,8 +19,8 @@ Framework and Spatie tables stay unprefixed (`users`, `roles`, `permissions`, ..
 | `app_categories` | id, name (unique), description, status | |
 | `app_foods` | id, category_id FK `app_categories`, name, price, description, status (`available`/`unavailable`), eta_minutes, tags json | `price` = lowest variant price when variants exist |
 | `app_food_variants` | id, food_id FK, name, price; unique (food_id, name) | |
-| `app_food_photos` | id, food_id FK, path, position | the mock stores data URLs; the backend stores files (use `HandlesFileUploads`, `$fileFields`) |
-| `app_payment_methods` | id, name, details, active, needs_ref, qr (image data URL or URL; move to stored files with `HandlesFileUploads` later) | `needs_ref`: GCash, Maya, cards; staff must enter the transaction reference |
+| `app_food_photos` | id, food_id FK, path, position | `path` is the stored path of a private file on the `s3` disk (DigitalOcean Spaces) uploaded through `POST /api/uploads` (`HandlesFileUploads`); `FoodResource` shows short-lived links. Removed photos are deleted from storage |
+| `app_payment_methods` | id, name, details, active, needs_ref, qr (stored path from `POST /api/uploads`, shown as a short-lived link; old data URLs still load) | `needs_ref`: GCash, Maya, cards; staff must enter the transaction reference |
 | `app_discounts` | id, name, pct, note, active | |
 | `app_floors` | id, name | at least one must exist |
 | `app_dining_tables` | id, floor_id FK, name, seats, x, y (percent), status | `status` follows the open session (see rules) |
@@ -51,7 +51,7 @@ Register custom `POST` routes before `Route::crudModule` (section 6.1). `crudMod
 | `orders.placeTakeout`, `guest.placeTakeout` | `POST /takeout` (staff) and `POST /public/takeout` (QR) |
 | `kitchen.queue / next / toReady / serve` | `GET /kitchen/queue`, `PATCH /orders/{code}/advance`, `PATCH /orders/{code}/ready`, `PATCH /orders/{code}/serve` (`{code}` is the round code) |
 | `tables.*` | `crudModule('/tables')`, `crudModule('/floors')`, `POST /tables/{id}/activate`, `POST /tables/{id}/clean`, `PATCH /tables/{id}/position` |
-| `reservations.*` | `crudModule('/reservations', only index, store, update)`, `PATCH /reservations/{id}/move`, `/move-day`, `/cancel`, `/no-show`, `/restore`, `/dismiss`, `POST /reservations/{id}/seat` |
+| `reservations.*` | `crudModule('/reservations', only index, store, update, destroy)`, `PATCH /reservations/{id}/move`, `/move-day`, `/cancel`, `/no-show`, `/restore`, `/dismiss`, `POST /reservations/{id}/seat` |
 | `admin.*` | `crudModule('/payment-methods')`, `/discounts`, `/roles`, `/users`; `GET/PATCH /settings` (`tableTimerOn`, `tableTimerMins`) |
 | `guest.*` | public, token-scoped: `GET /public/tables/{table}/session?k=` (join), `.../plate?k=`, `POST .../plate-lines`, `PATCH .../plate-lines/{id}` (`delta` or `note`), `POST .../send`, `POST .../bill-out`; Takeout QR uses table `__takeout` |
 

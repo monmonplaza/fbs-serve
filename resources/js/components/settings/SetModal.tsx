@@ -4,24 +4,27 @@ import type { SettingsList } from "@/api-service/admin/mock";
 import { useInvalidate } from "@/hooks/useApi";
 import { closeModal } from "@/context/modal";
 import { toast } from "@/context/toast";
-import { imageToDataUrl } from "@/lib/image";
 import { SET, type Opts, type Row } from "@/lib/settingsConfig";
 
-/** A picture picker that submits the image as a data URL in a hidden input named after the field. */
+/** A picture picker: uploads the picture right away and submits its URL in a hidden input named after the field. */
 function ImageField({ name, label, hint, initial }: { name: string; label: string; hint?: string; initial: string }) {
     const [src, setSrc] = useState(initial);
+    const [uploading, setUploading] = useState(false);
     const pick = async (file?: File) => {
         if (!file) return;
+        setUploading(true);
         try {
-            setSrc(await imageToDataUrl(file));
+            setSrc(await api.uploads.image(file, "payments"));
         } catch (e) {
-            toast(e instanceof Error ? e.message : "Could not read the image");
+            toast(e instanceof Error ? e.message : "Could not upload the image");
+        } finally {
+            setUploading(false);
         }
     };
     return (
         <div className="field">
             <span className="label">{label}</span>
-            <input type="hidden" name={name} value={src} />
+            <input type="hidden" name={name} value={src} data-uploading={uploading || undefined} />
             {src ? (
                 <img
                     src={src}
@@ -38,11 +41,12 @@ function ImageField({ name, label, hint, initial }: { name: string; label: strin
             ) : null}
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                 <label className="btn btn-outline" style={{ cursor: "pointer" }}>
-                    {src ? "Replace image" : "Upload image"}
+                    {uploading ? "Uploading…" : src ? "Replace image" : "Upload image"}
                     <input
                         type="file"
                         accept="image/*"
                         hidden
+                        disabled={uploading}
                         onChange={(e) => {
                             pick(e.target.files?.[0]);
                             e.target.value = "";
@@ -68,6 +72,7 @@ export function SetModal({ list, row, opts }: { list: SettingsList; row: Row | n
     const submit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (busy) return;
+        if (e.currentTarget.querySelector("[data-uploading]")) return toast("Wait for the picture to finish uploading");
         const fd = new FormData(e.currentTarget),
             v: Record<string, unknown> = {};
         cfg.fields.forEach((x) => {

@@ -10,12 +10,18 @@ import { BillModal } from "@/components/guest/GuestModals";
 export function GuestClosed({ t }: { t: DiningTable }) {
     if (t.status === "cleaning")
         return (
-            <div className="center">
+            <div className="center" style={{ paddingTop: 48 }}>
                 <div className="big-ic">
                     <Icon name="check" size={32} />
                 </div>
-                <h3>Payment received</h3>
-                <p className="muted">Thank you for dining at FBS Serve. This table QR is now closed.</p>
+                <h2>Thank you!</h2>
+                <p>
+                    <b>Payment received for {t.name}.</b>
+                </p>
+                <p className="muted">
+                    We hope you enjoyed your meal at FBS Serve. We would love to see you again. This table QR is now
+                    closed.
+                </p>
             </div>
         );
     return (

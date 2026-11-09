@@ -2,6 +2,7 @@ import { api, ApiError } from "@/api-service";
 import { invalidateOutside } from "@/hooks/useApi";
 import { openModal } from "@/context/modal";
 import { toast } from "@/context/toast";
+import { Icon } from "@/components/Icon";
 import { useUi } from "@/context/ui";
 import type { Reservation } from "@/types/restaurant";
 import type { RowAction } from "@/components/RowActions";
@@ -48,6 +49,41 @@ export const openMove = (r: Reservation) =>
     openModal({ title: `Reschedule ${r.name}`, content: <ResMoveModal id={r.id} /> });
 export const openCancel = (r: Reservation) =>
     openModal({ title: `Cancel ${r.name}?`, content: <ResCancelModal id={r.id} /> });
+export const openDelete = (r: Reservation) =>
+    openModal({
+        title: `Delete ${r.name}'s reservation?`,
+        content: (
+            <>
+                <div className="m-body">
+                    <p>
+                        {whenText(r.at)} · {r.pax} guests. This removes the reservation and its history for good. To
+                        keep a record, cancel it instead.
+                    </p>
+                </div>
+                <div className="m-foot">
+                    <button className="btn btn-outline" onClick={closeModal}>
+                        Keep reservation
+                    </button>
+                    <button
+                        className="btn btn-danger"
+                        onClick={async () => {
+                            try {
+                                await api.reservations.remove(r.id);
+                                await refresh();
+                                closeModal();
+                                toast(`${r.name}'s reservation deleted`);
+                            } catch (e) {
+                                toast(e instanceof Error ? e.message : "Could not delete");
+                            }
+                        }}
+                    >
+                        <Icon name="trash" size={20} />
+                        Delete
+                    </button>
+                </div>
+            </>
+        ),
+    });
 export const openSeatModal = (r: Reservation, msg = "") =>
     openModal({ title: `Seat ${r.name}`, content: <SeatModal id={r.id} msg={msg} /> });
 export const openJump = () => openModal({ title: "Go to a date", content: <JumpModal /> });
@@ -110,12 +146,22 @@ export function resActions(r: Reservation): RowAction[] {
             { ic: "clock", label: "Reschedule", aria: `Reschedule ${n}`, onClick: () => openMove(r) },
             { ic: "edit", label: "Edit", aria: `Edit ${n}`, onClick: () => openResForm(r) },
             { ic: "user", label: "Mark no-show", aria: `Mark ${n} as no-show`, onClick: () => markNoShow(r) },
-            { ic: "x", label: "Cancel", aria: `Cancel ${n}`, onClick: () => openCancel(r), danger: true },
+            { ic: "x", label: "Cancel", aria: `Cancel ${n}`, onClick: () => openCancel(r) },
+            { ic: "trash", label: "Delete", aria: `Delete ${n}`, onClick: () => openDelete(r), danger: true },
         ];
-    if (r.status === "arrived") return [{ ic: "search", label: "View", aria: `View ${n}`, onClick: () => openRes(r) }];
+    const del: RowAction = {
+        ic: "trash",
+        label: "Delete",
+        aria: `Delete ${n}`,
+        onClick: () => openDelete(r),
+        danger: true,
+    };
+    if (r.status === "arrived")
+        return [{ ic: "search", label: "View", aria: `View ${n}`, onClick: () => openRes(r) }, del];
     return [
         { ic: "check", label: "Restore", aria: `Restore ${n}`, onClick: () => restoreRes(r) },
         { ic: "search", label: "View", aria: `View ${n}`, onClick: () => openRes(r) },
+        del,
     ];
 }
 

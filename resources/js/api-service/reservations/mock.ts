@@ -105,6 +105,12 @@ export const reservations = {
         return out(r);
     },
 
+    remove: async (id: string) => {
+        const i = db.reservations.findIndex((x) => x.id === id);
+        if (i < 0) fail("Reservation not found");
+        db.reservations.splice(i, 1);
+    },
+
     dismiss: async (id: string) => {
         const r = db.reservations.find((x) => x.id === id);
         if (r) r.dismissed = true;

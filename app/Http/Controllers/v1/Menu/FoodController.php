@@ -6,6 +6,7 @@ use App\Exceptions\ApiException;
 use App\Http\Controllers\v1\BaseController;
 use App\Http\Resources\FoodResource;
 use App\Models\Food;
+use App\Support\StoredFile;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -119,6 +120,11 @@ class FoodController extends BaseController
         return $rows->all();
     }
 
+    protected function beforeDelete(Model $model): void
+    {
+        StoredFile::forget($model->photos()->pluck('path'));
+    }
+
     private function syncChildren(Model $food, array $validated): void
     {
         if (($variants = $this->cleanVariants($validated)) !== null) {
@@ -132,8 +138,10 @@ class FoodController extends BaseController
             $food->variants()->whereNotIn('id', $keep)->delete();
         }
         if (array_key_exists('photos', $validated)) {
+            $paths = array_map(fn ($v) => StoredFile::toPath($v), array_values($validated['photos']));
+            StoredFile::forget($food->photos()->pluck('path')->diff($paths));
             $food->photos()->delete();
-            foreach (array_values($validated['photos']) as $i => $path) {
+            foreach (array_values(array_filter($paths)) as $i => $path) {
                 $food->photos()->create(['path' => $path, 'position' => $i]);
             }
         }

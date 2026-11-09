@@ -42,11 +42,19 @@ export function FoodForm({ food }: { food: Food | null }) {
             [...(lastName.current?.querySelectorAll<HTMLInputElement>("input[name=vname]") ?? [])].at(-1)?.focus(),
         );
     };
+    const [uploading, setUploading] = useState(0);
+    /** Each photo is uploaded as soon as it is picked; the form saves the returned URLs. */
     const addPhotos = (files: FileList | null) => {
-        [...(files ?? [])].forEach((file) => {
-            const rd = new FileReader();
-            rd.onload = () => setPhotos((p) => [...p, String(rd.result)]);
-            rd.readAsDataURL(file);
+        [...(files ?? [])].forEach(async (file) => {
+            setUploading((n) => n + 1);
+            try {
+                const url = await api.uploads.image(file, "foods");
+                setPhotos((p) => [...p, url]);
+            } catch (e) {
+                toast(e instanceof Error ? e.message : "Could not upload the photo");
+            } finally {
+                setUploading((n) => n - 1);
+            }
         });
     };
 
@@ -220,7 +228,7 @@ export function FoodForm({ food }: { food: Food | null }) {
                             ))}
                             <label className="ff-add">
                                 <Icon name="plus" size={20} />
-                                Add photos
+                                {uploading ? `Uploading ${uploading}…` : "Add photos"}
                                 <input
                                     id="ff-img"
                                     type="file"
@@ -284,7 +292,9 @@ export function FoodForm({ food }: { food: Food | null }) {
                 <button type="button" className="btn btn-outline" onClick={closeModal}>
                     Cancel
                 </button>
-                <button className="btn btn-primary">{n ? "Add food" : "Save changes"}</button>
+                <button className="btn btn-primary" disabled={uploading > 0}>
+                    {uploading ? "Uploading photos…" : n ? "Add food" : "Save changes"}
+                </button>
             </div>
         </form>
     );

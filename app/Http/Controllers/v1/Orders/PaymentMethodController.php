@@ -5,6 +5,7 @@ namespace App\Http\Controllers\v1\Orders;
 use App\Http\Controllers\v1\BaseController;
 use App\Http\Resources\PaymentMethodResource;
 use App\Models\PaymentMethod;
+use App\Support\StoredFile;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\Rule;
 
@@ -41,7 +42,17 @@ class PaymentMethodController extends BaseController
 
     protected function beforeSave(array $validated, ?Model $model): array
     {
+        $qr = array_key_exists('qr', $validated) ? StoredFile::toPath($validated['qr'] ?: null) : $model?->qr;
+        if ($model && $qr !== $model->qr) {
+            StoredFile::forget([$model->qr]); // the old QR picture is replaced or removed
+        }
+
         return ['name' => trim($validated['name']), 'details' => trim($validated['details'] ?? ''), 'active' => $validated['active'] ?? ($model?->active ?? true), 'needs_ref' => $validated['needsRef'] ?? ($model?->needs_ref ?? false),
-            'qr' => array_key_exists('qr', $validated) ? ($validated['qr'] ?: null) : $model?->qr];
+            'qr' => $qr];
+    }
+
+    protected function beforeDelete(Model $model): void
+    {
+        StoredFile::forget([$model->qr]);
     }
 }

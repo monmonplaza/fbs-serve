@@ -113,6 +113,17 @@ it('reschedules, cancels, marks no-show, restores and dismisses', function () {
     $this->getJson('/api/reservations')->assertJsonPath('data.0.dismissed', true);
 });
 
+it('deletes a reservation with its history and advance order', function () {
+    Reservation::query()->delete();
+    $id = $this->postJson('/api/reservations', booking())->json('data.id');
+    $this->patchJson("/api/reservations/{$id}/cancel", ['reason' => 'Changed plans'])->assertOk();
+
+    $this->deleteJson("/api/reservations/{$id}")->assertNoContent();
+    $this->getJson('/api/reservations')->assertJsonCount(0, 'data');
+    $this->assertDatabaseMissing('app_reservation_history', ['reservation_id' => $id]);
+    $this->deleteJson("/api/reservations/{$id}")->assertNotFound();
+});
+
 it('seating activates the table and puts the advance order on its plate', function () {
     Reservation::query()->delete();
     $f = Food::where('name', 'Garlic Rice')->firstOrFail();

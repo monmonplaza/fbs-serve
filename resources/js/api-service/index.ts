@@ -18,6 +18,8 @@ import { admin as adminMock } from "@/api-service/admin/mock";
 import { adminHttp } from "@/api-service/admin/http";
 import { guest as guestMock } from "@/api-service/guest/mock";
 import { guestHttp } from "@/api-service/guest/http";
+import { uploads as uploadsMock } from "@/api-service/uploads/mock";
+import { uploadsHttp } from "@/api-service/uploads/http";
 
 /**
  * The one place the UI talks to the backend. Every method is async and returns plain data.
@@ -27,7 +29,7 @@ import { guestHttp } from "@/api-service/guest/http";
 /**
  * With VITE_API_URL set, foods, categories, orders, kitchen, tables, floors, guest ordering and the payment/discount settings talk to the
  * Laravel backend: foods, categories, orders, kitchen, tables, floors, reservations, guest ordering and every settings list (payment methods,
- * discounts, roles, users, the table timer).
+ * discounts, roles, users, the table timer). Picture uploads go to the backend, which stores them on DigitalOcean Spaces.
  */
 // `H extends T` makes the compiler check that an HTTP module has the same methods and return shapes as its mock.
 const pick = <T, H extends T>(mock: T, http: H): T => (USE_HTTP ? http : mock);
@@ -38,5 +40,6 @@ const tables = pick(tablesMock, tablesHttp);
 const reservations = pick(reservationsMock, reservationsHttp);
 const admin = pick(adminMock, adminHttp as unknown as typeof adminMock);
 const guest = pick(guestMock, guestHttp);
-export const api = { catalog, orders, kitchen, tables, reservations, admin, guest };
+const uploads = pick(uploadsMock, uploadsHttp);
+export const api = { catalog, orders, kitchen, tables, reservations, admin, guest, uploads };
 export { ApiError } from "@/api-service/mock/core";

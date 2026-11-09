@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Support\StoredFile;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -18,7 +19,7 @@ class FoodResource extends JsonResource
             'status' => $this->status,
             'tags' => $this->tags ?? [],
             'eta' => (int) $this->eta_minutes,
-            'photos' => $this->photos->pluck('path')->all(),
+            'photos' => $this->photos->pluck('path')->map(fn ($p) => StoredFile::url($p))->all(),
             // `variants` is absent (not empty) for a food without variants, as in the mock.
             $this->mergeWhen($this->variants->isNotEmpty(), fn () => [
                 'variants' => $this->variants->map(fn ($v) => ['id' => (string) $v->id, 'name' => $v->name, 'price' => (float) $v->price])->all(),

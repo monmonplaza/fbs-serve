@@ -18,6 +18,8 @@ php artisan serve                                  # the app, in another
 
 By default the pages run on the in-memory mock API (`resources/js/api-service/mock`), which resets on reload. Set `VITE_API_URL=/api` in `.env` (and restart Vite) to use the Laravel API instead; every module then runs on it (the demo roles, users and a few bookings come from `RestaurantSeeder`).
 
+Uploaded pictures (food photos, payment QR codes) go to DigitalOcean Spaces through Laravel's `s3` disk (`FILESYSTEM_DISK=s3`). Fill in `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` and `AWS_BUCKET` in `.env`, then run `php artisan config:clear`. Files are private and stored under `AWS_BUCKET_FOLDER` (`fbs-serve`); the API shows short-lived links. Until the keys are set, uploads fail.
+
 Guest QR for the seeded table: `/guest#t=4&k=abc123`. Takeout QR: `/guest#takeout`.
 
 ```bash

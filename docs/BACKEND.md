@@ -11,8 +11,9 @@ Times are epoch milliseconds, money is a number in pesos (2 decimals), ids are s
 | `orders` | `list()`, `payTable(tableId, discountId, pays)`, `payBill(orderId, discountId, pays)`, `payPickup(orderId, discountId, pays)`, `handover(orderId)`, `placeTakeout(items, customer, phone, channel, ref)` |
 | `kitchen` | `queue()`, `next(id)` queued, cooking, plating, completed; `toReady(id)` takeout; `serve(id)` dine-in |
 | `tables` | `list()`, `floors()`, `activate(id, guests)`, `clean(id)`, `move(id, x, y)`, `add`, `update`, `remove`, `addFloor`, `updateFloor`, `removeFloor` |
-| `reservations` | `list()`, `create`, `update`, `move`, `moveToDay`, `cancel`, `noShow`, `restore`, `dismiss`, `seat(id, tableId)` |
+| `reservations` | `list()`, `create`, `update`, `move`, `moveToDay`, `cancel`, `noShow`, `restore`, `dismiss`, `remove`, `seat(id, tableId)` |
 | `admin` | `payments()`, `discounts()`, `roles()`, `users()`, `settings()`, `saveSettings`, `saveSetting(list, id, values)`, `deleteSetting(list, id)`, `deleteBlock(list, id)`, `updateProfile` |
+| `uploads` | `image(file, folder)`: `POST /api/uploads` (multipart `file`, `folder` = `foods` or `payments`; PNG, JPG, WEBP or GIF up to 4 MB) returns `{ path, url }`. Files are private on the `s3` disk (DigitalOcean Spaces) under `AWS_BUCKET_FOLDER/<folder>`; the record stores the path, the API shows a link that lasts 60 minutes (reused for 50 so polling does not reload pictures), and a link sent back on save is turned into its path again. Replaced or removed pictures are deleted from storage |
 | `guest` | `join(tableId, token)`, `plate(tableId)`, `addLine`, `changeQty`, `setNote(tableId, lineId, note)`, `send(tableId, by)`, `billOut(tableId, method)`, `placeTakeout(name, phone)` |
 
 ## Rules the server must enforce

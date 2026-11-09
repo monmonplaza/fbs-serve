@@ -25,6 +25,7 @@ import {
 import {
     attempt,
     openCancel,
+    openDelete,
     openGuestView,
     openMove,
     openResForm,
@@ -166,6 +167,10 @@ export function ResModal({ id }: { id: string }) {
             <div className="m-foot">
                 <button className="btn btn-outline" onClick={closeModal}>
                     Close
+                </button>
+                <button className="btn btn-outline danger" onClick={() => openDelete(r)}>
+                    <Icon name="trash" size={20} />
+                    Delete
                 </button>
                 {r.status === "booked" ? (
                     <>

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Public\GuestController;
+use App\Http\Controllers\v1\Files\UploadController;
 use App\Http\Controllers\v1\Kitchen\KitchenController;
 use App\Http\Controllers\v1\Menu\CategoryController;
 use App\Http\Controllers\v1\Menu\FoodController;
@@ -38,6 +39,7 @@ Route::middleware('dev.open')->group(function () {
 
     Route::get('/settings', [SettingsController::class, 'show']);
     Route::patch('/settings', [SettingsController::class, 'update']);
+    Route::post('/uploads', [UploadController::class, 'store']);
 
     Route::patch('/reservations/{id}/move', [ReservationController::class, 'move'])->whereNumber('id');
     Route::patch('/reservations/{id}/move-day', [ReservationController::class, 'moveToDay'])->whereNumber('id');
@@ -46,7 +48,7 @@ Route::middleware('dev.open')->group(function () {
     Route::patch('/reservations/{id}/restore', [ReservationController::class, 'restore'])->whereNumber('id');
     Route::patch('/reservations/{id}/dismiss', [ReservationController::class, 'dismiss'])->whereNumber('id');
     Route::post('/reservations/{id}/seat', [ReservationController::class, 'seat'])->whereNumber('id');
-    Route::crudModule('/reservations', ReservationController::class, 'reservations', ['index', 'store', 'update']);
+    Route::crudModule('/reservations', ReservationController::class, 'reservations', ['index', 'store', 'update', 'destroy']);
     Route::crudModule('/roles', RoleController::class, 'roles', ['index', 'store', 'update', 'destroy']);
     Route::crudModule('/users', UserController::class, 'users', ['index', 'store', 'update', 'destroy']);
 
