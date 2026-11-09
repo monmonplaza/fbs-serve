@@ -1,6 +1,8 @@
 // Domain types. These mirror what the backend should return; ids are strings, times are epoch milliseconds.
 
 export type ModuleId = "dashboard" | "orders" | "reservations" | "kitchen" | "foods" | "tables" | "settings" | "guide";
+/** A staff page: a module, or the profile page every signed-in user can open. */
+export type PageId = ModuleId | "profile";
 
 export type TableStatus = "inactive" | "active" | "ordering" | "eating" | "billout" | "cleaning";
 export type OrderStatus = "queued" | "cooking" | "plating" | "completed" | "ready" | "served" | "paid";
@@ -64,6 +66,13 @@ export interface User {
     role: string;
     active: boolean;
     email?: string;
+    /** Contact number. */
+    phone?: string;
+    address?: string;
+    /** Photo URL (a short-lived link from the server). */
+    avatar?: string;
+    /** Whether a password is set. The password itself never leaves the server. */
+    hasPassword?: boolean;
 }
 export interface Floor {
     id: string;

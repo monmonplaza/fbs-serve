@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 Route::redirect('/', '/dashboard');
 Route::inertia('/login', 'auth/LoginPage')->name('login');
 Route::inertia('/guest', 'guest/GuestPage')->name('guest');
+Route::inertia('/profile', 'profile/ProfilePage')->name('profile');
 
 foreach (['dashboard', 'orders', 'kitchen', 'foods', 'tables', 'reservations', 'settings', 'guide'] as $module) {
     Route::inertia("/{$module}", "{$module}/".ucfirst($module).'Page')->name($module);

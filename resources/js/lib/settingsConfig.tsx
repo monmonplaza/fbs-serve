@@ -20,7 +20,7 @@ export type Row = { id: string; name: string } & Record<string, unknown>;
 
 export const SET: Record<SettingsList, Cfg> = {
     payments: {
-        title: "Payment methods",
+        title: "Payment Methods",
         one: "payment method",
         fields: [
             { k: "name", l: "Name", req: true },
@@ -33,9 +33,9 @@ export const SET: Record<SettingsList, Cfg> = {
             },
             {
                 k: "needsRef",
-                l: "Needs a reference no.",
+                l: "Ask for a reference no.",
                 t: "check",
-                hint: "For GCash, Maya and cards: staff must enter the transaction reference before confirming payment.",
+                hint: "For GCash, Maya and cards: shows an optional reference no. field when staff confirm payment.",
             },
             { k: "active", l: "Guests can choose this", t: "check" },
         ],
@@ -61,7 +61,7 @@ export const SET: Record<SettingsList, Cfg> = {
         ],
     },
     roles: {
-        title: "User roles",
+        title: "User Roles",
         one: "role",
         fields: [
             { k: "name", l: "Role name", req: true },
@@ -79,13 +79,13 @@ export const SET: Record<SettingsList, Cfg> = {
         extra: "Status",
     },
     floors: {
-        title: "Floor levels",
+        title: "Floor Levels",
         one: "floor level",
         fields: [{ k: "name", l: "Floor name", req: true, hint: "For example: Ground floor, 2nd floor, Rooftop" }],
         extra: "Tables",
     },
     categories: {
-        title: "Food categories",
+        title: "Food Categories",
         one: "category",
         fields: [
             { k: "name", l: "Name", req: true },

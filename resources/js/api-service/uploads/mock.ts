@@ -6,11 +6,13 @@
 import { blobToDataUrl, scaleImage } from "@/lib/image";
 
 /** Where a picture belongs. The backend keeps each kind in its own folder. */
-export type UploadFolder = "foods" | "payments";
+export type UploadFolder = "foods" | "payments" | "avatars";
 
 /** QR codes stay PNG so they scan; food photos become JPEG so they load fast on phones. */
 export const uploadSpec = (folder: UploadFolder) =>
-    folder === "payments" ? { side: 900, type: "image/png" as const } : { side: 1600, type: "image/jpeg" as const };
+    folder === "payments"
+        ? { side: 900, type: "image/png" as const }
+        : { side: folder === "avatars" ? 600 : 1600, type: "image/jpeg" as const };
 
 export const uploads = {
     /** Scales the picture and returns the URL to save on the record. */

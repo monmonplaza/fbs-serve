@@ -1,7 +1,7 @@
 import { router } from "@inertiajs/react";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { ModuleId } from "@/types/restaurant";
+import type { ModuleId, PageId } from "@/types/restaurant";
 import { TO } from "@/lib/constants";
 
 export interface Notif {
@@ -18,7 +18,7 @@ interface UiState {
     mode: "staff" | "guest";
     /** Opened from a QR code: only the guest phone, no staff chrome. */
     guestOnly: boolean;
-    view: ModuleId;
+    view: PageId;
     meId: string;
     signedOut: boolean;
     notifs: Notif[];

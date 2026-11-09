@@ -6,6 +6,7 @@ import { useUi } from "@/context/ui";
 import { useTables } from "@/hooks/useApi";
 import type { DiningTable } from "@/types/restaurant";
 import { guestLink } from "@/lib/guestLink";
+import { openTableOrder } from "@/components/tables/TableOrderModal";
 
 export function openGuestView(tableId: string) {
     const ui = useUi.getState();
@@ -44,7 +45,8 @@ function QrBody({ id }: { id: string }) {
                     </span>
                 </div>
                 <p className="caption muted">
-                    Every guest at {t.name} scans this same code. It stops working once the table is marked clean.
+                    Every guest at {t.name} scans this same code. It stops working once the table is marked clean. No
+                    phone? Use <b>Take order</b> to enter their order yourself.
                 </p>
             </div>
             <div className="m-foot">
@@ -54,9 +56,13 @@ function QrBody({ id }: { id: string }) {
                 <button type="button" className="btn btn-outline" onClick={copy}>
                     Copy link
                 </button>
-                <button type="button" className="btn btn-primary" onClick={() => openGuestView(t.id)}>
+                <button type="button" className="btn btn-outline" onClick={() => openGuestView(t.id)}>
                     <Icon name="phone" size={20} />
                     Open guest view
+                </button>
+                <button type="button" className="btn btn-primary" onClick={() => openTableOrder(t)}>
+                    <Icon name="utensils" size={20} />
+                    Take order
                 </button>
             </div>
         </>

@@ -7,7 +7,7 @@ import { usePrint } from "@/context/print";
 import { VAT_RATE } from "@/lib/constants";
 
 /**
- * The printable bill. It lives in <body> (outside #root) and is hidden on screen; when printing, app.css hides #root and shows only this.
+ * The printable bill. It lives in <body> (outside the app) and is hidden on screen; when printing, app.css hides everything else in <body>.
  * 80 mm wide, so it suits a receipt printer and also prints fine on A4.
  */
 export function BillPrintHost() {

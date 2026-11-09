@@ -47,7 +47,6 @@ export function PayForm({
     const disc = discounts.find((d) => d.id === discId);
     const m = methods.find((x) => x.id === method);
     const needsRef = !!m?.needsRef;
-    const noRef = needsRef && !ref.trim();
     const sub = sum(orders.map(subtotal));
     const off = disc ? r2((sub * disc.pct) / 100) : 0;
     const due = r2(sub - off);
@@ -63,12 +62,8 @@ export function PayForm({
             toast(`The amount received is less than the amount due (${peso(due)})`);
             return;
         }
-        if (noRef) {
-            toast(`Enter the reference no. for ${m!.name}`);
-            return;
-        }
         const pays: Payment[] = [
-            { method, amount: due, received: received ?? due, ...(needsRef ? { ref: ref.trim() } : {}) },
+            { method, amount: due, received: received ?? due, ...(needsRef && ref.trim() ? { ref: ref.trim() } : {}) },
         ];
         setBusy(true);
         try {
@@ -98,11 +93,11 @@ export function PayForm({
                                 </option>
                             ))}
                         </select>
-                        {hint ? <span className="hint">{hint}</span> : null}
+                        {hint ? <span className="hint text-[12px] leading-4">{hint}</span> : null}
                     </label>
                     {needsRef ? (
                         <label className="field">
-                            <span>Reference no.</span>
+                            <span>Reference no. (optional)</span>
                             <input
                                 id="pay-ref"
                                 name="ref"
@@ -112,9 +107,10 @@ export function PayForm({
                                 autoComplete="off"
                                 placeholder="e.g. 1234 567 890123"
                                 onChange={(e) => setRef(e.target.value)}
-                                aria-required="true"
                             />
-                            <span className="hint">Check it in your {m!.name} app or SMS before you confirm.</span>
+                            <span className="hint text-[12px] leading-4">
+                                Check it in your {m!.name} app or SMS before you confirm.
+                            </span>
                         </label>
                     ) : null}
                     <label className="field">
@@ -133,7 +129,7 @@ export function PayForm({
                                 </option>
                             ))}
                         </select>
-                        <span className="hint" id="pay-note">
+                        <span className="hint text-[12px] leading-4" id="pay-note">
                             {disc
                                 ? `Requirement: ${disc.note || "none"}.`
                                 : "Check the guest’s ID before applying a discount."}
@@ -171,7 +167,7 @@ export function PayForm({
                         onChange={(e) => setRecv(e.target.value)}
                         aria-describedby="pay-recv-hint"
                     />
-                    <span className="hint" id="pay-recv-hint">
+                    <span className="hint text-[12px] leading-4" id="pay-recv-hint">
                         Leave blank if the exact amount is paid.
                     </span>
                 </label>
@@ -221,7 +217,7 @@ export function PayForm({
                         Print bill
                     </button>
                 ) : null}
-                <button className="btn btn-primary" disabled={busy || short || noRef}>
+                <button className="btn btn-primary" disabled={busy || short}>
                     <Icon name="check" size={20} />
                     {submitLabel}
                 </button>

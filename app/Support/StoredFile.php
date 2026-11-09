@@ -15,7 +15,7 @@ final class StoredFile
 {
     use HandlesFileUploads;
 
-    public const FOLDERS = ['foods', 'payments'];
+    public const FOLDERS = ['foods', 'payments', 'avatars'];
 
     /** Link minutes, and how long one link is reused: screens refetch every few seconds, and a new link each time would reload the picture. */
     private const LINK_MINUTES = 60;

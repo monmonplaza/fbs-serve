@@ -4,9 +4,10 @@
  */
 
 import { db } from "@/api-service/mock/db";
-import { out, tableOf, orderOf, syncTable, fail, uid } from "@/api-service/mock/core";
+import { out, tableOf, orderOf, syncTable, fail, uid, nextId } from "@/api-service/mock/core";
+import { orderEta } from "@/lib/domain";
 import { clamp, r2 } from "@/lib/format";
-import type { DiningTable } from "@/types/restaurant";
+import type { DiningTable, Order, OrderItem } from "@/types/restaurant";
 
 const need = (id: string) => tableOf(id) ?? fail("Table not found");
 
@@ -20,6 +21,29 @@ export const tables = {
         Object.assign(t, { status: "active", token: uid(), openedAt: Date.now(), bill: null, guests });
         db.plates[t.id] = [];
         return out(t);
+    },
+    /** Staff enter the order for a table whose guests have no phone. It goes to the kitchen like a guest send. */
+    order: async (id: string, items: OrderItem[], by: string) => {
+        const t = need(id);
+        if (!t.token || !["active", "ordering", "eating"].includes(t.status))
+            return fail(
+                t.status === "billout" ? "The bill was already requested for this table." : "Activate the table first.",
+            );
+        const lines = items.filter((i) => i.qty > 0);
+        if (!lines.length) return fail("Add food to the order first");
+        const o: Order = {
+            id: nextId(),
+            table: t.id,
+            session: t.token,
+            items: lines.map((i) => ({ ...i })),
+            status: "queued",
+            createdAt: Date.now(),
+            by,
+            eta: orderEta(lines, db.foods),
+        };
+        db.orders.push(o);
+        syncTable(t);
+        return out(o);
     },
     /** Back to inactive. The old QR token stops working. */
     clean: async (id: string) => {

@@ -8,6 +8,7 @@ import { useNow } from "@/hooks/useNow";
 import { useUi } from "@/context/ui";
 import { Icon } from "@/components/Icon";
 import { Pill } from "@/components/Pill";
+import { CompareChart, DaySalesChart } from "@/components/dashboard/SalesCharts";
 
 export default function DashboardPage() {
     const { data: orders } = useOrders();
@@ -48,13 +49,13 @@ export default function DashboardPage() {
             <div className="tiles">
                 <div className="card tile">
                     <Icon name="cash" />
-                    <span className="label muted">Income today</span>
+                    <span className="label muted">Income Today</span>
                     <span className="val num">{peso(sum(paid.map(total)))}</span>
                     <span className="caption muted num">{peso(pending)} still to collect</span>
                 </div>
                 <div className="card tile">
                     <Icon name="receipt" />
-                    <span className="label muted">Orders today</span>
+                    <span className="label muted">Orders Today</span>
                     <span className="val num">{today.length}</span>
                     <span className="caption muted">
                         {paid.length} paid · {today.length - paid.length} open · {today.filter(isTO).length} takeout
@@ -62,21 +63,25 @@ export default function DashboardPage() {
                 </div>
                 <div className="card tile">
                     <Icon name="table" />
-                    <span className="label muted">Active tables</span>
+                    <span className="label muted">Active Tables</span>
                     <span className="val num">{inUse}</span>
                     <span className="caption muted">of {tables.length} tables</span>
                 </div>
                 <div className="card tile">
                     <Icon name="moon" />
-                    <span className="label muted">Inactive tables</span>
+                    <span className="label muted">Inactive Tables</span>
                     <span className="val num">{tables.length - inUse}</span>
                     <span className="caption muted">Ready for new guests</span>
                 </div>
             </div>
+            <div className="two" style={{ marginBottom: 16 }}>
+                <DaySalesChart orders={orders} now={now} />
+                <CompareChart orders={orders} now={now} />
+            </div>
             <div className="two">
                 <section className="card">
                     <div className="card-head">
-                        <h3>Top ordered today</h3>
+                        <h3>Top Ordered Today</h3>
                         <span className="caption muted">by quantity</span>
                     </div>
                     {top.length ? (
@@ -98,7 +103,7 @@ export default function DashboardPage() {
                 </section>
                 <section className="card">
                     <div className="card-head">
-                        <h3>In the kitchen now</h3>
+                        <h3>In the Kitchen Now</h3>
                         <button className="btn btn-outline" onClick={() => go("kitchen")}>
                             Open kitchen
                         </button>
@@ -122,7 +127,7 @@ export default function DashboardPage() {
             </div>
             <section className="card">
                 <div className="card-head">
-                    <h3>Tables at a glance</h3>
+                    <h3>Tables at a Glance</h3>
                     <button className="btn btn-outline" onClick={() => go("tables")}>
                         Open floor plan
                     </button>

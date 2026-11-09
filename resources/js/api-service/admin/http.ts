@@ -5,7 +5,7 @@
 
 // Every list has an endpoint now; the mock spread only keeps the list type and `foodCounts` shape in one place.
 import { http, unwrap } from "@/api-service/client";
-import { admin as mock, type SettingsList } from "@/api-service/admin/mock";
+import { admin as mock, type ProfileInput, type SettingsList } from "@/api-service/admin/mock";
 import type { AppSettings, Discount, Food, PaymentMethod, Role, User } from "@/types/restaurant";
 
 const PATH: Partial<Record<SettingsList, string>> = {
@@ -34,7 +34,16 @@ export const adminHttp = {
     payments: async () => unwrap<PaymentMethod[]>(await http.get("/payment-methods")),
     roles: async () => unwrap<Role[]>(await http.get("/roles")),
     users: async () => unwrap<User[]>(await http.get("/users")),
-    updateProfile: async (id: string, p: { name: string }) => unwrap<User>(await http.post(`/users/${id}`, p)),
+    saveProfile: async (id: string, p: ProfileInput) =>
+        unwrap<User>(await http.post(`/users/${id}/profile`, { ...p, avatar: p.avatar || null })),
+    changePassword: async (id: string, current: string, next: string, confirm: string) =>
+        unwrap<User>(
+            await http.post(`/users/${id}/password`, {
+                currentPassword: current || null,
+                password: next,
+                password_confirmation: confirm,
+            }),
+        ),
     discounts: async () => unwrap<Discount[]>(await http.get("/discounts")),
     settings: async () => unwrap<AppSettings>(await http.get("/settings")),
     saveSettings: async (p: Partial<AppSettings>) => unwrap<AppSettings>(await http.patch("/settings", p)),

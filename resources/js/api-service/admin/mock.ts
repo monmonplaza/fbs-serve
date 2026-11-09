@@ -13,10 +13,45 @@ export type SettingsRow = Record<string, unknown> & { id: string; name: string }
 
 const rows = (list: SettingsList) => db[list] as unknown as SettingsRow[];
 
+/** What the profile page saves. */
+export interface ProfileInput {
+    name: string;
+    email: string;
+    phone: string;
+    address: string;
+    /** Photo URL, or "" for none. */
+    avatar: string;
+}
+const mockPasswords = new Map<string, string>();
+
 export const admin = {
-    updateProfile: async (id: string, p: { name: string }) => {
-        const u = db.users.find((x) => x.id === id);
-        if (u) u.name = p.name;
+    /** The user's own profile page. Empty fields clear the value. */
+    saveProfile: async (id: string, p: ProfileInput) => {
+        const u = db.users.find((x) => x.id === id) ?? fail("User not found");
+        if (!p.name.trim()) fail("Enter your name");
+        const email = p.email.trim();
+        if (email && db.users.some((x) => x.id !== id && x.email?.toLowerCase() === email.toLowerCase()))
+            fail("Another user already has that email.");
+        if (!/^[0-9+()\-\s]*$/.test(p.phone))
+            fail("The contact number can only have numbers, spaces, +, - and brackets.");
+        Object.assign(u, {
+            name: p.name.trim(),
+            email: email || undefined,
+            phone: p.phone.trim() || undefined,
+            address: p.address.trim() || undefined,
+            avatar: p.avatar || undefined,
+        });
+        return out(u);
+    },
+    /** Sets a new password. Once one exists, the current one is needed. The mock keeps passwords in memory only. */
+    changePassword: async (id: string, current: string, next: string, confirm: string) => {
+        const u = db.users.find((x) => x.id === id) ?? fail("User not found");
+        const had = mockPasswords.get(id);
+        if (had !== undefined && had !== current) fail("The current password is not correct.");
+        if (next.length < 8) fail("Use at least 8 characters.");
+        if (next !== confirm) fail("The new passwords do not match.");
+        mockPasswords.set(id, next);
+        u.hasPassword = true;
         return out(u);
     },
     payments: async () => out(db.payments),

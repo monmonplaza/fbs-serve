@@ -37,6 +37,8 @@
   --brand-fill:#476818;--brand-fill-hover:#385217;--brand-fill-active:#233510;--on-brand-fill:#FFFFFF;--chip-on:#16191F;--on-chip-on:#FFFFFF;--tip-bg:#16191F;
   --secondary:#107236;--secondary-hover:#0C5A2A;--secondary-active:#08431F;--on-secondary:#FFFFFF;
   --accent:#C42A93;--accent-ink:#A51E7A;--accent-tint:#FADCEF;--on-accent:#FFFFFF;
+  /* Chart series (validated for colour-blind separation on the card surface): 1 = today / the chosen day, 2 = yesterday. */
+  --chart-1:#476818;--chart-2:#C42A93;
   --disabled-bg:#EBEEF2;--disabled-ink:#5E6876;--focus:#C42A93;
   --success:#107236;--success-tint:#DCF5E5;--warning:#A7530A;--warning-tint:#FEF0D7;--error:#C11E38;--error-tint:#FDE2E6;
   --info:#1D5BD8;--info-tint:#DBE8FF;--purple:#6D33D9;--purple-tint:#ECE4FF;
@@ -58,6 +60,7 @@
   --brand:#B8DF63;--brand-hover:#D4EC9C;--brand-active:#EAF6CC;--on-brand:#16191F;--brand-tint:#24301A;
   --secondary:#357A47;--secondary-hover:#2E6B3E;--secondary-active:#24563A;--on-secondary:#FFFFFF;
   --accent:#E35BBF;--accent-ink:#E35BBF;--accent-tint:#3A1530;--on-accent:#16191F;
+  --chart-1:#76A02E;--chart-2:#CF47AC;
   --disabled-bg:#272C35;--disabled-ink:#A9B2BF;--focus:#E35BBF;
   --success:#5EE08F;--success-tint:#12301F;--warning:#FDBA4D;--warning-tint:#3A2810;--error:#FF8F8F;--error-tint:#3D161D;
   --info:#7DB0FF;--info-tint:#172A4A;--purple:#BCA4FF;--purple-tint:#2A1F4A;
@@ -73,6 +76,7 @@
   --brand:#B8DF63;--brand-hover:#D4EC9C;--brand-active:#EAF6CC;--on-brand:#16191F;--brand-tint:#24301A;
   --secondary:#357A47;--secondary-hover:#2E6B3E;--secondary-active:#24563A;--on-secondary:#FFFFFF;
   --accent:#E35BBF;--accent-ink:#E35BBF;--accent-tint:#3A1530;--on-accent:#16191F;
+  --chart-1:#76A02E;--chart-2:#CF47AC;
   --disabled-bg:#272C35;--disabled-ink:#A9B2BF;--focus:#E35BBF;
   --success:#5EE08F;--success-tint:#12301F;--warning:#FDBA4D;--warning-tint:#3A2810;--error:#FF8F8F;--error-tint:#3D161D;
   --info:#7DB0FF;--info-tint:#172A4A;--purple:#BCA4FF;--purple-tint:#2A1F4A;
@@ -88,7 +92,8 @@
 @media print{
   html,body{height:auto;background:#fff!important}
   body::before{display:none}
-  #root{display:none!important}
+  /* Print only the bill: hide the app (Inertia mounts it in #app) and every portal (modals, toasts) next to it. */
+  body > :not(#bill-print){display:none!important}
 }
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -110,6 +115,26 @@ button,input,select,textarea{font:inherit;color:inherit}
 }
 
 @layer components {
+/* Dashboard charts (hand-drawn SVG). */
+.chart-filters{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.chart-filters .input{width:auto;min-height:40px}
+.chart-filters .btn{min-width:40px;padding-inline:10px}
+.chart-hero{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:4px 0 8px}
+.chart-hero .val{font-size:26px;line-height:32px;font-weight:600}
+.chart-box{position:relative;width:100%;min-height:220px}
+.chart-axis{font-size:12px;fill:var(--ink-muted);font-variant-numeric:tabular-nums}
+.chart-label{font-size:12px;fill:var(--ink);font-weight:500}
+.chart-tip{position:absolute;transform:translateX(-50%);display:flex;flex-direction:column;gap:2px;min-width:150px;padding:8px 10px;border-radius:8px;background:var(--tip-bg);color:#fff;font-size:13px;line-height:18px;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,.18);z-index:2}
+.chart-tip .muted{color:rgba(255,255,255,.75)}
+.chart-tip .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px;vertical-align:middle}
+.chart-empty{position:absolute;inset:0 0 28px 52px;display:grid;place-items:center;pointer-events:none}
+.chart-legend{display:flex;gap:16px;flex-wrap:wrap;list-style:none;margin:0 0 4px;padding:0;font-size:13px}
+.chart-legend li{display:flex;align-items:center;gap:6px}
+.chart-legend .key{display:inline-block;width:16px;height:3px;border-radius:2px}
+.chart-legend .key-dash{background:repeating-linear-gradient(90deg,currentColor 0 6px,transparent 6px 9px)!important}
+.chart-table{margin-top:8px}
+.chart-table summary{cursor:pointer;width:max-content}
+.chart-table table{margin-top:8px}
 /* Top bar: on staff screens it is the top of the main column (the brand lives in the sidebar); on the guest preview it is full width with the brand. */
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--chrome-bg);border-bottom:1px solid var(--chrome-border)}
 .main > .top{margin:-24px calc(-1 * max(var(--main-px),env(safe-area-inset-right,0px))) 24px calc(-1 * max(var(--main-px),env(safe-area-inset-left,0px)))}

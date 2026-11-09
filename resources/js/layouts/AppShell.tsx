@@ -3,7 +3,7 @@ import { router, usePage } from "@inertiajs/react";
 import { Icon } from "@/components/Icon";
 import { GuestShell } from "@/components/guest/GuestShell";
 import { NAV, KITCHEN } from "@/lib/constants";
-import type { ModuleId } from "@/types/restaurant";
+import type { ModuleId, PageId } from "@/types/restaurant";
 import { useOrders, useReservations, useTables, usePayments, useRoles, useUsers } from "@/hooks/useApi";
 import { useUi } from "@/context/ui";
 import { printBill } from "@/context/print";
@@ -21,13 +21,14 @@ export function AppShell({ children }: { children: ReactNode }) {
     const { mode, signedOut, meId } = useUi();
     const allowed = useAllowed();
     // The page component name is '<module>/<Module>Page'.
-    const asked = usePage().component.split("/")[0] as ModuleId;
+    const asked = usePage().component.split("/")[0] as PageId;
     // A module the role cannot open (typed URL, notification, menu) falls back to the first allowed one.
     // After a refresh the users and roles load a moment later: do not redirect until they are here.
     const users = useUsers().data,
         roles = useRoles().data;
     const ready = users.length > 0 && roles.length > 0;
-    const view: ModuleId = !ready || allowed.includes(asked) ? asked : (allowed[0] ?? "guide");
+    // Every signed-in user can open their own profile page.
+    const view: PageId = !ready || asked === "profile" || allowed.includes(asked) ? asked : (allowed[0] ?? "guide");
     useEffect(() => {
         if (signedOut) router.visit("/login", { replace: true });
         else if (ready && view !== asked) router.visit("/" + view, { replace: true });
@@ -50,7 +51,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     return <StaffFrame view={view}>{children}</StaffFrame>;
 }
 
-function StaffFrame({ view, children }: { view: ModuleId; children: ReactNode }) {
+function StaffFrame({ view, children }: { view: PageId; children: ReactNode }) {
     const { go } = useUi();
     const allowed = useAllowed();
     const now = useNow(15000);

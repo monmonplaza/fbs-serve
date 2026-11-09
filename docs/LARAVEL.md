@@ -20,7 +20,7 @@ Framework and Spatie tables stay unprefixed (`users`, `roles`, `permissions`, ..
 | `app_foods` | id, category_id FK `app_categories`, name, price, description, status (`available`/`unavailable`), eta_minutes, tags json | `price` = lowest variant price when variants exist |
 | `app_food_variants` | id, food_id FK, name, price; unique (food_id, name) | |
 | `app_food_photos` | id, food_id FK, path, position | `path` is the stored path of a private file on the `s3` disk (DigitalOcean Spaces) uploaded through `POST /api/uploads` (`HandlesFileUploads`); `FoodResource` shows short-lived links. Removed photos are deleted from storage |
-| `app_payment_methods` | id, name, details, active, needs_ref, qr (stored path from `POST /api/uploads`, shown as a short-lived link; old data URLs still load) | `needs_ref`: GCash, Maya, cards; staff must enter the transaction reference |
+| `app_payment_methods` | id, name, details, active, needs_ref, qr (stored path from `POST /api/uploads`, shown as a short-lived link; old data URLs still load) | `needs_ref`: GCash, Maya, cards; shows an optional transaction reference field |
 | `app_discounts` | id, name, pct, note, active | |
 | `app_floors` | id, name | at least one must exist |
 | `app_dining_tables` | id, floor_id FK, name, seats, x, y (percent), status | `status` follows the open session (see rules) |
@@ -36,7 +36,7 @@ Framework and Spatie tables stay unprefixed (`users`, `roles`, `permissions`, ..
 | `app_reservation_history` | id, reservation_id FK, at, text | |
 | `app_settings` | id, table_timer_on bool, table_timer_mins (1 to 600) | one row, created on first read (`AppSetting::current()`) |
 
-Users: the framework `users` table gained `username` (unique), `role_id` FK `app_roles` (restrict on delete), `active`; `email` and `password` are optional until login exists. When Sanctum login arrives, the role's `modules` become the policy/route-middleware check (the UI only hides modules today).
+Users: the framework `users` table gained `username` (unique), `role_id` FK `app_roles` (restrict on delete), `active`, and for the Profile page `avatar` (stored path on the `s3` disk, folder `avatars`), `phone`, `address`; `email` and `password` are optional until login exists (the login page does not check the password yet). When Sanctum login arrives, the role's `modules` become the policy/route-middleware check (the UI only hides modules today).
 Every table gets an explicit `$table`, short explicit index names for long composite keys (section 11.4), and foreign keys with `->constrained('app_...')`.
 
 ## Routes: standard CRUD plus actions
@@ -50,9 +50,9 @@ Register custom `POST` routes before `Route::crudModule` (section 6.1). `crudMod
 | `orders.payTable / payBill / payPickup / handover` | `POST /tables/{id}/pay`, `POST /orders/{code}/pay` (pays the whole order), `POST /orders/{code}/pickup`, `POST /orders/{code}/handover` |
 | `orders.placeTakeout`, `guest.placeTakeout` | `POST /takeout` (staff) and `POST /public/takeout` (QR) |
 | `kitchen.queue / next / toReady / serve` | `GET /kitchen/queue`, `PATCH /orders/{code}/advance`, `PATCH /orders/{code}/ready`, `PATCH /orders/{code}/serve` (`{code}` is the round code) |
-| `tables.*` | `crudModule('/tables')`, `crudModule('/floors')`, `POST /tables/{id}/activate`, `POST /tables/{id}/clean`, `PATCH /tables/{id}/position` |
+| `tables.*` | `crudModule('/tables')`, `crudModule('/floors')`, `POST /tables/{id}/activate`, `POST /tables/{id}/order`, `POST /tables/{id}/clean`, `PATCH /tables/{id}/position` |
 | `reservations.*` | `crudModule('/reservations', only index, store, update, destroy)`, `PATCH /reservations/{id}/move`, `/move-day`, `/cancel`, `/no-show`, `/restore`, `/dismiss`, `POST /reservations/{id}/seat` |
-| `admin.*` | `crudModule('/payment-methods')`, `/discounts`, `/roles`, `/users`; `GET/PATCH /settings` (`tableTimerOn`, `tableTimerMins`) |
+| `admin.*` | `crudModule('/payment-methods')`, `/discounts`, `/roles`, `/users`, `POST /users/{id}/profile`, `POST /users/{id}/password`; `GET/PATCH /settings` (`tableTimerOn`, `tableTimerMins`) |
 | `guest.*` | public, token-scoped: `GET /public/tables/{table}/session?k=` (join), `.../plate?k=`, `POST .../plate-lines`, `PATCH .../plate-lines/{id}` (`delta` or `note`), `POST .../send`, `POST .../bill-out`; Takeout QR uses table `__takeout` |
 
 Guest endpoints are unauthenticated: authorize by the table token in the query string and reject a closed or replaced session. Rate-limit them.

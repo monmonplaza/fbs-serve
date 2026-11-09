@@ -4,10 +4,12 @@ namespace App\Http\Controllers\v1\Tables;
 
 use App\Exceptions\ApiException;
 use App\Http\Controllers\v1\BaseController;
+use App\Http\Resources\OrderRoundResource;
 use App\Http\Resources\TableResource;
 use App\Models\DiningTable;
 use App\Models\Order;
 use App\Support\Money;
+use App\Support\OrderService;
 use App\Support\Settlement;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
@@ -81,6 +83,25 @@ class TableController extends BaseController
         });
 
         return $this->sendResponse($this->present($this->fresh($table)), 'Table activated');
+    }
+
+    /** Staff enter an order for a table whose guests have no phone. Names and prices come from the menu. */
+    public function order(Request $request, int $id): JsonResponse
+    {
+        $v = $request->validate([
+            'items' => ['required', 'array', 'min:1', 'max:50'],
+            'items.*.foodId' => ['required'],
+            'items.*.variantId' => ['nullable'],
+            'items.*.qty' => ['required', 'integer', 'min:1', 'max:99'],
+            'items.*.note' => ['nullable', 'string', 'max:120'],
+            'by' => ['nullable', 'string', 'max:60'],
+        ]);
+        $session = DiningTable::query()->findOrFail($id)->openSession ?? throw new ApiException('Activate the table first.');
+        $round = OrderService::sendForTable($session, collect($v['items'])->map(fn ($i) => [
+            'food_id' => $i['foodId'], 'variant_id' => $i['variantId'] ?? null, 'qty' => (int) $i['qty'], 'note' => $i['note'] ?? null,
+        ]), trim($v['by'] ?? '') ?: 'Staff');
+
+        return $this->sendResponse((new OrderRoundResource(OrderService::findRound($round->code)))->resolve(), 'Sent to the kitchen', 201);
     }
 
     /** Back to inactive. The session closes, so the old QR token stops working. */

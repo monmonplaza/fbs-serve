@@ -27,7 +27,7 @@ export { goToSettingsTab } from "@/hooks/useSettingsTab";
 
 const TITLES: Record<string, string> = {
     ...Object.fromEntries(Object.entries(SET).map(([k, c]) => [k, c.title])),
-    timer: "Table timer",
+    timer: "Table Timer",
 };
 
 export default function SettingsPage() {

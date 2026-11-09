@@ -32,10 +32,6 @@ function checkPays(pays: Payment[], due: number) {
         received: p.received == null ? undefined : r2(p.received),
         ref: p.ref?.trim().slice(0, 40) || undefined,
     }));
-    const need = rows
-        .map((r) => db.payments.find((m) => m.id === r.method))
-        .find((m, i) => m?.needsRef && !rows[i].ref);
-    if (need) fail(`Enter the reference no. for ${need.name}`);
     if (!rows.length || rows.some((r) => !(r.amount > 0)) || r2(sum(rows.map((r) => r.amount)) - due) !== 0)
         fail(`The payments must add up to ₱${due.toFixed(2)}`);
     if (rows.length === 1 && rows[0].received != null && rows[0].received < due)

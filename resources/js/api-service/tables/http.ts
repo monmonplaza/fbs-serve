@@ -4,13 +4,26 @@
  */
 
 import { http, unwrap } from "@/api-service/client";
-import type { DiningTable, Floor, Order } from "@/types/restaurant";
+import type { DiningTable, Floor, Order, OrderItem } from "@/types/restaurant";
 
 export const tablesHttp = {
     list: async () => unwrap<DiningTable[]>(await http.get("/tables")),
     floors: async () => unwrap<Floor[]>(await http.get("/floors")),
     activate: async (id: string, guests: number) =>
         unwrap<DiningTable>(await http.post(`/tables/${id}/activate`, { guests })),
+    /** Only ids, quantities and notes are sent; the server takes names and prices from the menu. */
+    order: async (id: string, items: OrderItem[], by: string) =>
+        unwrap<Order>(
+            await http.post(`/tables/${id}/order`, {
+                by,
+                items: items.map((i) => ({
+                    foodId: i.foodId,
+                    variantId: i.variantId ?? null,
+                    qty: i.qty,
+                    note: i.note ?? null,
+                })),
+            }),
+        ),
     clean: async (id: string) => unwrap<DiningTable>(await http.post(`/tables/${id}/clean`)),
     serveOrder: async (orderId: string) => unwrap<Order>(await http.patch(`/orders/${orderId}/serve`)),
     move: async (id: string, x: number, y: number) =>

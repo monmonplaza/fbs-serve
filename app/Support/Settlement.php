@@ -6,7 +6,6 @@ use App\Exceptions\ApiException;
 use App\Models\Discount;
 use App\Models\Order;
 use App\Models\OrderRound;
-use App\Models\PaymentMethod;
 use Illuminate\Support\Facades\DB;
 
 /** Payment rules: one bill per order, one discount, a payment list that adds up to the amount due. */
@@ -53,13 +52,7 @@ final class Settlement
                 'received' => isset($p['received']) ? Money::r2($p['received']) : null,
                 'ref' => isset($p['ref']) && trim((string) $p['ref']) !== '' ? mb_substr(trim((string) $p['ref']), 0, 40) : null,
             ]);
-            // Digital methods need the transaction reference, so a payment can be traced back to the GCash/Maya record.
-            foreach ($rows as $r) {
-                $m = ctype_digit($r['method']) ? PaymentMethod::query()->find((int) $r['method']) : null;
-                if ($m?->needs_ref && $r['ref'] === null) {
-                    throw new ApiException("Enter the reference no. for {$m->name}");
-                }
-            }
+            // The reference no. (GCash, Maya, cards) is optional: it is saved when staff enter it.
             if ($rows->isEmpty() || $rows->contains(fn ($r) => ! ($r['amount'] > 0)) || Money::r2($rows->sum('amount') - $due) !== 0.0) {
                 throw new ApiException('The payments must add up to '.Money::peso($due));
             }

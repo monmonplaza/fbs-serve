@@ -89,6 +89,29 @@ final class OrderService
     }
 
     /**
+     * Staff take the order for a table whose guests have no phone: the lines go to the kitchen as the next round of the
+     * session's order, exactly as if a guest had sent them from the plate.
+     *
+     * @param  iterable<array{food_id: int|string, variant_id?: int|string|null, qty: int, note?: ?string}>  $lines
+     */
+    public static function sendForTable(TableSession $session, iterable $lines, string $by): OrderRound
+    {
+        return DB::transaction(function () use ($session, $lines, $by) {
+            $session = TableSession::query()->lockForUpdate()->findOrFail($session->id);
+            $table = $session->table;
+            if ($session->closed_at || ! in_array($table->status, ['active', 'ordering', 'eating'], true)) {
+                throw new ApiException($table->status === 'billout' ? 'The bill was already requested for this table.' : 'Activate the table first.');
+            }
+            ['items' => $items, 'eta' => $eta] = self::buildItems($lines);
+            $order = $session->order ?? self::newOrder(['session_id' => $session->id, 'table_id' => $table->id, 'type' => 'dine_in', 'created_by' => $by]);
+            $round = self::addRound($order, $items, $eta, $by);
+            TableSync::sync($table);
+
+            return $round;
+        });
+    }
+
+    /**
      * Takeout (counter entry, Takeout QR or a delivery platform): its own order with a single round and a pickup number per day.
      *
      * @param  iterable<array<string, mixed>>  $lines

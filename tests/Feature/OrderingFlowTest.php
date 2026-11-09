@@ -125,7 +125,7 @@ it('discount and split payment add up per round', function () {
     $this->postJson("/api/orders/{$a}/pay", ['pays' => [['method' => $cash, 'amount' => 1]]])->assertUnprocessable()->assertJsonPath('message', 'This order is already paid.');
 });
 
-it('gcash needs a reference that the guest can send and staff must confirm', function () {
+it('the gcash reference is optional and saved when staff enter it', function () {
     $this->add('Garlic Rice', 'Guest 1');   // 65
     $a = $this->postJson($this->url('send'), ['by' => 'Guest 1'])->json('data.id');
     foreach (range(1, 3) as $_) {
@@ -137,8 +137,6 @@ it('gcash needs a reference that the guest can send and staff must confirm', fun
 
     $this->postJson($this->url('bill-out'), ['method' => $gcash])->assertOk();
 
-    // Staff cannot confirm a GCash payment without a reference.
-    $this->postJson("/api/tables/{$this->table->id}/pay", ['pays' => [['method' => $gcash, 'amount' => 65]]])->assertUnprocessable()->assertJsonPath('message', 'Enter the reference no. for GCash');
     $this->postJson("/api/tables/{$this->table->id}/pay", ['pays' => [['method' => $gcash, 'amount' => 65, 'ref' => '1234 567 890123']]])->assertOk();
     $o = $this->getJson('/api/orders')->json('data.0');
     $this->assertSame('1234 567 890123', $o['payRef']);
@@ -203,4 +201,17 @@ it('keeps the table stay timer settings', function () {
     $this->getJson('/api/settings')->assertJsonPath('data.tableTimerOn', true)->assertJsonPath('data.tableTimerMins', 45);
     $this->patchJson('/api/settings', ['tableTimerMins' => 0])->assertUnprocessable();
     $this->patchJson('/api/settings', ['tableTimerMins' => 601])->assertUnprocessable();
+});
+
+it('a gcash payment can be confirmed without a reference', function () {
+    $this->add('Garlic Rice', 'Guest 1');
+    $a = $this->postJson($this->url('send'), ['by' => 'Guest 1'])->json('data.id');
+    foreach (range(1, 3) as $_) {
+        $this->patchJson("/api/orders/{$a}/advance");
+    }
+    $this->patchJson("/api/orders/{$a}/serve")->assertOk();
+    $gcash = (string) PaymentMethod::where('name', 'GCash')->value('id');
+
+    $this->postJson("/api/tables/{$this->table->id}/pay", ['pays' => [['method' => $gcash, 'amount' => 65]]])->assertOk();
+    expect($this->getJson('/api/orders')->json('data.0.payRef'))->toBeNull();
 });

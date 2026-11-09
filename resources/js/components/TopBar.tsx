@@ -1,3 +1,4 @@
+import { router } from "@inertiajs/react";
 import { useEffect, useRef, useState } from "react";
 import { useAllowed } from "@/lib/access";
 import { Icon } from "@/components/Icon";
@@ -7,7 +8,6 @@ import { openModal, closeModal } from "@/context/modal";
 import { mins } from "@/lib/format";
 import { useTheme } from "@/lib/theme";
 import { useNow } from "@/hooks/useNow";
-import { ProfileModal } from "@/components/ProfileModal";
 
 const LOGO = <img className="logo" src="/assets/fbs-serve-logo.png" alt="FBS Serve logo" />;
 const initials = (n: string) =>
@@ -169,9 +169,13 @@ function AccountMenu() {
                 title={me.name}
                 onClick={() => setOpen((o) => !o)}
             >
-                <span className="avatar" aria-hidden="true">
-                    {initials(me.name)}
-                </span>
+                {me.avatar ? (
+                    <img src={me.avatar} alt="" aria-hidden="true" className="avatar object-cover" />
+                ) : (
+                    <span className="avatar" aria-hidden="true">
+                        {initials(me.name)}
+                    </span>
+                )}
                 <span className="utext">
                     <b>{me.name.split(" ")[0]}</b>
                     <small>{role}</small>
@@ -182,9 +186,7 @@ function AccountMenu() {
                     <div className="uinfo">
                         <b>{me.name}</b>
                     </div>
-                    {item("user", "Profile", () =>
-                        openModal({ title: "Profile", content: <ProfileModal user={me} role={role} /> }),
-                    )}
+                    {item("user", "Profile", () => router.visit("/profile"))}
                     {allowed.includes("settings") && item("sliders", "Settings", () => go("settings"))}
                     {item("logout", "Log out", logout, true)}
                 </div>

@@ -10,6 +10,7 @@ use App\Http\Controllers\v1\Orders\OrderController;
 use App\Http\Controllers\v1\Orders\PaymentMethodController;
 use App\Http\Controllers\v1\Reservations\ReservationController;
 use App\Http\Controllers\v1\Settings\SettingsController;
+use App\Http\Controllers\v1\Staff\ProfileController;
 use App\Http\Controllers\v1\Staff\RoleController;
 use App\Http\Controllers\v1\Staff\UserController;
 use App\Http\Controllers\v1\Tables\FloorController;
@@ -34,6 +35,7 @@ Route::middleware('dev.open')->group(function () {
 
     Route::post('/tables/{id}/activate', [TableController::class, 'activate'])->whereNumber('id');
     Route::post('/tables/{id}/clean', [TableController::class, 'clean'])->whereNumber('id');
+    Route::post('/tables/{id}/order', [TableController::class, 'order'])->whereNumber('id');
     Route::post('/tables/{id}/pay', [TableController::class, 'pay'])->whereNumber('id');
     Route::patch('/tables/{id}/position', [TableController::class, 'position'])->whereNumber('id');
 
@@ -50,6 +52,8 @@ Route::middleware('dev.open')->group(function () {
     Route::post('/reservations/{id}/seat', [ReservationController::class, 'seat'])->whereNumber('id');
     Route::crudModule('/reservations', ReservationController::class, 'reservations', ['index', 'store', 'update', 'destroy']);
     Route::crudModule('/roles', RoleController::class, 'roles', ['index', 'store', 'update', 'destroy']);
+    Route::post('/users/{id}/profile', [ProfileController::class, 'update'])->whereNumber('id');
+    Route::post('/users/{id}/password', [ProfileController::class, 'password'])->whereNumber('id');
     Route::crudModule('/users', UserController::class, 'users', ['index', 'store', 'update', 'destroy']);
 
     Route::crudModule('/foods', FoodController::class, 'foods');
