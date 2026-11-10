@@ -8,6 +8,7 @@ use App\Http\Resources\OrderRoundResource;
 use App\Http\Resources\TableResource;
 use App\Models\DiningTable;
 use App\Models\Order;
+use App\Models\TableSession;
 use App\Support\Money;
 use App\Support\OrderService;
 use App\Support\Settlement;
@@ -15,7 +16,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class TableController extends BaseController
 {
@@ -76,7 +76,7 @@ class TableController extends BaseController
             if ($t->status !== 'inactive') {
                 throw new ApiException("{$t->name} is not free.");
             }
-            $t->sessions()->create(['token' => Str::lower(Str::random(10)), 'guests' => $guests, 'opened_at' => now()]);
+            $t->sessions()->create(TableSession::startAttributes($guests));
             $t->update(['status' => 'active']);
 
             return $t;

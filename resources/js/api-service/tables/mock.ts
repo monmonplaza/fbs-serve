@@ -6,6 +6,7 @@
 import { db } from "@/api-service/mock/db";
 import { out, tableOf, orderOf, syncTable, fail, uid, nextId } from "@/api-service/mock/core";
 import { orderEta } from "@/lib/domain";
+import { newTableCode } from "@/lib/guestLink";
 import { clamp, r2 } from "@/lib/format";
 import type { DiningTable, Order, OrderItem } from "@/types/restaurant";
 
@@ -18,7 +19,14 @@ export const tables = {
     /** Guests sit down: new QR session, empty plate. */
     activate: async (id: string, guests: number) => {
         const t = need(id);
-        Object.assign(t, { status: "active", token: uid(), openedAt: Date.now(), bill: null, guests });
+        Object.assign(t, {
+            status: "active",
+            token: uid(),
+            code: newTableCode(),
+            openedAt: Date.now(),
+            bill: null,
+            guests,
+        });
         db.plates[t.id] = [];
         return out(t);
     },
@@ -48,7 +56,7 @@ export const tables = {
     /** Back to inactive. The old QR token stops working. */
     clean: async (id: string) => {
         const t = need(id);
-        Object.assign(t, { status: "inactive", token: null, openedAt: null, bill: null, guests: null });
+        Object.assign(t, { status: "inactive", token: null, code: null, openedAt: null, bill: null, guests: null });
         db.plates[t.id] = [];
         return out(t);
     },

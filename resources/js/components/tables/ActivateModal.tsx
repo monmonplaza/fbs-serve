@@ -15,14 +15,14 @@ function ActivateForm({ table }: { table: DiningTable }) {
         const t = await api.tables.activate(table.id, Math.max(1, Math.min(99, Math.round(+guests) || 1)));
         await invalidate("tables", "plate");
         openQr(t);
-        toast(`${t.name} is active. Show the QR code to the guests.`);
+        toast(t.code ? `${t.name} is active. Table code: ${t.code}` : `${t.name} is active.`);
     };
     return (
         <form onSubmit={submit}>
             <div className="m-body">
                 <p>
-                    Activate this table after the guests sit down. Its QR code appears next, for the guests to scan and
-                    order.
+                    Activate this table after the guests sit down. You get a 4-digit table code to give them: they scan the
+                    QR code on the table and enter it to order.
                 </p>
                 <label className="field">
                     <span>Number of guests</span>
@@ -48,7 +48,7 @@ function ActivateForm({ table }: { table: DiningTable }) {
                 </button>
                 <button className="btn btn-primary">
                     <Icon name="qr" size={20} />
-                    Activate and show QR
+                    Activate and get code
                 </button>
             </div>
         </form>

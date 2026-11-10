@@ -92,8 +92,10 @@ export interface DiningTable {
     x: number;
     y: number;
     status: TableStatus;
-    /** Identifies the QR session. A new token invalidates the old QR. */
+    /** Identifies the table session. The phone gets it by entering `code`; a new session invalidates the old token. */
     token: string | null;
+    /** The 4-digit code the waiter gives each new group. The printed table QR never changes; this does. */
+    code?: string | null;
     openedAt: number | null;
     bill: TableBill | null;
     guests?: number | null;

@@ -68,6 +68,8 @@ Route::middleware('dev.open')->group(function () {
 | Guest phone. Token-scoped (`k` = the table session's QR token) and rate limited. `__takeout` is the Takeout QR's pseudo table.
 */
 Route::prefix('public')->middleware(['dev.open', 'throttle:120,1'])->group(function () {
+    // A wrong table code costs an attempt: 10 tries a minute per device (AppServiceProvider), so 4 digits cannot be guessed quickly.
+    Route::post('/tables/{table}/join', [GuestController::class, 'joinWithCode'])->middleware('throttle:table-code');
     Route::get('/tables/{table}/session', [GuestController::class, 'join']);
     Route::get('/tables/{table}/plate', [GuestController::class, 'plate']);
     Route::post('/tables/{table}/plate-lines', [GuestController::class, 'addLine']);

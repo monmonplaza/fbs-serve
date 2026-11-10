@@ -17,10 +17,20 @@ export const guest = {
     /** Opened from a table QR code: the phone joins that table's session (the prototype has no server, so it creates it). */
     join: async (tableId: string, token: string) => {
         const t = tableOf(tableId);
-        if (t) {
+        if (!t) return false;
+        if (t.token !== token) {
             Object.assign(t, { status: "active", token, openedAt: Date.now(), bill: null });
             db.plates[t.id] = [];
         }
+        return true;
+    },
+    /** The printed table QR has no token: the phone sends the code the waiter gave and gets the session token back. */
+    enterCode: async (tableId: string, code: string) => {
+        const t = tableOf(tableId);
+        if (!t || !t.token || ["inactive", "cleaning"].includes(t.status))
+            return fail("This table is not active yet. Ask your waiter to activate it.");
+        if (code.trim() !== t.code) return fail("That code is not right. Ask your waiter for the table code.");
+        return t.token;
     },
     plate: async (tableId: string) => out(db.plates[tableId] ?? []),
     /** The Takeout-QR order the guest preview starts with (demo only). */

@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { printTableQrs } from "@/context/print";
 import { goToSettingsTab } from "@/pages/settings/SettingsPage";
 import { Icon } from "@/components/Icon";
 import { Pill } from "@/components/Pill";
@@ -113,6 +114,16 @@ export default function TablesPage() {
                 <button className="btn btn-outline" onClick={() => goToSettingsTab("tables")}>
                     <Icon name="sliders" size={20} />
                     Manage tables
+                </button>
+                <button
+                    className="btn btn-outline"
+                    disabled={!tables.length}
+                    onClick={() =>
+                        printTableQrs([...tables].sort((a, b) => a.name.localeCompare(b.name, "en", { numeric: true })))
+                    }
+                >
+                    <Icon name="qr" size={20} />
+                    Print QR codes
                 </button>
                 <button
                     className={`btn ${edit ? "btn-primary" : "btn-outline"} desk-only`}

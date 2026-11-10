@@ -15,6 +15,7 @@ import { GuestMenu } from "@/components/guest/GuestMenu";
 import { GuestPlate } from "@/components/guest/GuestPlate";
 import { GuestOrders } from "@/components/guest/GuestOrders";
 import { GuestBill, GuestClosed } from "@/components/guest/GuestBill";
+import { CodeEntry } from "@/components/guest/CodeEntry";
 import { PickSheet } from "@/components/guest/PickSheet";
 import { SendModal, TakeoutModal } from "@/components/guest/GuestModals";
 import { useMyTakeouts } from "@/lib/guestStore";
@@ -30,8 +31,9 @@ function Phone({ tableId }: { tableId: string }) {
         orders = useOrders().data;
     const plate = usePlate(tableId).data,
         invalidate = useInvalidate();
-    const { name, tab: gtab } = useUi((s) => s.guest),
-        setGuest = useUi((s) => s.setGuest);
+    const { name, tab: gtab, key: guestKey } = useUi((s) => s.guest),
+        setGuest = useUi((s) => s.setGuest),
+        guestOnly = useUi((s) => s.guestOnly);
     const mine = useMyTakeouts((s) => s.ids);
     const [pick, setPick] = useState<Food | null>(null);
     const t = takeout ? null : tables.find((x) => x.id === tableId);
@@ -59,7 +61,10 @@ function Phone({ tableId }: { tableId: string }) {
     };
 
     if (!takeout && !t) return null;
+    // A guest's phone joins the seated group with the waiter's table code. The staff preview never needs it.
+    const joined = !guestOnly || takeout || (!!t?.token && guestKey === t.token);
     const live = takeout || (!!t?.token && !["inactive", "cleaning"].includes(t.status));
+    const needsCode = live && !joined;
     const sessionOrders = t ? orders.filter((o) => o.table === t.id && !!t.token && o.session === t.token) : [];
     const tabs: [Tab, string, string][] = [
         ["menu", "Menu", "utensils"],
@@ -99,13 +104,17 @@ function Phone({ tableId }: { tableId: string }) {
                         <Icon name="bag" size={16} />
                         Takeout
                     </span>
-                ) : live ? (
+                ) : live && joined ? (
                     <Pill meta={TSTAT[t!.status]} />
                 ) : null}
             </div>
             {!live ? (
                 <div className="g-scroll">
-                    <GuestClosed t={t!} />
+                    <GuestClosed t={t!} paid={joined} />
+                </div>
+            ) : needsCode ? (
+                <div className="g-scroll">
+                    <CodeEntry t={t!} />
                 </div>
             ) : (
                 <>

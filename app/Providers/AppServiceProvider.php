@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
@@ -23,6 +26,9 @@ class AppServiceProvider extends ServiceProvider
     {
         // The envelope is added by BaseController::sendResponse, so a Resource must not wrap itself in `data`.
         JsonResource::withoutWrapping();
+
+        // Table codes are 4 digits: 10 tries a minute per device and table, counted apart from the general guest limit.
+        RateLimiter::for('table-code', fn (Request $request) => Limit::perMinute(10)->by('table-code|'.$request->ip().'|'.$request->route('table')));
 
         // Section 6.1. Register any custom POST route BEFORE calling this, or `POST /{id}` captures it.
         Route::macro('crudModule', function (string $prefix, string $controller, string $name, ?array $only = null) {

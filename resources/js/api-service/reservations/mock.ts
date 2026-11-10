@@ -6,6 +6,7 @@
 import { db } from "@/api-service/mock/db";
 import { out, fail, uid, syncTable, tableOf } from "@/api-service/mock/core";
 import { resProblem } from "@/lib/reservations";
+import { newTableCode } from "@/lib/guestLink";
 import { tm } from "@/lib/format";
 import type { OrderItem, Reservation } from "@/types/restaurant";
 
@@ -123,7 +124,14 @@ export const reservations = {
         const t = tableOf(tableId);
         if (!t || t.status !== "inactive") fail("That table is in use");
         const tb = t!;
-        Object.assign(tb, { status: "active", token: uid(), openedAt: Date.now(), bill: null, guests: r.pax });
+        Object.assign(tb, {
+            status: "active",
+            token: uid(),
+            code: newTableCode(),
+            openedAt: Date.now(),
+            bill: null,
+            guests: r.pax,
+        });
         db.plates[tb.id] = (r.order || []).map((i) => ({
             id: uid(),
             foodId: i.foodId,

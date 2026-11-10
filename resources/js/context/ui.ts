@@ -1,4 +1,5 @@
 import { router } from "@inertiajs/react";
+import { savedKey } from "@/lib/guestLink";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { ModuleId, PageId } from "@/types/restaurant";
@@ -22,7 +23,8 @@ interface UiState {
     meId: string;
     signedOut: boolean;
     notifs: Notif[];
-    guest: { table: string; name: string; tab: "menu" | "plate" | "orders" | "bill"; cat: string };
+    /** `key`: the session token this phone joined with (by code or an old QR link); empty until it joins. */
+    guest: { table: string; name: string; tab: "menu" | "plate" | "orders" | "bill"; cat: string; key?: string };
     set: (p: Partial<Omit<UiState, "set" | "notify" | "go">>) => void;
     setGuest: (p: Partial<UiState["guest"]>) => void;
     /** Adds an entry to the bell. Newest first, last 40 kept. */
@@ -60,13 +62,14 @@ export const useUi = create<UiState>()(
     ),
 );
 
-// Opened from a table QR code (/guest#t=<table>&k=<token>) or the Takeout QR (/guest#takeout): show only the guest phone.
+// Opened from a printed table QR code (/guest#t=<table>, or an older /guest#t=<table>&k=<token> link) or the Takeout QR
+// (/guest#takeout): show only the guest phone. The token to try is the link's, or the one this phone joined with before.
 export const bootFromHash = () => {
     const q = new URLSearchParams(location.hash.slice(1)),
         t = q.get("t"),
-        k = q.get("k");
+        k = q.get("k") ?? (t ? savedKey(t) : null);
     if (location.pathname !== "/guest") return { table: null, token: null };
-    if (t && k)
+    if (t)
         useUi.setState({
             guestOnly: true,
             mode: "guest",

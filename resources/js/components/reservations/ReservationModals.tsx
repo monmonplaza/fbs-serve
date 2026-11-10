@@ -3,7 +3,7 @@ import { api } from "@/api-service";
 import { useCategories, useFloors, useFoods, useReservations, useTables } from "@/hooks/useApi";
 import { Icon } from "@/components/Icon";
 import { Pill } from "@/components/Pill";
-import { QrCode } from "@/components/QrCode";
+import { TableQr } from "@/components/tables/QrModal";
 import { closeModal } from "@/context/modal";
 import { toast } from "@/context/toast";
 import { dt, peso, sum, tm } from "@/lib/format";
@@ -710,46 +710,7 @@ export function SeatModal({ id, msg }: { id: string; msg: string }) {
 }
 
 export function SeatedQrModal({ tableId }: { tableId: string }) {
-    const t = useTables().data.find((x) => x.id === tableId);
-    if (!t) return null;
-    const link = location.origin + "/guest#t=" + encodeURIComponent(t.id) + "&k=" + t.token;
-    const copy = () => {
-        const p = navigator.clipboard?.writeText(link);
-        if (p)
-            p.then(
-                () => toast("Link copied"),
-                () => toast("Select the link above and copy it"),
-            );
-        else toast("Select the link above and copy it");
-    };
-    return (
-        <>
-            <div className="m-body">
-                <div className="qr-box">
-                    <QrCode text={link} />
-                    <b>Scan to order</b>
-                    <span className="caption muted" style={{ wordBreak: "break-all", userSelect: "all" }}>
-                        {link}
-                    </span>
-                </div>
-                <p className="caption muted">
-                    Every guest at {t.name} scans this same code. It stops working once the table is marked clean.
-                </p>
-            </div>
-            <div className="m-foot">
-                <button className="btn btn-outline" onClick={closeModal}>
-                    Done
-                </button>
-                <button className="btn btn-outline" onClick={copy}>
-                    Copy link
-                </button>
-                <button className="btn btn-primary" onClick={() => openGuestView(t.id)}>
-                    <Icon name="phone" size={20} />
-                    Open guest view
-                </button>
-            </div>
-        </>
-    );
+    return <TableQr id={tableId} />;
 }
 
 export function JumpModal() {

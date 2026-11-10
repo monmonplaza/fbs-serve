@@ -8,6 +8,7 @@ use App\Http\Resources\ReservationResource;
 use App\Http\Resources\TableResource;
 use App\Models\DiningTable;
 use App\Models\Reservation;
+use App\Models\TableSession;
 use App\Support\OrderService;
 use App\Support\TableSync;
 use Carbon\Carbon;
@@ -15,7 +16,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 /** Bookings: the standard CRUD (create, edit, list) plus the actions the Reservations screen has (move, cancel, no-show, restore, dismiss, seat). */
 class ReservationController extends BaseController
@@ -173,7 +173,7 @@ class ReservationController extends BaseController
             if ($t->status !== 'inactive') {
                 throw new ApiException('That table is in use');
             }
-            $session = $t->sessions()->create(['token' => Str::lower(Str::random(10)), 'guests' => $r->pax, 'opened_at' => now()]);
+            $session = $t->sessions()->create(TableSession::startAttributes($r->pax));
             $t->update(['status' => 'active']);
             foreach ($r->items as $i) {
                 $session->plateLines()->create(['food_id' => $i->food_id, 'variant_id' => $i->variant_id, 'qty' => $i->qty, 'added_by' => $r->name]);

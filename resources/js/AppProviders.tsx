@@ -5,6 +5,7 @@ import { clientRef } from "@/hooks/useApi";
 import { useReservationNotices } from "@/hooks/useReservationNotices";
 import { useUi } from "@/context/ui";
 import { BillPrintHost } from "@/components/BillPrintHost";
+import { QrPrintHost } from "@/components/tables/QrPrintHost";
 import { LightboxHost } from "@/components/foods/Lightbox";
 import { ModalHost } from "@/components/ModalHost";
 import { Toast } from "@/components/Toast";
@@ -38,6 +39,7 @@ function Hosts({ children }: { children: ReactNode }) {
             <LightboxHost />
             <ModalHost />
             <BillPrintHost />
+            <QrPrintHost />
             <Toast />
         </>
     );

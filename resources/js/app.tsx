@@ -2,7 +2,8 @@ import { createInertiaApp } from "@inertiajs/react";
 import type { ComponentType } from "react";
 import { createRoot } from "react-dom/client";
 import { api } from "@/api-service";
-import { bootFromHash } from "@/context/ui";
+import { bootFromHash, useUi } from "@/context/ui";
+import { saveKey, setAppUrl } from "@/lib/guestLink";
 import { withResolvedLayout } from "./ResolvedLayout";
 
 const appName = "FBS Serve";
@@ -25,9 +26,15 @@ createInertiaApp({
         return page;
     },
     setup({ el, App, props }) {
-        // Opened from a table QR code (/guest#t=<table>&k=<token>): join that table's session before the first render.
+        setAppUrl(props.initialPage.props.appUrl);
+        // Opened from a table QR code: rejoin the session this phone joined before (or the link's token) before the first
+        // render. A token from a session that has ended is dropped, and the phone asks for the new table code.
         const { table, token } = bootFromHash();
-        (table && token ? api.guest.join(table, token) : Promise.resolve()).then(() => {
+        (table && token ? api.guest.join(table, token) : Promise.resolve(false)).then((ok) => {
+            if (table && token) {
+                saveKey(table, ok ? token : null);
+                if (ok) useUi.getState().setGuest({ key: token });
+            }
             createRoot(el).render(<App {...props} />);
         });
     },

@@ -29,6 +29,7 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        return array_merge(parent::share($request), []);
+        // The public address from APP_URL: printed QR codes are built from it, never from the address the staff happen to use.
+        return array_merge(parent::share($request), ['appUrl' => rtrim((string) config('app.url'), '/')]);
     }
 }

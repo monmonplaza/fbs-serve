@@ -24,7 +24,7 @@ Framework and Spatie tables stay unprefixed (`users`, `roles`, `permissions`, ..
 | `app_discounts` | id, name, pct, note, active | |
 | `app_floors` | id, name | at least one must exist |
 | `app_dining_tables` | id, floor_id FK, name, seats, x, y (percent), status | `status` follows the open session (see rules) |
-| `app_table_sessions` | id, table_id FK, token (unique), guests, opened_at, closed_at null, bill_method null, bill_requested_at null | replaces `token`/`openedAt`/`bill` on the table; a new row per activation, closing it invalidates the QR |
+| `app_table_sessions` | id, table_id FK, token (unique), code (4 digits, given to the guests by the waiter), guests, opened_at, closed_at null, bill_method null, bill_requested_at null | replaces `token`/`openedAt`/`bill` on the table; a new row per activation, closing it invalidates the QR |
 | `app_orders` | id, code (`ORD-1001`), session_id FK null (unique: **one order per table session**), table_id FK null, type (`dine_in`/`takeout`), created_by, discount_name null, discount_pct null, payment_method null, received null, change_given null, paid_at null | takeout: pickup_code (`TO-001`, per day), customer, phone, source (`counter`/`qr`), channel (`walkin`/`grab`/`panda`), channel_ref |
 | `app_order_rounds` | id, order_id FK, round_no, code (unique: `ORD-1001`, `ORD-1001-2`), status (`queued`...`served`/`ready`), created_by, eta_minutes, ready_at, served_at | every "Send to kitchen" adds a round; the kitchen works on rounds |
 | `app_order_items` | id, round_id FK, food_id FK null, variant_id null, name, price, qty, note (string 120, null) | name and price are snapshots |

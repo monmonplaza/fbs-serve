@@ -24,7 +24,7 @@ export const sod = (ts: number) => {
     d.setHours(0, 0, 0, 0);
     return +d;
 };
-export const takeoutLink = () => location.origin + "/guest#takeout";
+export { takeoutLink } from "@/lib/guestLink";
 export const isDineIn = (o: Order) => !isTO(o);
 
 /** Payment method id to its display name (also for split bills and delivery platforms). */

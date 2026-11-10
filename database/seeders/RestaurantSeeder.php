@@ -60,7 +60,7 @@ class RestaurantSeeder extends Seeder
         // One table already seated, so the guest QR (#t=<id>&k=abc123) works right after seeding.
         $t4 = DiningTable::query()->where('name', 'Table 4')->first();
         if ($t4 && $t4->sessions()->doesntExist()) {
-            $t4->sessions()->create(['token' => 'abc123', 'guests' => 3, 'opened_at' => now()]);
+            $t4->sessions()->create(['token' => 'abc123', 'code' => '1234', 'guests' => 3, 'opened_at' => now()]);
             $t4->update(['status' => 'active']);
         }
     }

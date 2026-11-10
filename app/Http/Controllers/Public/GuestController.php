@@ -26,6 +26,24 @@ class GuestController extends BaseController
 
     private const INVALID = 'This QR code is no longer valid. Ask your waiter for a new one.';
 
+    /**
+     * POST /api/public/tables/{table}/join: the printed table QR has no token, so the phone sends the code the waiter gave
+     * the table. A right code returns the open session's token, which every later call carries as `k`.
+     */
+    public function joinWithCode(Request $request, string $table): JsonResponse
+    {
+        $code = trim((string) $request->validate(['code' => ['required', 'string', 'max:10']])['code']);
+        $s = ctype_digit($table) ? TableSession::query()->where('table_id', (int) $table)->whereNull('closed_at')->latest('id')->first() : null;
+        if (! $s) {
+            throw new ApiException('This table is not active yet. Ask your waiter to activate it.', 409);
+        }
+        if ($s->code === null || ! hash_equals($s->code, $code)) {
+            throw new ApiException('That code is not right. Ask your waiter for the table code.', 422, ['code' => ['That code is not right.']]);
+        }
+
+        return $this->sendResponse(['token' => $s->token]);
+    }
+
     /** GET /api/public/tables/{table}/session: checks the QR token; the phone joins that table session. */
     public function join(Request $request, string $table): JsonResponse
     {

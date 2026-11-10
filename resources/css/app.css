@@ -93,7 +93,8 @@
   html,body{height:auto;background:#fff!important}
   body::before{display:none}
   /* Print only the bill: hide the app (Inertia mounts it in #app) and every portal (modals, toasts) next to it. */
-  body > :not(#bill-print){display:none!important}
+  body > :not(#bill-print):not(#qr-print){display:none!important}
+  #qr-print .qr{width:100%;height:auto;border-radius:0}
 }
 *{box-sizing:border-box}
 html,body{height:100%}

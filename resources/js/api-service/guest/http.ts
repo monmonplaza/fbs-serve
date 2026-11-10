@@ -8,6 +8,7 @@
 import { http, unwrap } from "@/api-service/client";
 import { clientRef, keys } from "@/hooks/useApi";
 import { TO } from "@/lib/constants";
+import { useUi } from "@/context/ui";
 import type { DiningTable, Order, PlateLine } from "@/types/restaurant";
 
 const joined = new Map<string, string>();
@@ -16,6 +17,8 @@ async function tokenFor(tableId: string): Promise<string> {
     if (tableId === TO) return "";
     const j = joined.get(tableId);
     if (j) return j;
+    // A guest's phone must join with the table code first. Only the staff preview borrows the table's current token.
+    if (useUi.getState().guestOnly) return "";
     const cached = clientRef.current?.getQueryData<DiningTable[]>(keys.tables)?.find((t) => t.id === tableId)?.token;
     if (cached) return cached;
     return unwrap<DiningTable[]>(await http.get("/tables")).find((t) => t.id === tableId)?.token ?? "";
@@ -29,9 +32,17 @@ export const guestHttp = {
         try {
             await http.get(`${base(tableId)}/session`, { params: { k: token } });
             joined.set(tableId, token);
+            return true;
         } catch {
             joined.delete(tableId);
+            return false;
         }
+    },
+    /** The printed table QR has no token: the phone sends the code the waiter gave and gets the session token back. */
+    enterCode: async (tableId: string, code: string) => {
+        const { token } = unwrap<{ token: string }>(await http.post(`${base(tableId)}/join`, { code: code.trim() }));
+        joined.set(tableId, token);
+        return token;
     },
     plate: async (tableId: string) => unwrap<PlateLine[]>(await http.get(`${base(tableId)}/plate`, await q(tableId))),
     /** The backend has no demo takeout; the preview starts empty. */

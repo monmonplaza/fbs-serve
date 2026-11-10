@@ -7,8 +7,9 @@ import { peso, sum } from "@/lib/format";
 import { openModal } from "@/context/modal";
 import { BillModal } from "@/components/guest/GuestModals";
 
-export function GuestClosed({ t }: { t: DiningTable }) {
-    if (t.status === "cleaning")
+/** `paid`: this phone was part of the group that just paid (a phone that never joined sees "not active yet" instead). */
+export function GuestClosed({ t, paid = true }: { t: DiningTable; paid?: boolean }) {
+    if (t.status === "cleaning" && paid)
         return (
             <div className="center" style={{ paddingTop: 48 }}>
                 <div className="big-ic">
@@ -30,7 +31,7 @@ export function GuestClosed({ t }: { t: DiningTable }) {
                 <Icon name="qr" size={32} />
             </div>
             <h3>{t.name} is not active yet</h3>
-            <p className="muted">Ask your waiter to activate this table. Then scan the QR code they show you.</p>
+            <p className="muted">Ask your waiter to activate this table and give you the table code.</p>
         </div>
     );
 }
