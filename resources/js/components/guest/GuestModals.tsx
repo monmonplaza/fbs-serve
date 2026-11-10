@@ -19,7 +19,12 @@ export function SendModal({ tableId }: { tableId: string }) {
     const invalidate = useInvalidate(),
         me = useUi((s) => s.guest.name);
     const items = plateItems(plate, foods);
+    // The guest confirms the whole table has finished adding food: the plate goes out as one order for everyone.
+    const [complete, setComplete] = useState(false);
+    const [busy, setBusy] = useState(false);
     const send = async () => {
+        if (!complete || busy) return;
+        setBusy(true);
         try {
             const o = await api.guest.send(tableId, me);
             useUi.getState().notify("plate", `${t?.name} sent a new order (${orderTag(o)})`, "kitchen");
@@ -29,6 +34,7 @@ export function SendModal({ tableId }: { tableId: string }) {
             toast(`${orderTag(o)} sent to the kitchen`);
         } catch (e) {
             toast((e as Error).message);
+            setBusy(false);
         }
     };
     return (
@@ -55,13 +61,28 @@ export function SendModal({ tableId }: { tableId: string }) {
                         );
                     })}
                 </ul>
+                <label className="radio-card" style={{ marginTop: 12 }}>
+                    <input type="checkbox" checked={complete} onChange={(e) => setComplete(e.target.checked)} />
+                    <span className="grow">
+                        <b>Everyone at the table has finished adding their food</b>
+                        <br />
+                        <span className="caption muted">
+                            I checked the list above with my table. Nothing is missing.
+                        </span>
+                    </span>
+                </label>
             </div>
             <div className="m-foot">
                 <button className="btn btn-outline" onClick={closeModal}>
                     Not yet
                 </button>
-                <button className="btn btn-primary" onClick={send}>
-                    Send to kitchen
+                <button
+                    className="btn btn-primary"
+                    onClick={send}
+                    disabled={!complete || busy}
+                    title={complete ? undefined : "Tick the box first to confirm your order is complete"}
+                >
+                    {busy ? "Sending…" : "Send to kitchen"}
                 </button>
             </div>
         </>

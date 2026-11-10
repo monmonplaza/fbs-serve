@@ -417,6 +417,7 @@ dialog>form{display:flex;flex-direction:column;min-height:0;flex:1 1 auto}
 
 /* Toast */
 #toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--surface-card);padding:12px 20px;border-radius:var(--r-md);font-weight:500;box-shadow:var(--shadow-lift);z-index:50;display:flex;gap:8px;align-items:center;max-width:calc(100% - 32px)}
+#toast.top{top:calc(16px + env(safe-area-inset-top,0px));bottom:auto}
 
 /* Kitchen kanban */
 .kanban{display:grid;grid-template-columns:repeat(4,minmax(220px,1fr));gap:16px;overflow-x:auto;padding-bottom:8px;align-items:start}

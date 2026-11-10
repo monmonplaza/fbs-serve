@@ -1,7 +1,7 @@
-# Graph Report - fbs-serve-github  (2026-11-09)
+# Graph Report - fbs-serve-github  (2026-11-10)
 
 ## Corpus Check
-- 224 files · ~114,679 words
+- 224 files · ~114,781 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `1956684d`
+- Built from commit: `3b1938d5`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
