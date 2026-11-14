@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Public\GuestController;
 use App\Http\Controllers\v1\Files\UploadController;
+use App\Http\Controllers\v1\Inventory\IngredientController;
 use App\Http\Controllers\v1\Kitchen\KitchenController;
 use App\Http\Controllers\v1\Menu\CategoryController;
 use App\Http\Controllers\v1\Menu\FoodController;
@@ -35,6 +36,8 @@ Route::middleware('dev.open')->group(function () {
 
     Route::post('/tables/{id}/activate', [TableController::class, 'activate'])->whereNumber('id');
     Route::post('/tables/{id}/clean', [TableController::class, 'clean'])->whereNumber('id');
+    Route::post('/tables/{id}/deactivate', [TableController::class, 'deactivate'])->whereNumber('id');
+    Route::post('/tables/{id}/move-guests', [TableController::class, 'moveGuests'])->whereNumber('id');
     Route::post('/tables/{id}/order', [TableController::class, 'order'])->whereNumber('id');
     Route::post('/tables/{id}/pay', [TableController::class, 'pay'])->whereNumber('id');
     Route::patch('/tables/{id}/position', [TableController::class, 'position'])->whereNumber('id');
@@ -56,6 +59,13 @@ Route::middleware('dev.open')->group(function () {
     Route::post('/users/{id}/password', [ProfileController::class, 'password'])->whereNumber('id');
     Route::crudModule('/users', UserController::class, 'users', ['index', 'store', 'update', 'destroy']);
 
+    Route::get('/foods/{id}/recipe', [IngredientController::class, 'recipe'])->whereNumber('id');
+    Route::post('/foods/{id}/recipe', [IngredientController::class, 'saveRecipe'])->whereNumber('id');
+    Route::get('/stock-movements', [IngredientController::class, 'movements']);
+    Route::post('/ingredients/{id}/receive', [IngredientController::class, 'receive'])->whereNumber('id');
+    Route::post('/ingredients/{id}/waste', [IngredientController::class, 'waste'])->whereNumber('id');
+    Route::post('/ingredients/{id}/count', [IngredientController::class, 'count'])->whereNumber('id');
+    Route::crudModule('/ingredients', IngredientController::class, 'ingredients', ['index', 'store', 'update', 'destroy']);
     Route::crudModule('/foods', FoodController::class, 'foods');
     Route::crudModule('/categories', CategoryController::class, 'categories');
     Route::crudModule('/tables', TableController::class, 'tables');

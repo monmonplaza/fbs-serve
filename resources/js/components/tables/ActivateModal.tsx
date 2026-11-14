@@ -21,8 +21,8 @@ function ActivateForm({ table }: { table: DiningTable }) {
         <form onSubmit={submit}>
             <div className="m-body">
                 <p>
-                    Activate this table after the guests sit down. You get a 4-digit table code to give them: they scan the
-                    QR code on the table and enter it to order.
+                    Activate this table after the guests sit down. You get a 4-digit table code to give them: they scan
+                    the QR code on the table and enter it to order.
                 </p>
                 <label className="field">
                     <span>Number of guests</span>

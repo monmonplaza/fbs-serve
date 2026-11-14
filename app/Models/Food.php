@@ -24,6 +24,11 @@ class Food extends Model
         return $this->hasMany(FoodVariant::class, 'food_id')->orderBy('position')->orderBy('id');
     }
 
+    public function recipeLines(): HasMany
+    {
+        return $this->hasMany(RecipeLine::class, 'food_id');
+    }
+
     public function photos(): HasMany
     {
         return $this->hasMany(FoodPhoto::class, 'food_id')->orderBy('position')->orderBy('id');

@@ -1,6 +1,7 @@
 // Domain types. These mirror what the backend should return; ids are strings, times are epoch milliseconds.
 
-export type ModuleId = "dashboard" | "orders" | "reservations" | "kitchen" | "foods" | "tables" | "settings" | "guide";
+export type ModuleId =
+    "dashboard" | "orders" | "reservations" | "kitchen" | "foods" | "tables" | "inventory" | "settings" | "guide";
 /** A staff page: a module, or the profile page every signed-in user can open. */
 export type PageId = ModuleId | "profile";
 
@@ -208,4 +209,38 @@ export interface Database {
     takeoutSeq: number;
     /** Id of the Takeout-QR order the guest preview starts with (demo only). */
     demoTakeoutId?: string;
+}
+
+/** A stocked ingredient. `low`: out of stock, or at or under the reorder level. */
+export interface Ingredient {
+    id: string;
+    name: string;
+    unit: string;
+    onHand: number;
+    reorderLevel: number;
+    cost: number | null;
+    active: boolean;
+    low: boolean;
+}
+/** How much of an ingredient one portion of a dish uses. `variantId` null means every size. */
+export interface RecipeLine {
+    ingredientId: string;
+    variantId: string | null;
+    qty: number;
+}
+export type StockMovementType = "received" | "used" | "waste" | "count";
+export interface StockMovement {
+    id: string;
+    ingredientId: string;
+    ingredient: string;
+    unit: string;
+    type: StockMovementType;
+    /** Signed change: negative when stock leaves. */
+    qty: number;
+    balance: number;
+    note: string | null;
+    /** The order code a "used" movement belongs to. */
+    ref: string | null;
+    by: string | null;
+    at: number;
 }

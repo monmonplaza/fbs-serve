@@ -219,12 +219,14 @@ button,input,select,textarea{font:inherit;color:inherit}
 .page-head > div{flex:1;min-width:240px}
 .page-head p{margin-top:4px}
 @media (max-width:860px){
-  :root{--main-px:16px}
+  /* On a phone two bars stay pinned to the top while the page scrolls: the brand and menu strip (--rail-h tall), then the
+     bar with the bell, theme and account right under it. */
+  :root{--main-px:16px;--rail-h:57px}
   .shell{grid-template-columns:minmax(0,1fr)}
   .rail{height:auto;align-self:stretch;flex-direction:row;align-items:center;overflow-x:auto;border-right:0;border-bottom:1px solid var(--nav-border);padding:8px max(16px,env(safe-area-inset-left,0px));position:sticky;top:env(safe-area-inset-top,0px);z-index:15}
   .rail-brand{flex:none;min-height:0;padding:0 12px 0 0;margin:0 4px 0 0;border-bottom:0;border-right:1px solid var(--nav-border)}
   .rail-brand small{display:none}
-  .main > .top{position:static}
+  .main > .top{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--rail-h));z-index:14}
   .nav{width:auto;flex:none}
   h1{font-size:23px;line-height:30px}
 }
@@ -292,8 +294,11 @@ button,input,select,textarea{font:inherit;color:inherit}
 
 /* Dashboard */
 .tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
-.tile{display:flex;flex-direction:column;gap:4px}
-.tile .val{font-size:32px;line-height:40px;font-weight:500}
+.tile{display:flex;flex-direction:column;gap:4px;container-type:inline-size}
+/* A money amount (.money) keeps its full 32px when the card has room and shrinks with the card when it is narrow, so it never sticks out
+   (down to 12px; an amount up to about ₱9,999,999.00 fits a 320px phone). */
+.tile .val{font-size:32px;line-height:1.25;font-weight:500;white-space:nowrap}
+@container (max-width:240px){.tile .val.money{font-size:clamp(12px,14cqi,32px)}}
 .tile .ic{color:var(--brand)}
 @media (max-width:1000px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .two{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:16px}

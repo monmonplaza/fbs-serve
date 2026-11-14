@@ -7,6 +7,7 @@ use App\Http\Controllers\v1\BaseController;
 use App\Http\Resources\OrderRoundResource;
 use App\Models\OrderRound;
 use App\Support\OrderService;
+use App\Support\StockService;
 use App\Support\TableSync;
 use Illuminate\Http\JsonResponse;
 
@@ -28,6 +29,9 @@ class KitchenController extends BaseController
         $round = OrderService::findRound($code);
         $next = ['queued' => 'cooking', 'cooking' => 'plating', 'plating' => 'completed'][$round->status] ?? throw new ApiException('This order is already out');
         $round->update(['status' => $next]);
+        if ($next === 'completed') {
+            StockService::useForRound($round); // the bump: the ingredients of this order leave the stock
+        }
 
         return $this->done($code);
     }

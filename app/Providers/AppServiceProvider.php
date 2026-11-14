@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -24,6 +25,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // The Wi-Fi server (phones) must always load the built files. A running Vite dev server writes public/hot, which points
+        // the pages at [::1]:5173, an address a phone cannot reach. With VITE_USE_BUILD=true the hot file is ignored.
+        if (env('VITE_USE_BUILD', false)) {
+            Vite::useHotFile(storage_path('framework/vite-disabled.hot'));
+        }
+
         // The envelope is added by BaseController::sendResponse, so a Resource must not wrap itself in `data`.
         JsonResource::withoutWrapping();
 

@@ -8,6 +8,7 @@ import { out, orderOf, tableOf, syncTable, fail } from "@/api-service/mock/core"
 import { KITCHEN } from "@/lib/constants";
 import { isTO } from "@/lib/domain";
 import { useUi } from "@/context/ui";
+import { useStockForOrder } from "@/api-service/inventory/mock";
 
 const need = (id: string) => orderOf(id) ?? fail("Order not found");
 const tName = (id: string | null) => tableOf(id)?.name ?? "";
@@ -22,6 +23,7 @@ export const kitchen = {
         if (!nxt || o.status === "completed") fail("This order is already out");
         o.status = nxt;
         if (o.status === "completed") {
+            useStockForOrder(o); // the bump: this order's ingredients leave the stock
             useUi
                 .getState()
                 .notify(

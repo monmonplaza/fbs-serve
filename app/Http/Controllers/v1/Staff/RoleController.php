@@ -12,7 +12,7 @@ use Illuminate\Validation\Rule;
 class RoleController extends BaseController
 {
     /** Module ids of the UI navigation (resources/js/lib/constants.ts). */
-    public const MODULES = ['dashboard', 'orders', 'reservations', 'kitchen', 'foods', 'tables', 'settings', 'guide'];
+    public const MODULES = ['dashboard', 'orders', 'reservations', 'kitchen', 'foods', 'tables', 'inventory', 'settings', 'guide'];
 
     protected string $model = Role::class;
 

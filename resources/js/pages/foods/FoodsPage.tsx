@@ -10,6 +10,8 @@ import { RowActions } from "@/components/RowActions";
 import { openModal } from "@/context/modal";
 import { DeleteFood, FoodForm } from "@/components/foods/FoodModals";
 import { openGallery } from "@/components/foods/Lightbox";
+import { openRecipe } from "@/components/inventory/RecipeModal";
+import { useAllowed } from "@/lib/access";
 
 const FOOD_STEP = 8;
 const HAS_IO = typeof IntersectionObserver !== "undefined";
@@ -28,6 +30,8 @@ const Status = ({ f, icon }: { f: Food; icon?: boolean }) => (
 export default function FoodsPage() {
     const foods = useFoods().data,
         cats = useCategories().data;
+    // Recipes belong to Inventory: only users who can open it can edit them.
+    const canRecipe = useAllowed().includes("inventory");
     const [cat, setCat] = useState("all");
     const [view, setView] = useState<"card" | "table">("card");
     const [shown, setShown] = useState(FOOD_STEP);
@@ -156,6 +160,12 @@ export default function FoodsPage() {
                                         <Icon name="edit" size={20} />
                                         Edit
                                     </button>
+                                    {canRecipe ? (
+                                        <button className="btn btn-outline" onClick={() => openRecipe(f)}>
+                                            <Icon name="pot" size={20} />
+                                            Recipe
+                                        </button>
+                                    ) : null}
                                     <button
                                         className="icon-btn danger"
                                         aria-label={`Delete ${f.name}`}
@@ -264,6 +274,16 @@ export default function FoodsPage() {
                                                         aria: `Edit ${f.name}`,
                                                         onClick: () => editFood(f),
                                                     },
+                                                    ...(canRecipe
+                                                        ? [
+                                                              {
+                                                                  ic: "pot",
+                                                                  label: "Recipe",
+                                                                  aria: `Recipe for ${f.name}`,
+                                                                  onClick: () => openRecipe(f),
+                                                              },
+                                                          ]
+                                                        : []),
                                                     {
                                                         ic: "trash",
                                                         label: "Delete",

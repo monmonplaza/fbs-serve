@@ -19,6 +19,9 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias(['dev.open' => DevOpen::class]);
+        // Behind the hosting proxy (Coolify/Traefik) every request comes from the proxy. Trusting it makes the guest rate limit
+        // count each phone by its own address; without it, all phones would share one limit and block each other.
+        $middleware->trustProxies(at: env('TRUSTED_PROXIES', '*'));
         $middleware->web(append: [HandleInertiaRequests::class]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

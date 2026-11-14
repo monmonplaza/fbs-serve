@@ -24,6 +24,9 @@ export const tablesHttp = {
                 })),
             }),
         ),
+    deactivate: async (id: string) => unwrap<DiningTable>(await http.post(`/tables/${id}/deactivate`)),
+    moveGuests: async (id: string, to: string) =>
+        unwrap<DiningTable>(await http.post(`/tables/${id}/move-guests`, { to })),
     clean: async (id: string) => unwrap<DiningTable>(await http.post(`/tables/${id}/clean`)),
     serveOrder: async (orderId: string) => unwrap<Order>(await http.patch(`/orders/${orderId}/serve`)),
     move: async (id: string, x: number, y: number) =>

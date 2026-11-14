@@ -14,6 +14,8 @@ export const keys = {
     roles: ["roles"],
     users: ["users"],
     settings: ["settings"],
+    ingredients: ["ingredients"],
+    movements: ["movements"],
     plate: (tableId: string) => ["plate", tableId],
 } as const;
 
@@ -34,6 +36,8 @@ export const useDiscounts = () => list(keys.discounts, api.admin.discounts);
 export const useRoles = () => list(keys.roles, api.admin.roles);
 export const useUsers = () => list(keys.users, api.admin.users);
 export const useSettings = () => useQuery({ queryKey: keys.settings, queryFn: api.admin.settings }).data;
+export const useIngredients = () => list(keys.ingredients, api.inventory.ingredients);
+export const useMovements = () => list(keys.movements, () => api.inventory.movements());
 export const usePlate = (tableId: string) => list(keys.plate(tableId), () => api.guest.plate(tableId));
 
 type KeyName = Exclude<keyof typeof keys, "plate"> | "plate";

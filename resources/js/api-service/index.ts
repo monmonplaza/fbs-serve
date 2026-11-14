@@ -20,6 +20,8 @@ import { guest as guestMock } from "@/api-service/guest/mock";
 import { guestHttp } from "@/api-service/guest/http";
 import { uploads as uploadsMock } from "@/api-service/uploads/mock";
 import { uploadsHttp } from "@/api-service/uploads/http";
+import { inventory as inventoryMock } from "@/api-service/inventory/mock";
+import { inventoryHttp } from "@/api-service/inventory/http";
 
 /**
  * The one place the UI talks to the backend. Every method is async and returns plain data.
@@ -41,5 +43,6 @@ const reservations = pick(reservationsMock, reservationsHttp);
 const admin = pick(adminMock, adminHttp as unknown as typeof adminMock);
 const guest = pick(guestMock, guestHttp);
 const uploads = pick(uploadsMock, uploadsHttp);
-export const api = { catalog, orders, kitchen, tables, reservations, admin, guest, uploads };
+const inventory = pick(inventoryMock, inventoryHttp);
+export const api = { catalog, orders, kitchen, tables, reservations, admin, guest, uploads, inventory };
 export { ApiError } from "@/api-service/mock/core";

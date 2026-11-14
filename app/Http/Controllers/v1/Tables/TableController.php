@@ -8,10 +8,12 @@ use App\Http\Resources\OrderRoundResource;
 use App\Http\Resources\TableResource;
 use App\Models\DiningTable;
 use App\Models\Order;
+use App\Models\Reservation;
 use App\Models\TableSession;
 use App\Support\Money;
 use App\Support\OrderService;
 use App\Support\Settlement;
+use App\Support\TableSync;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -102,6 +104,67 @@ class TableController extends BaseController
         ]), trim($v['by'] ?? '') ?: 'Staff');
 
         return $this->sendResponse((new OrderRoundResource(OrderService::findRound($round->code)))->resolve(), 'Sent to the kitchen', 201);
+    }
+
+    /**
+     * Turns an activation off, for guests who leave or sit somewhere else before ordering. Only while nothing was sent to
+     * the kitchen: a table with orders is moved (or paid) instead, so no order is lost. The plate is emptied.
+     */
+    public function deactivate(int $id): JsonResponse
+    {
+        $table = DB::transaction(function () use ($id) {
+            $t = DiningTable::query()->lockForUpdate()->findOrFail($id);
+            $s = $t->openSession;
+            if (! $s || ! in_array($t->status, ['active', 'ordering', 'eating'], true)) {
+                throw new ApiException("{$t->name} is not active.");
+            }
+            if ($s->order()->exists()) {
+                throw new ApiException("{$t->name} already has orders. Use Move guests to take them to another table.");
+            }
+            $s->plateLines()->delete();
+            $s->update(['closed_at' => now()]);
+            $t->update(['status' => 'inactive']);
+
+            return $t;
+        });
+
+        return $this->sendResponse($this->present($this->fresh($table)), 'Table deactivated');
+    }
+
+    /**
+     * Guests change tables: their session (orders, plate, table code, bill request) moves to a free table. The old table
+     * becomes free, and phones keep working with the same table code on the new table.
+     */
+    public function moveGuests(Request $request, int $id): JsonResponse
+    {
+        $to = (int) $request->validate(['to' => ['required', 'integer', 'exists:app_dining_tables,id']])['to'];
+        if ($to === $id) {
+            throw new ApiException('Pick a different table.');
+        }
+        $target = DB::transaction(function () use ($id, $to) {
+            // Lock both tables in id order so two moves at once cannot deadlock.
+            $locked = DiningTable::query()->whereIn('id', [$id, $to])->orderBy('id')->lockForUpdate()->get()->keyBy('id');
+            $from = $locked->get($id) ?? throw new ApiException('Table not found', 404);
+            $target = $locked->get($to);
+            $s = $from->openSession;
+            if (! $s || in_array($from->status, ['inactive', 'cleaning'], true)) {
+                throw new ApiException("{$from->name} has no guests to move.");
+            }
+            if ($target->status !== 'inactive') {
+                throw new ApiException("{$target->name} is not free.");
+            }
+            $status = $from->status;
+            $s->update(['table_id' => $target->id]);
+            Order::query()->where('session_id', $s->id)->update(['table_id' => $target->id]);
+            Reservation::query()->where('table_id', $from->id)->where('status', 'arrived')->update(['table_id' => $target->id]);
+            $from->update(['status' => 'inactive']);
+            $target->update(['status' => $status]);
+            TableSync::sync($target);
+
+            return $target;
+        });
+
+        return $this->sendResponse($this->present($this->fresh($target)), 'Guests moved');
     }
 
     /** Back to inactive. The session closes, so the old QR token stops working. */

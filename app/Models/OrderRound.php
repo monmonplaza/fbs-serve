@@ -13,9 +13,9 @@ class OrderRound extends Model
 
     protected $table = 'app_order_rounds';
 
-    protected $fillable = ['order_id', 'round_no', 'code', 'status', 'created_by', 'eta_minutes', 'ready_at', 'served_at'];
+    protected $fillable = ['order_id', 'round_no', 'code', 'status', 'created_by', 'eta_minutes', 'ready_at', 'served_at', 'stock_used_at'];
 
-    protected $casts = ['ready_at' => 'datetime', 'served_at' => 'datetime'];
+    protected $casts = ['ready_at' => 'datetime', 'served_at' => 'datetime', 'stock_used_at' => 'datetime'];
 
     public function order(): BelongsTo
     {

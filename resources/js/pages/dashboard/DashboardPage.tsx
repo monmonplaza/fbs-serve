@@ -50,7 +50,7 @@ export default function DashboardPage() {
                 <div className="card tile">
                     <Icon name="cash" />
                     <span className="label muted">Income Today</span>
-                    <span className="val num">{peso(sum(paid.map(total)))}</span>
+                    <span className="val money num">{peso(sum(paid.map(total)))}</span>
                     <span className="caption muted num">{peso(pending)} still to collect</span>
                 </div>
                 <div className="card tile">

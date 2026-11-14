@@ -7,9 +7,12 @@ use App\Models\DiningTable;
 use App\Models\Discount;
 use App\Models\Floor;
 use App\Models\Food;
+use App\Models\Ingredient;
 use App\Models\PaymentMethod;
+use App\Models\RecipeLine;
 use App\Models\Reservation;
 use App\Models\Role;
+use App\Models\StockMovement;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -56,6 +59,7 @@ class RestaurantSeeder extends Seeder
 
         $this->seedStaff();
         $this->seedReservations();
+        $this->seedInventory();
 
         // One table already seated, so the guest QR (#t=<id>&k=abc123) works right after seeding.
         $t4 = DiningTable::query()->where('name', 'Table 4')->first();
@@ -91,6 +95,50 @@ class RestaurantSeeder extends Seeder
     }
 
     /** A few bookings around "now" so the Reservations screen and the reminders have something to show. Only when there are none. */
+    /** Demo stock and recipes for a few best sellers, only when no ingredient exists yet. Other dishes are not tracked until they get a recipe. */
+    private function seedInventory(): void
+    {
+        if (Ingredient::query()->exists()) {
+            return;
+        }
+        // name => [unit, opening stock, reorder level, cost per unit]
+        $stock = [
+            'Rice' => ['g', 20000, 5000, 0.06], 'Garlic' => ['g', 1500, 300, 0.12], 'Cooking oil' => ['ml', 12000, 3000, 0.09],
+            'Pork' => ['g', 15000, 4000, 0.32], 'Beef' => ['g', 9000, 2500, 0.55], 'Chicken' => ['g', 12000, 3000, 0.22],
+            'Squid' => ['g', 5000, 1200, 0.35], 'Spring roll wrapper' => ['pc', 400, 100, 2.5], 'Peanut sauce' => ['ml', 4000, 800, 0.1],
+            'Pizza dough' => ['g', 8000, 2000, 0.08], 'Cheese' => ['g', 5000, 1000, 0.45], 'Coffee beans' => ['g', 3000, 600, 0.9],
+            'Ube halaya' => ['g', 3000, 600, 0.3], 'Shaved ice' => ['g', 20000, 4000, 0.02],
+        ];
+        $id = [];
+        foreach ($stock as $name => [$unit, $open, $reorder, $cost]) {
+            $i = Ingredient::query()->create(['name' => $name, 'unit' => $unit, 'on_hand' => $open, 'reorder_level' => $reorder, 'cost' => $cost]);
+            StockMovement::query()->create(['ingredient_id' => $i->id, 'type' => 'received', 'qty' => $open, 'balance' => $open, 'note' => 'Opening stock', 'by' => 'Seeder']);
+            $id[$name] = $i->id;
+        }
+        // dish => [[ingredient, qty per portion, size name or null for every size]]
+        $recipes = [
+            'Garlic Rice' => [['Rice', 180], ['Garlic', 8], ['Cooking oil', 10]],
+            'Java Rice' => [['Rice', 180], ['Cooking oil', 10]],
+            'Lumpiang Shanghai' => [['Pork', 120], ['Spring roll wrapper', 8], ['Cooking oil', 60]],
+            'Calamares' => [['Squid', 200], ['Cooking oil', 80]],
+            'Kare-Kare' => [['Beef', 300], ['Peanut sauce', 120]],
+            'Chicken Inasal' => [['Chicken', 280], ['Garlic', 6]],
+            'Classic Pizza' => [['Pizza dough', 160, 'Small'], ['Pizza dough', 240, 'Medium'], ['Pizza dough', 320, 'Large'], ['Cheese', 80, 'Small'], ['Cheese', 120, 'Medium'], ['Cheese', 160, 'Large']],
+            'Sizzling Sisig' => [['Pork', 180, 'Solo'], ['Pork', 340, 'Good for 2'], ['Pork', 700, 'Platter']],
+            'Iced Coffee' => [['Coffee beans', 12, '12 oz'], ['Coffee beans', 16, '16 oz'], ['Coffee beans', 22, '22 oz']],
+            'Halo-Halo' => [['Shaved ice', 250], ['Ube halaya', 40]],
+        ];
+        foreach ($recipes as $dish => $lines) {
+            $food = Food::query()->with('variants')->where('name', $dish)->first();
+            foreach ($food ? $lines : [] as $l) {
+                $variant = isset($l[2]) ? $food->variants->firstWhere('name', $l[2])?->id : null;
+                if (! isset($l[2]) || $variant) {
+                    RecipeLine::query()->create(['food_id' => $food->id, 'variant_id' => $variant, 'ingredient_id' => $id[$l[0]], 'qty' => $l[1]]);
+                }
+            }
+        }
+    }
+
     private function seedReservations(): void
     {
         if (Reservation::query()->exists()) {

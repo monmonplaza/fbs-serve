@@ -19,6 +19,7 @@ import { CodeEntry } from "@/components/guest/CodeEntry";
 import { PickSheet } from "@/components/guest/PickSheet";
 import { SendModal, TakeoutModal } from "@/components/guest/GuestModals";
 import { useMyTakeouts } from "@/lib/guestStore";
+import { saveKey } from "@/lib/guestLink";
 import { PhoneLightbox } from "@/components/foods/Lightbox";
 
 type Tab = "menu" | "plate" | "orders" | "bill";
@@ -168,6 +169,20 @@ export function GuestShell() {
     useEffect(() => {
         if (!guestOnly) api.guest.demoTakeoutId().then(seed);
     }, [guestOnly, seed]);
+    // The waiter moved these guests to another table: the phone's session now belongs to a different table, so follow it.
+    useEffect(() => {
+        if (!guestOnly || !guest.key || guest.table === TO) return;
+        const here = tables.find((x) => x.id === guest.table);
+        if (here?.token === guest.key) return;
+        const moved = tables.find((x) => x.token === guest.key && x.id !== guest.table);
+        if (!moved) return;
+        api.guest.join(moved.id, guest.key).then((ok) => {
+            if (!ok) return;
+            saveKey(guest.table, null);
+            saveKey(moved.id, guest.key!);
+            setGuest({ table: moved.id });
+        });
+    }, [guestOnly, guest.key, guest.table, tables, setGuest]);
     const takeout = guest.table === TO,
         t = takeout ? null : tables.find((x) => x.id === guest.table);
     // The preview starts on a default table id; with a real backend ids differ, so fall back to the first table.

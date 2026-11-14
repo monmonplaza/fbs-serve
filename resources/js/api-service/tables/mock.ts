@@ -53,6 +53,36 @@ export const tables = {
         syncTable(t);
         return out(o);
     },
+    /** Turns an activation off before anything was ordered (guests left or sat elsewhere). */
+    deactivate: async (id: string) => {
+        const t = need(id);
+        if (!t.token || !["active", "ordering", "eating"].includes(t.status)) return fail(`${t.name} is not active.`);
+        if (db.orders.some((o) => o.table === t.id && o.session === t.token))
+            return fail(`${t.name} already has orders. Use Move guests to take them to another table.`);
+        Object.assign(t, { status: "inactive", token: null, code: null, openedAt: null, bill: null, guests: null });
+        db.plates[t.id] = [];
+        return out(t);
+    },
+    /** Guests change tables: the session (orders, plate, table code, bill request) moves to a free table. */
+    moveGuests: async (id: string, to: string) => {
+        const from = need(id),
+            target = need(to);
+        if (from.id === target.id) return fail("Pick a different table.");
+        if (!from.token || ["inactive", "cleaning"].includes(from.status))
+            return fail(`${from.name} has no guests to move.`);
+        if (target.status !== "inactive") return fail(`${target.name} is not free.`);
+        const { status, token, code, openedAt, bill, guests } = from;
+        Object.assign(target, { status, token, code, openedAt, bill, guests });
+        Object.assign(from, { status: "inactive", token: null, code: null, openedAt: null, bill: null, guests: null });
+        db.orders.filter((o) => o.session === token).forEach((o) => (o.table = target.id));
+        db.plates[target.id] = db.plates[from.id] ?? [];
+        db.plates[from.id] = [];
+        db.reservations
+            .filter((r) => r.tableId === from.id && r.status === "arrived")
+            .forEach((r) => (r.tableId = target.id));
+        syncTable(target);
+        return out(target);
+    },
     /** Back to inactive. The old QR token stops working. */
     clean: async (id: string) => {
         const t = need(id);

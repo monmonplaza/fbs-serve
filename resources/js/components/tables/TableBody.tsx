@@ -12,6 +12,7 @@ import { openSeatReservation } from "@/pages/reservations/ReservationsPage";
 import { openQr, openGuestView } from "@/components/tables/QrModal";
 import { openActivate } from "@/components/tables/ActivateModal";
 import { openTableOrder } from "@/components/tables/TableOrderModal";
+import { openMoveGuests } from "@/components/tables/MoveGuestsModal";
 
 export const SHOW_BEFORE = 60;
 export const SHOW_AFTER = 30;
@@ -51,6 +52,15 @@ export function TableBody({ t, rv }: { t: DiningTable; rv?: Reservation }) {
         await api.tables.serveOrder(id);
         await invalidate("orders", "tables");
         toast(`${id} served to ${t.name}`);
+    };
+    const deactivate = async () => {
+        try {
+            await api.tables.deactivate(t.id);
+            await invalidate("tables", "plate");
+            toast(`${t.name} is deactivated. Its table code no longer works.`);
+        } catch (e) {
+            toast(e instanceof Error ? e.message : "Could not deactivate the table");
+        }
     };
     const clean = async () => {
         await api.tables.clean(t.id);
@@ -171,7 +181,23 @@ export function TableBody({ t, rv }: { t: DiningTable; rv?: Reservation }) {
                             <Icon name="qr" size={20} />
                             Show QR
                         </button>
+                        <button className="btn btn-outline" onClick={() => openMoveGuests(t)}>
+                            <Icon name="table" size={20} />
+                            Move guests
+                        </button>
+                        {os.length === 0 ? (
+                            <button className="btn btn-outline danger" onClick={deactivate}>
+                                <Icon name="x" size={20} />
+                                Deactivate
+                            </button>
+                        ) : null}
                     </>
+                ) : null}
+                {t.status === "billout" ? (
+                    <button className="btn btn-outline" onClick={() => openMoveGuests(t)}>
+                        <Icon name="table" size={20} />
+                        Move guests
+                    </button>
                 ) : null}
                 {ready.map((o) => (
                     <button key={o.id} className="btn btn-secondary" onClick={() => serve(o.id)}>
