@@ -19,9 +19,10 @@ final class OrderService
      * Names and prices come from the menu, never from the client.
      *
      * @param  iterable<array{food_id: int|string, variant_id?: int|string|null, qty: int, note?: ?string}>  $lines
+     * @param  bool  $checkStock  False for an advance reservation order: it is a plan for another day, not an order for today's stock.
      * @return array{items: array<int, array<string, mixed>>, eta: int}
      */
-    public static function buildItems(iterable $lines): array
+    public static function buildItems(iterable $lines, bool $checkStock = true): array
     {
         $lines = collect($lines);
         $foods = Food::query()->with('variants')->whereIn('id', $lines->pluck('food_id')->unique())->get()->keyBy('id');
@@ -56,6 +57,9 @@ final class OrderService
         }
         if (! $items) {
             throw new ApiException('Your plate is empty');
+        }
+        if ($checkStock) {
+            StockService::assertAvailable(array_values($items));
         }
 
         return ['items' => array_values($items), 'eta' => max(1, ...array_column($items, 'eta'))];

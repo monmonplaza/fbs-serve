@@ -3,6 +3,7 @@
  * Orders, kitchen and payments.
  */
 
+import { assertStock } from "@/api-service/inventory/mock";
 import { db } from "@/api-service/mock/db";
 import {
     out,
@@ -89,6 +90,7 @@ export const orders = {
     /** Counter takeout entry. */
     placeTakeout: async (items: OrderItem[], customer: string, phone: string, channel: TakeoutChannel, ref: string) => {
         if (!customer.trim()) fail("Enter the customer name first");
+        assertStock(items);
         return out(newTakeout(items, customer.trim(), phone.trim(), "counter", channel, ref.trim()));
     },
 };

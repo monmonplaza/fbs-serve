@@ -9,6 +9,7 @@ import { TO } from "@/lib/constants";
 import type { Order } from "@/types/restaurant";
 import { plateItems, orderEta, itemName } from "@/lib/domain";
 import { sum } from "@/lib/format";
+import { assertStock, assertPlateFits } from "@/api-service/inventory/mock";
 import { total } from "@/lib/domain";
 
 const plateOf = (key: string) => (db.plates[key] = db.plates[key] || []);
@@ -41,6 +42,10 @@ export const guest = {
         if (!f) return fail("This dish is no longer on the menu");
         if (f.status !== "available") return fail(`${f.name} is not available`);
         const p = plateOf(tableId);
+        const onPlate = p
+            .filter((x) => x.foodId === foodId && x.variantId === variantId)
+            .reduce((n, x) => n + x.qty, 0);
+        assertPlateFits(foodId, variantId, itemName(f, variantId), onPlate);
         const l = p.find((x) => x.foodId === foodId && x.variantId === variantId && x.by === by);
         if (l) l.qty++;
         else p.push({ id: uid(), foodId, variantId, qty: 1, by });
@@ -69,6 +74,7 @@ export const guest = {
         if (!t || !t.token) return fail("This table is not active");
         if (!p.length) return fail("Your plate is empty");
         const items = plateItems(p, db.foods);
+        assertStock(items);
         const o: Order = {
             id: nextId(),
             table: t.id,
@@ -96,7 +102,9 @@ export const guest = {
     placeTakeout: async (name: string, phone: string) => {
         const p = plateOf(TO);
         if (!p.length) return fail("Your plate is empty");
-        const o = newTakeout(plateItems(p, db.foods), name, phone, "qr");
+        const items = plateItems(p, db.foods);
+        assertStock(items);
+        const o = newTakeout(items, name, phone, "qr");
         db.plates[TO] = [];
         return out(o);
     },

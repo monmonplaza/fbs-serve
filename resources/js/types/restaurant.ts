@@ -22,6 +22,8 @@ export interface Variant {
     id: string;
     name: string;
     price: number;
+    /** Portions of this size the kitchen can still make; absent when the dish has no recipe. 0 means sold out. */
+    left?: number;
 }
 export interface Food {
     id: string;
@@ -33,6 +35,8 @@ export interface Food {
     tags: FoodTag[];
     eta: number;
     photos: string[];
+    /** Portions the kitchen can still make from its ingredients (the most of any size); absent when the dish has no recipe. */
+    left?: number;
     /** When set, `price` is the lowest variant price. */
     variants?: Variant[];
 }

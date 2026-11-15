@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useCategories, useFoods } from "@/hooks/useApi";
 import type { Food } from "@/types/restaurant";
-import { hasV } from "@/lib/domain";
+import { hasV, soldOut } from "@/lib/domain";
 import { peso } from "@/lib/format";
 import { catName, EtaTag, FoodImage, FoodTags, PriceTag } from "@/lib/foodDisplay";
 import { Icon } from "@/components/Icon";
@@ -20,12 +20,17 @@ const addFood = () => openModal({ title: "Add food", content: <FoodForm food={nu
 const editFood = (f: Food) => openModal({ title: `Edit ${f.name}`, content: <FoodForm food={f} /> });
 const delFood = (f: Food) => openModal({ title: "Delete food?", content: <DeleteFood food={f} /> });
 
-const Status = ({ f, icon }: { f: Food; icon?: boolean }) => (
-    <span className={`pill ${f.status === "available" ? "p-ok" : "p-error"}`}>
-        {icon && <Icon name={f.status === "available" ? "check" : "x"} size={16} />}
-        {f.status === "available" ? "Available" : "Not available"}
-    </span>
-);
+const Status = ({ f, icon }: { f: Food; icon?: boolean }) => {
+    // Turned off by hand, or on but out of an ingredient (it comes back by itself when stock arrives).
+    const off = f.status !== "available",
+        out = !off && soldOut(f);
+    return (
+        <span className={`pill ${off ? "p-error" : out ? "p-warn" : "p-ok"}`}>
+            {icon && <Icon name={off || out ? "x" : "check"} size={16} />}
+            {off ? "Not available" : out ? "Out of stock" : "Available"}
+        </span>
+    );
+};
 
 export default function FoodsPage() {
     const foods = useFoods().data,
@@ -117,7 +122,10 @@ export default function FoodsPage() {
                 <>
                     <div className="food-grid">
                         {list.slice(0, shown).map((f) => (
-                            <article key={f.id} className={`fcard ${f.status !== "available" ? "unavail" : ""}`}>
+                            <article
+                                key={f.id}
+                                className={`fcard ${f.status !== "available" || soldOut(f) ? "unavail" : ""}`}
+                            >
                                 <div className="fimg">
                                     <button
                                         className="photo-btn"

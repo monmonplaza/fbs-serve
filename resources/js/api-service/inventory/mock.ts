@@ -5,7 +5,15 @@
 
 import { db } from "@/api-service/mock/db";
 import { out, fail, uid } from "@/api-service/mock/core";
-import type { Ingredient, Order, RecipeLine, StockMovement, StockMovementType } from "@/types/restaurant";
+import type {
+    Food,
+    Ingredient,
+    Order,
+    OrderItem,
+    RecipeLine,
+    StockMovement,
+    StockMovementType,
+} from "@/types/restaurant";
 
 export interface IngredientInput {
     name: string;
@@ -105,6 +113,107 @@ export function useStockForOrder(o: Order) {
                 need.set(l.ingredientId, (need.get(l.ingredientId) ?? 0) + l.qty * item.qty);
     need.forEach((qty, id) => move(find(id), "used", -qty, null, o.id, "Kitchen"));
     (o as Order & { stockUsed?: boolean }).stockUsed = true;
+}
+
+/** Ingredients promised to orders the kitchen has not bumped yet (sent, but still on the shelf). */
+const reserved = () => {
+    const m = new Map<string, number>();
+    for (const o of db.orders) {
+        if (!["queued", "cooking", "plating"].includes(o.status) || (o as Order & { stockUsed?: boolean }).stockUsed)
+            continue;
+        for (const item of o.items)
+            for (const l of state.recipes[item.foodId] ?? [])
+                if (l.variantId === null || l.variantId === item.variantId)
+                    m.set(l.ingredientId, (m.get(l.ingredientId) ?? 0) + l.qty * item.qty);
+    }
+    return m;
+};
+/** What can still be sold: on hand minus reserved. */
+const available = () => {
+    const r = reserved();
+    return new Map(state.ingredients.map((i) => [i.id, round3(i.onHand - (r.get(i.id) ?? 0))]));
+};
+const countOf = (lines: RecipeLine[], avail: Map<string, number>): number | undefined => {
+    let left: number | undefined;
+    for (const l of lines) {
+        if (!(l.qty > 0)) continue;
+        const n = Math.max(0, Math.floor(Math.round(((avail.get(l.ingredientId) ?? 0) / l.qty) * 1e6) / 1e6));
+        left = left === undefined ? n : Math.min(left, n);
+    }
+    return left;
+};
+
+/** The dish list with how many portions are left of each dish that has a recipe, as the server sends it. */
+export function withStock(foods: Food[]): Food[] {
+    const avail = available();
+    return foods.map((f) => {
+        const lines = state.recipes[f.id];
+        if (!lines?.length) return f;
+        if (!f.variants?.length)
+            return {
+                ...f,
+                left: countOf(
+                    lines.filter((l) => l.variantId === null),
+                    avail,
+                ),
+            };
+        const variants = f.variants.map((v) => ({
+            ...v,
+            left: countOf(
+                lines.filter((l) => l.variantId === null || l.variantId === v.id),
+                avail,
+            ),
+        }));
+        const counts = variants.map((v) => v.left);
+        return { ...f, variants, left: counts.includes(undefined) ? undefined : Math.max(...(counts as number[])) };
+    });
+}
+
+/** Refuses an order the stock cannot cover: a sold-out dish, more portions than are left, or dishes fighting over one ingredient. */
+export function assertStock(items: Pick<OrderItem, "foodId" | "variantId" | "name" | "qty">[]) {
+    const tracked = withStock(db.foods);
+    const wanted = new Map<string, { item: (typeof items)[number]; qty: number }>();
+    for (const i of items) {
+        const k = i.foodId + "|" + (i.variantId ?? "");
+        wanted.set(k, { item: i, qty: (wanted.get(k)?.qty ?? 0) + i.qty });
+    }
+    for (const { item, qty } of wanted.values()) {
+        const f = tracked.find((x) => x.id === item.foodId);
+        const left = f
+            ? f.variants?.length && item.variantId
+                ? f.variants.find((v) => v.id === item.variantId)?.left
+                : f.left
+            : undefined;
+        if (left !== undefined && qty > left)
+            fail(left <= 0 ? `${item.name} is sold out` : `Only ${left} ${item.name} left`);
+    }
+    const avail = available();
+    const need = new Map<string, number>();
+    for (const { item, qty } of wanted.values())
+        for (const l of state.recipes[item.foodId] ?? [])
+            if (l.variantId === null || l.variantId === item.variantId)
+                need.set(l.ingredientId, (need.get(l.ingredientId) ?? 0) + l.qty * qty);
+    for (const [id, amount] of need)
+        if (amount > (avail.get(id) ?? 0) + 0.0005)
+            fail(`There is not enough ${find(id).name} for this whole order. Take out a dish and try again.`);
+}
+
+/** A guest cannot put more of a dish on the plate than is left (the full check runs when the plate is sent). */
+export function assertPlateFits(
+    foodId: string,
+    variantId: string | undefined,
+    name: string,
+    onPlate: number,
+    extra = 1,
+) {
+    const f = withStock(db.foods).find((x) => x.id === foodId);
+    const left = f
+        ? f.variants?.length && variantId
+            ? f.variants.find((v) => v.id === variantId)?.left
+            : f.left
+        : undefined;
+    if (left !== undefined && onPlate + extra > left)
+        fail(left <= 0 ? `${name} is sold out` : `Only ${left} ${name} left`);
 }
 
 export const inventory = {

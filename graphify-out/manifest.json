@@ -12,9 +12,9 @@
     "semantic_hash": ""
   },
   "app/Http/Controllers/Public/GuestController.php": {
-    "mtime": 1794277529.1120071,
-    "seen": 1794277977.67738,
-    "ast_hash": "30fce524e98a252cc765c16caf4a5f74",
+    "mtime": 1794713651.4128895,
+    "seen": 1794714271.1263082,
+    "ast_hash": "d57f1a064cbff0053b2c89a65ff703b7",
     "semantic_hash": ""
   },
   "app/Http/Controllers/v1/BaseController.php": {
@@ -102,9 +102,9 @@
     "semantic_hash": ""
   },
   "app/Http/Resources/FoodResource.php": {
-    "mtime": 1794204327.3005993,
-    "seen": 1794204369.1840682,
-    "ast_hash": "9c646f001f6aea544ff575e0ba48c71c",
+    "mtime": 1794713651.2029746,
+    "seen": 1794714271.126324,
+    "ast_hash": "1f347214117e125caef2476a616da672",
     "semantic_hash": ""
   },
   "app/Http/Resources/OrderRoundResource.php": {
@@ -234,9 +234,9 @@
     "semantic_hash": ""
   },
   "app/Support/OrderService.php": {
-    "mtime": 1794207540.9822085,
-    "seen": 1794207721.438895,
-    "ast_hash": "3783ad5c1f537fb22bdee216899feaf7",
+    "mtime": 1794713636.3352606,
+    "seen": 1794714271.126348,
+    "ast_hash": "fe9fa49502e6257e737cb4bc90bbe5f4",
     "semantic_hash": ""
   },
   "app/Support/Settlement.php": {
@@ -474,9 +474,9 @@
     "semantic_hash": ""
   },
   "resources/js/api-service/catalog/mock.ts": {
-    "mtime": 1794180275.9092486,
-    "seen": 1794189250.619595,
-    "ast_hash": "6a1faa4799ae7e3f2f9e859d74acceee",
+    "mtime": 1794714079.349635,
+    "seen": 1794714271.1263812,
+    "ast_hash": "05330182af46e0591c2b164b1e665b65",
     "semantic_hash": ""
   },
   "resources/js/api-service/client.ts": {
@@ -498,9 +498,9 @@
     "semantic_hash": ""
   },
   "resources/js/api-service/guest/mock.ts": {
-    "mtime": 1794277655.2841375,
-    "seen": 1794277977.677456,
-    "ast_hash": "c9b0d1809fd55f96c1813d73906edee5",
+    "mtime": 1794714083.3705163,
+    "seen": 1794714271.126384,
+    "ast_hash": "d2162363d9a735a4f259790ba87d05f0",
     "semantic_hash": ""
   },
   "resources/js/api-service/http.ts": {
@@ -558,9 +558,9 @@
     "semantic_hash": ""
   },
   "resources/js/api-service/orders/mock.ts": {
-    "mtime": 1794208022.088002,
-    "seen": 1794208582.510677,
-    "ast_hash": "ed9a54667056ed8accf218e477e0cf83",
+    "mtime": 1794714079.3504584,
+    "seen": 1794714271.1263921,
+    "ast_hash": "490716bec57257ea35d3fe7d429d36f3",
     "semantic_hash": ""
   },
   "resources/js/api-service/reservations/mock.ts": {
@@ -576,9 +576,9 @@
     "semantic_hash": ""
   },
   "resources/js/api-service/tables/mock.ts": {
-    "mtime": 1794278310.0863283,
-    "seen": 1794280478.921994,
-    "ast_hash": "c8601ae8b02a6a596eadf22d85bf09d7",
+    "mtime": 1794714079.3506823,
+    "seen": 1794714271.126395,
+    "ast_hash": "5e6974d31f7f13859dbab6af9f4afcf6",
     "semantic_hash": ""
   },
   "resources/js/app.tsx": {
@@ -672,9 +672,9 @@
     "semantic_hash": ""
   },
   "resources/js/components/guest/GuestMenu.tsx": {
-    "mtime": 1794180275.9127076,
-    "seen": 1794189250.619642,
-    "ast_hash": "52a0006d143c68d2427d0a1b833b4f11",
+    "mtime": 1794714120.2297335,
+    "seen": 1794714271.126409,
+    "ast_hash": "24a7e4bfc12ff305fc581e39c1c65c4f",
     "semantic_hash": ""
   },
   "resources/js/components/guest/GuestModals.tsx": {
@@ -702,9 +702,9 @@
     "semantic_hash": ""
   },
   "resources/js/components/guest/PickSheet.tsx": {
-    "mtime": 1794180275.913661,
-    "seen": 1794189250.6196449,
-    "ast_hash": "2a73faf43004edcdb7a3b6a46d2649ee",
+    "mtime": 1794714101.5309415,
+    "seen": 1794714271.126412,
+    "ast_hash": "71f78273966257a7ff94a62df5f509d2",
     "semantic_hash": ""
   },
   "resources/js/components/kitchen/ChannelTag.tsx": {
@@ -852,9 +852,9 @@
     "semantic_hash": ""
   },
   "resources/js/lib/domain.ts": {
-    "mtime": 1794180275.9156213,
-    "seen": 1794189250.6196601,
-    "ast_hash": "41523780f0e302c0131915a0e7236aeb",
+    "mtime": 1794714059.7019086,
+    "seen": 1794714271.1264331,
+    "ast_hash": "1f6ce59fe946aca25ebfdbb2bf3e065d",
     "semantic_hash": ""
   },
   "resources/js/lib/foodDisplay.tsx": {
@@ -948,9 +948,9 @@
     "semantic_hash": ""
   },
   "resources/js/pages/foods/FoodsPage.tsx": {
-    "mtime": 1794281259.239194,
-    "seen": 1794281428.136389,
-    "ast_hash": "f36eb1502e6e676bff39f619b0c43b9c",
+    "mtime": 1794714131.4007235,
+    "seen": 1794714271.126444,
+    "ast_hash": "3564721be22414e8057045a4fbaaf294",
     "semantic_hash": ""
   },
   "resources/js/pages/guest/GuestPage.tsx": {
@@ -996,9 +996,9 @@
     "semantic_hash": ""
   },
   "resources/js/types/restaurant.ts": {
-    "mtime": 1794281189.2180905,
-    "seen": 1794281428.136395,
-    "ast_hash": "3840b1d8d32a333f1bc6b4b5b3feb3bd",
+    "mtime": 1794714059.7016382,
+    "seen": 1794714271.126451,
+    "ast_hash": "916b10fa7d0d78413e8f48252110b9d6",
     "semantic_hash": ""
   },
   "resources/js/types/reusable/pagination.ts": {
@@ -1122,15 +1122,15 @@
     "semantic_hash": ""
   },
   "docs/BACKEND.md": {
-    "mtime": 1794281424.782306,
-    "seen": 1794281428.136412,
-    "ast_hash": "d003d2013cc5a54828b18b84042cfb31",
+    "mtime": 1794714262.020264,
+    "seen": 1794714271.1264699,
+    "ast_hash": "cdf70e5e0ff60dbbf8e79a8c5d720651",
     "semantic_hash": ""
   },
   "docs/LARAVEL.md": {
-    "mtime": 1794281424.7824912,
-    "seen": 1794281428.136412,
-    "ast_hash": "eae8f5558d602bf14273abdd767f021a",
+    "mtime": 1794714262.0203993,
+    "seen": 1794714271.1264699,
+    "ast_hash": "a86221fbce55775e9b31ac4ea0422ed9",
     "semantic_hash": ""
   },
   "docs/PORTING.md": {
@@ -1176,9 +1176,9 @@
     "semantic_hash": ""
   },
   "app/Http/Controllers/v1/Reservations/ReservationController.php": {
-    "mtime": 1794277590.9015498,
-    "seen": 1794277977.677388,
-    "ast_hash": "df701c1f975a2c7f05c202800cd8f305",
+    "mtime": 1794713636.3353648,
+    "seen": 1794714271.126316,
+    "ast_hash": "9350d11059c0c0509292ec0804012b08",
     "semantic_hash": ""
   },
   "app/Http/Controllers/v1/Settings/SettingsController.php": {
@@ -1320,9 +1320,9 @@
     "semantic_hash": ""
   },
   "resources/js/components/orders/FoodPicker.tsx": {
-    "mtime": 1794207610.9562614,
-    "seen": 1794207721.438962,
-    "ast_hash": "aa766f64497e1b3940f3031588a07c8e",
+    "mtime": 1794714130.612018,
+    "seen": 1794714271.126415,
+    "ast_hash": "c0d0eeeb2fbdece3330a6a788626fdf6",
     "semantic_hash": ""
   },
   "resources/js/components/tables/TableOrderModal.tsx": {
@@ -1440,9 +1440,9 @@
     "semantic_hash": ""
   },
   "app/Support/StockService.php": {
-    "mtime": 1794281113.3362868,
-    "seen": 1794281428.1363032,
-    "ast_hash": "35410dc72a4e8a63176825635612d3d0",
+    "mtime": 1794713636.3349462,
+    "seen": 1794714271.1263502,
+    "ast_hash": "4d80bfd384a1e890283b50c3f3c07f8e",
     "semantic_hash": ""
   },
   "database/migrations/2026_11_10_110000_create_app_inventory_tables.php": {
@@ -1458,9 +1458,9 @@
     "semantic_hash": ""
   },
   "resources/js/api-service/inventory/mock.ts": {
-    "mtime": 1794281189.2003658,
-    "seen": 1794281428.1363368,
-    "ast_hash": "53da62ab3b85ababc696083835275314",
+    "mtime": 1794714083.3976758,
+    "seen": 1794714271.126387,
+    "ast_hash": "f01896d9e57461fe45c7a3c88423b93f",
     "semantic_hash": ""
   },
   "resources/js/components/inventory/IngredientModals.tsx": {
@@ -1476,15 +1476,15 @@
     "semantic_hash": ""
   },
   "resources/js/pages/inventory/InventoryPage.tsx": {
-    "mtime": 1794281259.8360815,
-    "seen": 1794281428.136391,
-    "ast_hash": "0d6ab6fbc83f4a65b0b2098db4b0e571",
+    "mtime": 1794714130.6124594,
+    "seen": 1794714271.126446,
+    "ast_hash": "bb3451260b75bde48acd26640a224dbc",
     "semantic_hash": ""
   },
   "tests/Feature/InventoryTest.php": {
-    "mtime": 1794281152.7967443,
-    "seen": 1794281428.1364,
-    "ast_hash": "a456a1dfb468ca86e9e2f42c1ab8b213",
+    "mtime": 1794714002.6702816,
+    "seen": 1794714271.126456,
+    "ast_hash": "af36b4eb51028c8532a16f1cf36459ab",
     "semantic_hash": ""
   },
   "app/Console/Commands/ServeWifi.php": {

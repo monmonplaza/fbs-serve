@@ -7,6 +7,7 @@ import { db } from "@/api-service/mock/db";
 import { out, tableOf, orderOf, syncTable, fail, uid, nextId } from "@/api-service/mock/core";
 import { orderEta } from "@/lib/domain";
 import { newTableCode } from "@/lib/guestLink";
+import { assertStock } from "@/api-service/inventory/mock";
 import { clamp, r2 } from "@/lib/format";
 import type { DiningTable, Order, OrderItem } from "@/types/restaurant";
 
@@ -39,6 +40,7 @@ export const tables = {
             );
         const lines = items.filter((i) => i.qty > 0);
         if (!lines.length) return fail("Add food to the order first");
+        assertStock(lines);
         const o: Order = {
             id: nextId(),
             table: t.id,

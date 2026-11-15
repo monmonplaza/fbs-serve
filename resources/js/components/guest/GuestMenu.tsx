@@ -3,7 +3,7 @@ import { useUi } from "@/context/ui";
 import { TAGS } from "@/lib/constants";
 import type { Food } from "@/types/restaurant";
 import { Icon } from "@/components/Icon";
-import { hasV } from "@/lib/domain";
+import { hasV, LOW_STOCK, soldOut } from "@/lib/domain";
 import { FoodImage, PriceTag, EtaTag } from "@/lib/foodDisplay";
 import { openGallery } from "@/components/foods/Lightbox";
 
@@ -25,7 +25,9 @@ export function GuestMenu({ onAdd }: { onAdd: (f: Food) => void }) {
                 ))}
             </div>
             {list.map((f) => {
-                const ok = f.status === "available";
+                const out = soldOut(f),
+                    ok = f.status === "available" && !out,
+                    left = f.left;
                 return (
                     <article key={f.id} className={`gfood ${ok ? "" : "unavail"}`}>
                         <button
@@ -55,6 +57,11 @@ export function GuestMenu({ onAdd }: { onAdd: (f: Food) => void }) {
                             {hasV(f) && (
                                 <span className="caption muted">{f.variants.map((v) => v.name).join(" · ")}</span>
                             )}
+                            {ok && left !== undefined && left <= LOW_STOCK ? (
+                                <span className="caption num" style={{ color: "var(--warning)" }}>
+                                    Only {left} left
+                                </span>
+                            ) : null}
                             <div className="foot">
                                 <PriceTag food={f} />
                                 {ok ? (
@@ -67,7 +74,7 @@ export function GuestMenu({ onAdd }: { onAdd: (f: Food) => void }) {
                                         Add
                                     </button>
                                 ) : (
-                                    <span className="pill p-error">Not available</span>
+                                    <span className="pill p-error">{out ? "Sold out" : "Not available"}</span>
                                 )}
                             </div>
                         </div>

@@ -7,6 +7,7 @@ import { db } from "@/api-service/mock/db";
 import { out, fail, uid } from "@/api-service/mock/core";
 import type { Food, FoodStatus, FoodTag, Variant } from "@/types/restaurant";
 import { r2 } from "@/lib/format";
+import { withStock } from "@/api-service/inventory/mock";
 
 export interface FoodInput {
     name: string;
@@ -44,7 +45,7 @@ function build(input: FoodInput): Omit<Food, "id"> {
 }
 
 export const catalog = {
-    foods: async () => out(db.foods),
+    foods: async () => out(withStock(db.foods)),
     categories: async () => out(db.categories),
     createFood: async (input: FoodInput) => {
         const f: Food = { id: "f" + uid(), ...build(input) };

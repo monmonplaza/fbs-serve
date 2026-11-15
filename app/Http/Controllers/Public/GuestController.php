@@ -12,6 +12,7 @@ use App\Models\PlateLine;
 use App\Models\TableSession;
 use App\Support\OrderService;
 use App\Support\Settlement;
+use App\Support\StockService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -58,6 +59,19 @@ class GuestController extends BaseController
         return $this->sendResponse($this->lines($request, $table)->get()->map(fn ($l) => (new PlateLineResource($l))->resolve())->all());
     }
 
+    /** A guest cannot put more of a dish on the plate than the kitchen has left. The final check is made when the plate is sent. */
+    private function assertPlateFits(Request $request, string $table, int $foodId, ?int $variantId, string $name, int $extra): void
+    {
+        $left = StockService::leftFor($foodId, $variantId);
+        if ($left === null) {
+            return;
+        }
+        $onPlate = (int) $this->lines($request, $table)->where('food_id', $foodId)->where('variant_id', $variantId)->sum('qty');
+        if ($onPlate + $extra > $left) {
+            throw new ApiException($left <= 0 ? "{$name} is sold out" : "Only {$left} {$name} left");
+        }
+    }
+
     /** Adds one of a food to the shared plate; the same guest adding the same dish again raises its quantity. */
     public function addLine(Request $request, string $table): JsonResponse
     {
@@ -72,6 +86,7 @@ class GuestController extends BaseController
         $vid = $food->variants->isEmpty() ? null : ($food->variants->firstWhere('id', (int) ($v['variantId'] ?? 0))?->id ?? $food->variants->first()->id);
 
         DB::transaction(function () use ($request, $table, $food, $vid, $v) {
+            $this->assertPlateFits($request, $table, $food->id, $vid, $food->itemName($vid), 1);
             $line = $this->lines($request, $table)->where('food_id', $food->id)->where('variant_id', $vid)->where('added_by', $v['by'])->lockForUpdate()->first();
             $line ? $line->increment('qty') : PlateLine::query()->create($this->owner($request, $table) + ['food_id' => $food->id, 'variant_id' => $vid, 'qty' => 1, 'added_by' => $v['by']]);
         });
@@ -88,6 +103,9 @@ class GuestController extends BaseController
             return $this->sendResponse(null);
         }
         if (array_key_exists('delta', $v)) {
+            if ($v['delta'] > 0) {
+                $this->assertPlateFits($request, $table, $l->food_id, $l->variant_id, Food::query()->with('variants')->find($l->food_id)?->itemName($l->variant_id) ?? 'This dish', (int) $v['delta']);
+            }
             $l->qty += $v['delta'];
             $l->qty < 1 ? $l->delete() : $l->save();
         }

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { api } from "@/api-service";
-import { useIngredients, useInvalidate, useMovements } from "@/hooks/useApi";
+import { useFoods, useIngredients, useInvalidate, useMovements } from "@/hooks/useApi";
 import type { Ingredient, StockMovement, StockMovementType } from "@/types/restaurant";
 import { Icon } from "@/components/Icon";
 import { usePaged } from "@/components/Pager";
@@ -8,6 +8,7 @@ import { RowActions } from "@/components/RowActions";
 import { closeModal, openModal } from "@/context/modal";
 import { toast } from "@/context/toast";
 import { dt, tm } from "@/lib/format";
+import { soldOut } from "@/lib/domain";
 import { openIngredientForm, openStockAction, qtyText } from "@/components/inventory/IngredientModals";
 
 type Tab = "stock" | "movements";
@@ -23,6 +24,8 @@ export default function InventoryPage() {
     const [tab, setTab] = useState<Tab>("stock");
     const ingredients = useIngredients().data;
     const low = ingredients.filter((i) => i.active && i.low);
+    // Dishes that cannot be ordered right now because an ingredient ran out (dishes turned off by hand are not listed).
+    const soldOutDishes = useFoods().data.filter((f) => f.status === "available" && soldOut(f));
     return (
         <>
             <div className="page-head">
@@ -49,6 +52,17 @@ export default function InventoryPage() {
                             .map((i) => i.name)
                             .join(", ")}
                         {low.length > 6 ? ` and ${low.length - 6} more` : ""}
+                    </p>
+                </div>
+            ) : null}
+            {soldOutDishes.length ? (
+                <div className="alert warn" role="alert" style={{ marginBottom: 12 }}>
+                    <Icon name="x" />
+                    <p>
+                        <b>
+                            {soldOutDishes.length} {soldOutDishes.length === 1 ? "dish is" : "dishes are"} sold out
+                        </b>{" "}
+                        and can’t be ordered until stock arrives: {soldOutDishes.map((f) => f.name).join(", ")}
                     </p>
                 </div>
             ) : null}

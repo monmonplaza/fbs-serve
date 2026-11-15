@@ -5,6 +5,7 @@ use App\Models\Food;
 use App\Models\Ingredient;
 use App\Models\StockMovement;
 use Database\Seeders\RestaurantSeeder;
+use Illuminate\Testing\TestResponse;
 
 /** Phase 1 of inventory: ingredients, recipes, and stock that leaves when the kitchen bumps an order. */
 beforeEach(function () {
@@ -81,10 +82,11 @@ it('uses the recipe of the size that was ordered, and ignores dishes without a r
     expect(StockMovement::count())->toBe($count);
 });
 
-it('lets stock go below zero when the food was already cooked', function () {
+it('lets stock go below zero when a count came in lower after the order was sent', function () {
     $rice = Ingredient::where('name', 'Rice')->firstOrFail();
-    $this->postJson("/api/ingredients/{$rice->id}/count", ['counted' => 100])->assertOk();
-    bump($this, sendFor($this, 'Java Rice', 1));
+    $code = sendFor($this, 'Java Rice', 1); // sent while the stock covered it
+    $this->postJson("/api/ingredients/{$rice->id}/count", ['counted' => 100])->assertOk(); // the shelf turns out to hold less
+    bump($this, $code);
     expect((float) $rice->refresh()->on_hand)->toBe(-80.0);
     $this->getJson('/api/ingredients')->assertOk();
 });
@@ -113,4 +115,95 @@ it('does not delete an ingredient that is in a recipe', function () {
         ->assertJsonPath('message', 'This ingredient is used in recipes. Take it out of the recipes first, or turn it off instead.');
     $free = Ingredient::create(['name' => 'Salt', 'unit' => 'g']);
     $this->deleteJson("/api/ingredients/{$free->id}")->assertNoContent();
+});
+
+// ---------- Phase 2: reserve stock when an order is sent, and block what is sold out ----------
+function setRice($test, float $grams): void
+{
+    $rice = Ingredient::where('name', 'Rice')->firstOrFail();
+    $test->postJson("/api/ingredients/{$rice->id}/count", ['counted' => $grams])->assertOk();
+}
+
+function foodNamed($test, string $name): array
+{
+    return collect($test->getJson('/api/foods?per_page=1000')->assertOk()->json('data'))->firstWhere('name', $name);
+}
+
+function orderLines($test, array $dishes): TestResponse
+{
+    $items = collect($dishes)->map(fn ($qty, $name) => ['foodId' => Food::where('name', $name)->value('id'), 'qty' => $qty])->values()->all();
+
+    return $test->postJson("/api/tables/{$test->table->id}/order", ['items' => $items]);
+}
+
+it('reserves ingredients the moment an order is sent, and blocks the last portion twice', function () {
+    setRice($this, 360); // two portions of Garlic Rice (180 g each)
+    expect(foodNamed($this, 'Garlic Rice')['left'])->toBe(2);
+
+    orderLines($this, ['Garlic Rice' => 1])->assertCreated();
+    expect((float) Ingredient::where('name', 'Rice')->value('on_hand'))->toBe(360.0) // reserved, not taken yet
+        ->and(foodNamed($this, 'Garlic Rice')['left'])->toBe(1)
+        ->and(foodNamed($this, 'Java Rice')['left'])->toBe(1); // Java Rice uses the same rice
+
+    orderLines($this, ['Java Rice' => 2])->assertUnprocessable()->assertJsonPath('message', 'Only 1 Java Rice left');
+    orderLines($this, ['Java Rice' => 1])->assertCreated();
+    expect(foodNamed($this, 'Garlic Rice')['left'])->toBe(0);
+    orderLines($this, ['Garlic Rice' => 1])->assertUnprocessable()->assertJsonPath('message', 'Garlic Rice is sold out');
+});
+
+it('keeps a dish sold out after the bump, until stock is received', function () {
+    setRice($this, 180);
+    $code = orderLines($this, ['Garlic Rice' => 1])->assertCreated()->json('data.id');
+    bump($this, $code); // the reservation becomes real usage: no double counting
+    expect((float) Ingredient::where('name', 'Rice')->value('on_hand'))->toBe(0.0)
+        ->and(foodNamed($this, 'Garlic Rice')['left'])->toBe(0);
+
+    $rice = Ingredient::where('name', 'Rice')->firstOrFail();
+    $this->postJson("/api/ingredients/{$rice->id}/receive", ['qty' => 540])->assertOk();
+    expect(foodNamed($this, 'Garlic Rice')['left'])->toBe(3);
+    orderLines($this, ['Garlic Rice' => 3])->assertCreated();
+});
+
+it('blocks dishes that together need more of one ingredient than there is', function () {
+    setRice($this, 360);
+    orderLines($this, ['Garlic Rice' => 1, 'Java Rice' => 2])->assertUnprocessable()
+        ->assertJsonPath('message', 'There is not enough Rice for this whole order. Take out a dish and try again.');
+    orderLines($this, ['Garlic Rice' => 1, 'Java Rice' => 1])->assertCreated();
+});
+
+it('shows the portions left per size, and a dish without a recipe is never limited', function () {
+    $dough = Ingredient::where('name', 'Pizza dough')->firstOrFail();
+    $this->postJson("/api/ingredients/{$dough->id}/count", ['counted' => 500])->assertOk(); // 160 / 240 / 320 g per size
+    $pizza = foodNamed($this, 'Classic Pizza');
+    expect(collect($pizza['variants'])->pluck('left', 'name')->all())->toBe(['Small' => 3, 'Medium' => 2, 'Large' => 1])
+        ->and($pizza['left'])->toBe(3);
+
+    $large = collect($pizza['variants'])->firstWhere('name', 'Large');
+    $this->postJson("/api/tables/{$this->table->id}/order", ['items' => [['foodId' => $pizza['id'], 'variantId' => $large['id'], 'qty' => 2]]])
+        ->assertUnprocessable()->assertJsonPath('message', 'Only 1 Classic Pizza (Large) left');
+
+    expect(foodNamed($this, 'Leche Flan'))->not->toHaveKey('left');
+    orderLines($this, ['Leche Flan' => 5])->assertCreated();
+});
+
+it('stops a guest adding more than is left to the shared plate', function () {
+    setRice($this, 180);
+    $guestTable = DiningTable::where('name', 'Table 4')->firstOrFail();
+    $session = $guestTable->sessions()->where('closed_at', null)->first() ?? throw new RuntimeException('Table 4 should be seeded as seated');
+    $url = "/api/public/tables/{$guestTable->id}/plate-lines?k={$session->token}";
+    $rice = Food::where('name', 'Garlic Rice')->value('id');
+
+    $this->postJson($url, ['foodId' => $rice, 'by' => 'Guest 1'])->assertOk();
+    $this->postJson($url, ['foodId' => $rice, 'by' => 'Guest 2'])->assertUnprocessable()->assertJsonPath('message', 'Only 1 Garlic Rice left');
+    setRice($this, 0);
+    $this->postJson($url, ['foodId' => $rice, 'by' => 'Guest 3'])->assertUnprocessable()->assertJsonPath('message', 'Garlic Rice is sold out');
+});
+
+it('does not block an advance reservation order, which is a plan for another day', function () {
+    setRice($this, 0);
+    $table = DiningTable::where('name', 'Table 4')->firstOrFail();
+    $this->postJson('/api/reservations', [
+        'name' => 'Cruz', 'phone' => '0917', 'pax' => 2, 'at' => now()->addDays(3)->setTime(19, 0)->valueOf(), 'tableId' => (string) $table->id, 'note' => '',
+        'order' => [['foodId' => Food::where('name', 'Garlic Rice')->value('id'), 'variantId' => null, 'qty' => 2]],
+    ])->assertCreated();
 });

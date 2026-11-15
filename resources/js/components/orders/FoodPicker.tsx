@@ -2,7 +2,7 @@ import { Fragment, useState, type ReactNode } from "react";
 import { Icon } from "@/components/Icon";
 import { useCategories } from "@/hooks/useApi";
 import type { Food, OrderItem, Variant } from "@/types/restaurant";
-import { hasV, itemName, unitPrice } from "@/lib/domain";
+import { hasV, itemName, LOW_STOCK, stockLeft, unitPrice } from "@/lib/domain";
 import { peso } from "@/lib/format";
 
 /** Picked quantities. The key is the food id, or "foodId|variantId" for a food with variants. */
@@ -40,9 +40,13 @@ export function FoodPicker({
     const card = (f: Food, v?: Variant) => {
         const k = v ? f.id + "|" + v.id : f.id,
             nm = v ? `${f.name} (${v.name})` : f.name,
-            q = draft[k];
+            q = draft[k],
+            left = stockLeft(f, v?.id),
+            out = left !== undefined && left <= 0,
+            // Staff cannot pick more than is left. The server makes the final check for dishes that share an ingredient.
+            full = left !== undefined && (q || 0) >= left;
         return (
-            <div key={k} className={`to-food ${q ? "on" : ""}`}>
+            <div key={k} className={`to-food ${q ? "on" : ""}`} style={out ? { opacity: 0.6 } : undefined}>
                 <div>
                     <b>{f.name}</b>
                     {v ? (
@@ -53,6 +57,13 @@ export function FoodPicker({
                     <div className="caption muted num">
                         {peso(v ? v.price : f.price)} · {f.eta} min
                     </div>
+                    {out ? (
+                        <span className="pill p-error">Sold out</span>
+                    ) : left !== undefined && left <= LOW_STOCK ? (
+                        <span className="caption num" style={{ color: "var(--warning)" }}>
+                            Only {left} left
+                        </span>
+                    ) : null}
                 </div>
                 {q ? (
                     <div className="stepper" style={{ alignSelf: "flex-start" }}>
@@ -60,7 +71,13 @@ export function FoodPicker({
                             <Icon name={q > 1 ? "minus" : "trash"} size={18} />
                         </button>
                         <span className="num">{q}</span>
-                        <button type="button" aria-label={`Add one ${nm}`} onClick={() => qty(k, 1)}>
+                        <button
+                            type="button"
+                            aria-label={`Add one ${nm}`}
+                            disabled={full}
+                            title={full ? `Only ${left} left` : undefined}
+                            onClick={() => qty(k, 1)}
+                        >
                             <Icon name="plus" size={18} />
                         </button>
                     </div>
@@ -69,6 +86,7 @@ export function FoodPicker({
                         type="button"
                         className="btn btn-outline"
                         aria-label={`Add ${nm}`}
+                        disabled={out}
                         onClick={() => qty(k, 1)}
                     >
                         <Icon name="plus" size={18} />

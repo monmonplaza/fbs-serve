@@ -198,7 +198,7 @@ class ReservationController extends BaseController
         if (! $order) {
             return;
         }
-        $built = OrderService::buildItems(array_map(fn ($l) => ['food_id' => $l['foodId'], 'variant_id' => $l['variantId'] ?? null, 'qty' => $l['qty']], $order));
+        $built = OrderService::buildItems(array_map(fn ($l) => ['food_id' => $l['foodId'], 'variant_id' => $l['variantId'] ?? null, 'qty' => $l['qty']], $order), checkStock: false);
         foreach ($built['items'] as $i) {
             $r->items()->create(['food_id' => $i['food_id'], 'variant_id' => $i['variant_id'], 'name' => $i['name'], 'price' => $i['price'], 'qty' => $i['qty']]);
         }

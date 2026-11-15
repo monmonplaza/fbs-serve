@@ -5,6 +5,16 @@ import { r2, sum } from "@/lib/format";
 
 export const hasV = (f?: Food | null): f is Food & { variants: NonNullable<Food["variants"]> } => !!f?.variants?.length;
 export const vOf = (f: Food, id?: string) => f.variants!.find((v) => v.id === id) || f.variants![0];
+/** Show "Only N left" at or under this many portions. */
+export const LOW_STOCK = 5;
+/** Portions left of a dish (and size). `undefined` when it has no recipe: it is never limited. */
+export const stockLeft = (f: Food, vid?: string): number | undefined =>
+    hasV(f) && vid ? f.variants.find((v) => v.id === vid)?.left : f.left;
+/** Out of an ingredient: it can't be ordered until stock arrives. A dish turned off by hand stays "Not available". */
+export const soldOut = (f: Food, vid?: string) => {
+    const n = stockLeft(f, vid);
+    return n !== undefined && n <= 0;
+};
 export const unitPrice = (f: Food, vid?: string) => (hasV(f) ? vOf(f, vid).price : f.price);
 export const itemName = (f: Food, vid?: string) => (hasV(f) ? `${f.name} (${vOf(f, vid).name})` : f.name);
 

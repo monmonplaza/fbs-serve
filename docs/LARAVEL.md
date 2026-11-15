@@ -55,6 +55,7 @@ Register custom `POST` routes before `Route::crudModule` (section 6.1). `crudMod
 | `kitchen.queue / next / toReady / serve` | `GET /kitchen/queue`, `PATCH /orders/{code}/advance`, `PATCH /orders/{code}/ready`, `PATCH /orders/{code}/serve` (`{code}` is the round code) |
 | `tables.*` | `crudModule('/tables')`, `crudModule('/floors')`, `POST /tables/{id}/activate`, `POST /tables/{id}/order`, `POST /tables/{id}/deactivate`, `POST /tables/{id}/move-guests`, `POST /tables/{id}/clean`, `PATCH /tables/{id}/position` |
 | `reservations.*` | `crudModule('/reservations', only index, store, update, destroy)`, `PATCH /reservations/{id}/move`, `/move-day`, `/cancel`, `/no-show`, `/restore`, `/dismiss`, `POST /reservations/{id}/seat` |
+| `foods.*` | the foods list also carries `left` (portions left from stock; see BACKEND.md, Inventory) |
 | `inventory.*` | `crudModule('/ingredients')` (no show), `POST /ingredients/{id}/receive`, `/waste`, `/count`, `GET /stock-movements`, `GET/POST /foods/{id}/recipe` |
 | `admin.*` | `crudModule('/payment-methods')`, `/discounts`, `/roles`, `/users`, `POST /users/{id}/profile`, `POST /users/{id}/password`; `GET/PATCH /settings` (`tableTimerOn`, `tableTimerMins`) |
 | `guest.*` | public, token-scoped: `GET /public/tables/{table}/session?k=` (join), `.../plate?k=`, `POST .../plate-lines`, `PATCH .../plate-lines/{id}` (`delta` or `note`), `POST .../send`, `POST .../bill-out`; Takeout QR uses table `__takeout` |
