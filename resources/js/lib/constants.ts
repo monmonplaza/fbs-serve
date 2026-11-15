@@ -15,6 +15,7 @@ export const NAV: { id: ModuleId; label: string; ic: string }[] = [
     { id: "foods", label: "Foods", ic: "utensils" },
     { id: "tables", label: "Tables", ic: "table" },
     { id: "inventory", label: "Inventory", ic: "store" },
+    { id: "reports", label: "Reports", ic: "chart" },
     { id: "settings", label: "Settings", ic: "sliders" },
     { id: "guide", label: "Guide", ic: "book" },
 ];

@@ -1,4 +1,5 @@
-import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
+import { useWidth } from "@/hooks/useWidth";
 import type { Order } from "@/types/restaurant";
 import { peso } from "@/lib/format";
 import {
@@ -19,20 +20,6 @@ const H = 220,
     TOP = 12,
     BOTTOM = 28,
     LEFT = 52;
-
-/** Width of the chart box, so the SVG draws at real pixels and its text stays crisp. */
-function useWidth() {
-    const ref = useRef<HTMLDivElement>(null);
-    const [w, setW] = useState(0);
-    useLayoutEffect(() => {
-        const el = ref.current;
-        if (!el) return;
-        const ro = new ResizeObserver(([e]) => setW(Math.floor(e.contentRect.width)));
-        ro.observe(el);
-        return () => ro.disconnect();
-    }, []);
-    return [ref, w] as const;
-}
 
 const ymd = (t: number) => {
     const d = new Date(t);

@@ -72,11 +72,11 @@ class RestaurantSeeder extends Seeder
     /** The demo roles and accounts of the login page. There is no password login yet, so the accounts have none. */
     private function seedStaff(): void
     {
-        $all = ['dashboard', 'orders', 'reservations', 'kitchen', 'foods', 'tables', 'settings', 'guide'];
+        $all = ['dashboard', 'orders', 'reservations', 'kitchen', 'foods', 'tables', 'inventory', 'reports', 'settings', 'guide'];
         $roles = [];
         foreach ([
             ['Admin', $all, true],
-            ['Manager', ['dashboard', 'orders', 'reservations', 'foods', 'tables', 'guide'], false],
+            ['Manager', ['dashboard', 'orders', 'reservations', 'foods', 'tables', 'reports', 'guide'], false],
             ['Waiter', ['orders', 'reservations', 'kitchen', 'tables', 'guide'], false],
             ['Kitchen staff', ['kitchen', 'guide'], false],
             ['Cashier', ['dashboard', 'orders', 'reservations', 'tables', 'guide'], false],

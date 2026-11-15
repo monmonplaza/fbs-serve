@@ -68,6 +68,11 @@ return [
     'timezone' => 'UTC',
 
     /*
+    | The restaurant's own time zone. The database keeps UTC; the days, weeks and months in reports are the restaurant's.
+    */
+    'restaurant_timezone' => env('RESTAURANT_TIMEZONE', 'Asia/Manila'),
+
+    /*
     |--------------------------------------------------------------------------
     | Application Locale Configuration
     |--------------------------------------------------------------------------

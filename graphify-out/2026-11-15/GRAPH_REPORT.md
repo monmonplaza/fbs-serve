@@ -1,27 +1,27 @@
-# Graph Report - fbs-serve-github  (2026-11-14)
+# Graph Report - fbs-serve-github  (2026-11-15)
 
 ## Corpus Check
-- 244 files · ~125,051 words
+- 255 files · ~135,084 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1459 nodes · 2225 edges · 181 communities (131 shown, 50 thin omitted)
-- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 19 edges (avg confidence: 0.85)
+- 1564 nodes · 2410 edges · 185 communities (130 shown, 55 thin omitted)
+- Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 39 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `de62e852`
+- Built from commit: `8d046cf4`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
-- OrderService
+- Illuminate\Http\JsonResponse
 - devDependencies
 - Illuminate\Database\Migrations\Migration
 - restaurant.ts
 - scripts
 - reservationHelpers.ts
-- User
+- StoredFile
 - useApi.ts
 - compilerOptions
 - Food
@@ -40,7 +40,7 @@
 - PayModals.tsx
 - Illuminate\Database\Eloquent\Model
 - require
-- Illuminate\Database\Eloquent\Relations\HasMany
+- StockService
 - Reusable Component Boilerplate Report
 - seed.ts
 - reservations.ts
@@ -96,7 +96,7 @@
 - SettingsPage.tsx
 - TablesPage.tsx
 - Laravel Application
-- Order
+- Money
 - FBS Serve
 - 6. Backend CRUD boilerplate
 - 9. Conventions
@@ -113,8 +113,8 @@
 - print.ts
 - toast.ts
 - GuidePage.tsx
-- Illuminate\Http\Resources\Json\JsonResource
-- FloorController
+- reportRanges.ts
+- DiscountController.php
 - keywords
 - console.php
 - guest/mock.ts
@@ -134,64 +134,67 @@
 - tsconfig.json
 - db.ts
 - tables/http.ts
-- StoredFile
+- PaymentMethodController
 - guestLink.ts
 - image.ts
 - vite-env.d.ts
-- UserController
+- reports/mock.ts
+- ApiException
 - api.php
-- Illuminate\Http\JsonResponse
-- HandlesFileUploads.php
+- IngredientController
+- UserController
 - uploads/mock.ts
 - uploads/http.ts
 - reservations/http.ts
 - salesStats.ts
-- ApiException
-- Illuminate\Database\Eloquent\Relations\BelongsTo
+- ReportsPage.tsx
+- Illuminate\Support\Str
+- reportCsv.ts
 - FoodPicker.tsx
 - SalesCharts.tsx
-- Illuminate\Database\Seeder
+- ReportPrintHost.tsx
 - RoleController
 - Illuminate\Http\Request
 - inventory/mock.ts
 - IngredientModals.tsx
-- Illuminate\Support\Facades\DB
+- BarChart.tsx
 - InventoryPage.tsx
 - RecipeModal.tsx
 - inventory/http.ts
+- reports/http.ts
 
 ## God Nodes (most connected - your core abstractions)
 1. `BaseController` - 56 edges
-2. `DiningTable` - 30 edges
-3. `Food` - 29 edges
+2. `Food` - 33 edges
+3. `DiningTable` - 32 edges
 4. `OrderService` - 26 edges
-5. `Order` - 23 edges
-6. `StoredFile` - 23 edges
-7. `TableController` - 20 edges
-8. `OrderRound` - 20 edges
-9. `Reservation` - 20 edges
-10. `User` - 20 edges
+5. `StockService` - 26 edges
+6. `Order` - 25 edges
+7. `StoredFile` - 23 edges
+8. `TableController` - 20 edges
+9. `Ingredient` - 20 edges
+10. `OrderRound` - 20 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `booking()` --calls--> `DiningTable`  [EXTRACTED]
   tests/Feature/StaffAndReservationsTest.php → app/Models/DiningTable.php
+- `setRice()` --calls--> `Ingredient`  [EXTRACTED]
+  tests/Feature/InventoryTest.php → app/Models/Ingredient.php
+- `paidSale()` --calls--> `DiningTable`  [EXTRACTED]
+  tests/Feature/SalesReportTest.php → app/Models/DiningTable.php
 - `sendFor()` --calls--> `Food`  [EXTRACTED]
   tests/Feature/InventoryTest.php → app/Models/Food.php
-- `add()` --calls--> `Food`  [EXTRACTED]
-  tests/Support/OrderingHelpers.php → app/Models/Food.php
-- `BaseController` --inherits--> `Controller`  [EXTRACTED]
-  app/Http/Controllers/v1/BaseController.php → app/Http/Controllers/Controller.php
-- `ProfileController` --inherits--> `Controller`  [EXTRACTED]
-  app/Http/Controllers/v1/Staff/ProfileController.php → app/Http/Controllers/Controller.php
+- `paidSale()` --calls--> `Discount`  [EXTRACTED]
+  tests/Feature/SalesReportTest.php → app/Models/Discount.php
 
 ## Import Cycles
 - None detected.
 
-## Communities (181 total, 50 thin omitted)
+## Communities (185 total, 55 thin omitted)
 
-### Community 0 - "OrderService"
-Cohesion: 0.16
-Nodes (5): KitchenController, OrderRound, OrderService, Illuminate\Support\Collection, self
+### Community 0 - "Illuminate\Http\JsonResponse"
+Cohesion: 0.15
+Nodes (7): KitchenController, OrderController, OrderRoundResource, OrderRound, OrderService, Settlement, Illuminate\Http\JsonResponse
 
 ### Community 1 - "devDependencies"
 Cohesion: 0.04
@@ -203,7 +206,7 @@ Nodes (3): Illuminate\Database\Migrations\Migration, Illuminate\Database\Schema\
 
 ### Community 3 - "restaurant.ts"
 Cohesion: 0.06
-Nodes (31): AppliedDiscount, AppSettings, Category, Database, DiningTable, Discount, Floor, Food (+23 more)
+Nodes (35): AppliedDiscount, AppSettings, Category, Database, DiningTable, Discount, Floor, Food (+27 more)
 
 ### Community 4 - "scripts"
 Cohesion: 0.08
@@ -213,12 +216,12 @@ Nodes (26): scripts, dev, post-autoload-dump, post-create-project-cmd, post-root
 Cohesion: 0.13
 Nodes (15): addDays(), draftKey(), DraftStore, hm(), initDraft(), OrderDraft, pad2(), ResDraft (+7 more)
 
-### Community 6 - "User"
-Cohesion: 0.11
-Nodes (13): ProfileController, User, UserFactory, Illuminate\Database\Eloquent\Attributes\Fillable, Illuminate\Database\Eloquent\Attributes\Hidden, Illuminate\Database\Eloquent\Factories\Factory, Illuminate\Database\Eloquent\Factories\HasFactory, Illuminate\Foundation\Auth\User (+5 more)
+### Community 6 - "StoredFile"
+Cohesion: 0.07
+Nodes (18): Controller, UploadController, ProfileController, PaymentMethodResource, UserResource, User, StoredFile, storeUploadedFile() (+10 more)
 
 ### Community 7 - "useApi.ts"
-Cohesion: 0.09
+Cohesion: 0.08
 Nodes (4): clientRef, EMPTY, KeyName, keys
 
 ### Community 8 - "compilerOptions"
@@ -226,16 +229,16 @@ Cohesion: 0.10
 Nodes (19): DOM, DOM.Iterable, resources/js, compilerOptions, baseUrl, isolatedModules, jsx, lib (+11 more)
 
 ### Community 9 - "Food"
-Cohesion: 0.14
-Nodes (6): Food, RestaurantSeeder, sendFor(), booking(), add(), url()
+Cohesion: 0.05
+Nodes (20): Category, Discount, Food, Order, PaymentMethod, DatabaseSeeder, RestaurantSeeder, Illuminate\Database\Eloquent\Relations\BelongsTo (+12 more)
 
 ### Community 10 - "What the prompt applies"
 Cohesion: 0.18
 Nodes (10): 1. Package, 2. `.env`, 3. `config/filesystems.php` — the `s3` disk, 4. Upload trait — `app/Traits/HandlesFileUploads.php`, 5. Clear config, DigitalOcean Spaces uploads for a Laravel project, Left out (copy from `laravel-sub-sms` `app/Traits/HandlesFileUploads.php` if needed), Prompt to give Claude in the other project (+2 more)
 
 ### Community 11 - "bootstrap/app.php"
-Cohesion: 0.18
-Nodes (9): DevOpen, Closure, Illuminate\Database\Eloquent\ModelNotFoundException, Illuminate\Foundation\Application, Illuminate\Foundation\Configuration\Exceptions, Illuminate\Foundation\Configuration\Middleware, Illuminate\Validation\ValidationException, Symfony\Component\HttpFoundation\Response (+1 more)
+Cohesion: 0.13
+Nodes (11): DevOpen, HandleInertiaRequests, Closure, Illuminate\Database\Eloquent\ModelNotFoundException, Illuminate\Foundation\Application, Illuminate\Foundation\Configuration\Exceptions, Illuminate\Foundation\Configuration\Middleware, Illuminate\Validation\ValidationException (+3 more)
 
 ### Community 12 - "FBS Serve — Handoff"
 Cohesion: 0.11
@@ -258,8 +261,8 @@ Cohesion: 0.13
 Nodes (15): GSTEP_L, GSTEPS, KITCHEN, NAV, OrderStatusMeta, OSTAT, StatusMeta, TAGS (+7 more)
 
 ### Community 19 - "domain.ts"
-Cohesion: 0.24
-Nodes (10): billKey(), hasV(), isTO(), itemName(), oMeta(), plateItems(), subtotal(), total() (+2 more)
+Cohesion: 0.20
+Nodes (13): billKey(), hasV(), isTO(), itemName(), LOW_STOCK, oMeta(), plateItems(), soldOut() (+5 more)
 
 ### Community 20 - "core.ts"
 Cohesion: 0.21
@@ -274,16 +277,16 @@ Cohesion: 0.28
 Nodes (10): fail(), HandoverModal(), isPayable(), openOrder(), openPickup(), OrderModal(), PayTableModal(), PickupModal() (+2 more)
 
 ### Community 23 - "Illuminate\Database\Eloquent\Model"
-Cohesion: 0.16
-Nodes (8): Floor, FoodPhoto, FoodVariant, OrderItem, OrderPayment, ReservationHistory, ReservationItem, Illuminate\Database\Eloquent\Model
+Cohesion: 0.15
+Nodes (8): FloorController, Floor, FoodPhoto, OrderItem, OrderPayment, ReservationHistory, ReservationItem, Illuminate\Database\Eloquent\Model
 
 ### Community 24 - "require"
 Cohesion: 0.15
 Nodes (13): require, ext-bcmath, ext-curl, ext-fileinfo, ext-mbstring, ext-openssl, ext-pdo_sqlite, inertiajs/inertia-laravel (+5 more)
 
-### Community 26 - "Illuminate\Database\Eloquent\Relations\HasMany"
-Cohesion: 0.11
-Nodes (6): Category, Ingredient, PaymentMethod, Role, StockMovement, Illuminate\Database\Eloquent\Relations\HasMany
+### Community 26 - "StockService"
+Cohesion: 0.09
+Nodes (7): IngredientResource, FoodVariant, Ingredient, RecipeLine, StockMovement, StockService, self
 
 ### Community 27 - "Reusable Component Boilerplate Report"
 Cohesion: 0.18
@@ -322,16 +325,16 @@ Cohesion: 0.25
 Nodes (3): CHAN, chanOf(), ChTag()
 
 ### Community 37 - "index.ts"
-Cohesion: 0.17
-Nodes (10): admin, api, catalog, guest, inventory, kitchen, orders, reservations (+2 more)
+Cohesion: 0.15
+Nodes (11): admin, api, catalog, guest, inventory, kitchen, orders, reports (+3 more)
 
 ### Community 38 - "settingsConfig.tsx"
 Cohesion: 0.22
 Nodes (6): Cfg, Field, Opts, Row, SET, TAB_ORDER
 
 ### Community 39 - "AppServiceProvider.php"
-Cohesion: 0.25
-Nodes (5): AppServiceProvider, Illuminate\Cache\RateLimiting\Limit, Illuminate\Support\Facades\RateLimiter, Illuminate\Support\Facades\Vite, Illuminate\Support\ServiceProvider
+Cohesion: 0.20
+Nodes (6): AppServiceProvider, Illuminate\Cache\RateLimiting\Limit, Illuminate\Support\Facades\RateLimiter, Illuminate\Support\Facades\Route, Illuminate\Support\Facades\Vite, Illuminate\Support\ServiceProvider
 
 ### Community 40 - "autoload-dev"
 Cohesion: 0.67
@@ -374,8 +377,8 @@ Cohesion: 0.67
 Nodes (3): extra, laravel, dont-discover
 
 ### Community 53 - "Reservation"
-Cohesion: 0.16
-Nodes (4): ReservationController, Reservation, Carbon, Carbon\Carbon
+Cohesion: 0.14
+Nodes (5): ReservationController, Reservation, Carbon, Carbon\Carbon, booking()
 
 ### Community 54 - "11. Table prefix convention `app_`"
 Cohesion: 0.33
@@ -477,9 +480,9 @@ Nodes (3): RESERVED, tableShape(), TablesPage()
 Cohesion: 0.50
 Nodes (3): Agent Setup, Laravel Application, Prerequisites
 
-### Community 84 - "Order"
-Cohesion: 0.10
-Nodes (6): OrderController, OrderRoundResource, Discount, Order, Money, Settlement
+### Community 84 - "Money"
+Cohesion: 0.11
+Nodes (8): ReportController, Money, SalesReport, Carbon\CarbonImmutable, Carbon\CarbonInterface, CarbonImmutable, Illuminate\Support\Collection, Illuminate\Support\Facades\DB
 
 ### Community 85 - "FBS Serve"
 Cohesion: 0.40
@@ -502,20 +505,16 @@ Cohesion: 0.67
 Nodes (3): ICON_RULES, ModalHost(), modalIcon()
 
 ### Community 102 - "print.ts"
-Cohesion: 0.33
-Nodes (3): PrintJob, usePrint, useQrPrint
+Cohesion: 0.25
+Nodes (4): PrintJob, usePrint, useQrPrint, useReportPrint
 
-### Community 105 - "Illuminate\Http\Resources\Json\JsonResource"
-Cohesion: 0.11
-Nodes (7): CategoryResource, DiscountResource, FloorResource, ReservationResource, RoleResource, TableResource, Illuminate\Http\Resources\Json\JsonResource
+### Community 105 - "reportRanges.ts"
+Cohesion: 0.21
+Nodes (12): addDays(), dayText(), mondayOf(), monthEnd(), MONTHS, parseYmd(), Preset, presetRange() (+4 more)
 
 ### Community 107 - "keywords"
 Cohesion: 0.67
 Nodes (3): keywords, framework, laravel
-
-### Community 135 - "StoredFile"
-Cohesion: 0.12
-Nodes (6): PaymentMethodController, FoodResource, PaymentMethodResource, UserResource, StoredFile, Illuminate\Validation\Rule
 
 ### Community 141 - "guestLink.ts"
 Cohesion: 0.31
@@ -525,65 +524,61 @@ Nodes (7): appUrlIsLocal(), guestLink(), keyName(), publicBase(), savedKey(), sa
 Cohesion: 0.83
 Nodes (3): blobToDataUrl(), imageToDataUrl(), scaleImage()
 
-### Community 156 - "api.php"
+### Community 155 - "reports/mock.ts"
 Cohesion: 0.18
-Nodes (3): CategoryController, DiscountController, Illuminate\Support\Facades\Route
+Nodes (7): addDays(), CHANNELS, load(), mondayOf(), reports, Sale, SalesQuery
 
-### Community 159 - "Illuminate\Http\JsonResponse"
-Cohesion: 0.18
-Nodes (4): IngredientController, IngredientResource, StockService, Illuminate\Http\JsonResponse
-
-### Community 160 - "HandlesFileUploads.php"
-Cohesion: 0.18
-Nodes (5): Controller, UploadController, SettingsController, AppSetting, storeUploadedFile()
+### Community 156 - "ApiException"
+Cohesion: 0.13
+Nodes (6): ApiException, CategoryController, Role, Illuminate\Support\Facades\Validator, Illuminate\Validation\Rule, RuntimeException
 
 ### Community 165 - "salesStats.ts"
 Cohesion: 0.19
 Nodes (5): addDays(), hourly(), HourSales, salesOn(), saleTime()
 
-### Community 166 - "ApiException"
-Cohesion: 0.33
-Nodes (3): ApiException, Illuminate\Support\Facades\Validator, RuntimeException
+### Community 166 - "ReportsPage.tsx"
+Cohesion: 0.29
+Nodes (3): GROUPS, ReportBody(), share()
 
-### Community 167 - "Illuminate\Database\Eloquent\Relations\BelongsTo"
-Cohesion: 0.12
-Nodes (4): RecipeLine, Illuminate\Database\Eloquent\Relations\BelongsTo, Illuminate\Support\Str, Pdo\Mysql
+### Community 168 - "reportCsv.ts"
+Cohesion: 0.43
+Nodes (4): cell(), line(), n(), salesCsv()
 
 ### Community 171 - "SalesCharts.tsx"
-Cohesion: 0.29
-Nodes (5): CompareChart(), DaySalesChart(), longDay(), useWidth(), ymd()
+Cohesion: 0.28
+Nodes (3): DaySalesChart(), longDay(), ymd()
 
 ### Community 176 - "Illuminate\Http\Request"
-Cohesion: 0.18
-Nodes (6): GuestController, HandleInertiaRequests, PlateLineResource, PlateLine, Illuminate\Http\Request, Inertia\Middleware
+Cohesion: 0.11
+Nodes (12): GuestController, CategoryResource, DiscountResource, FloorResource, FoodResource, PlateLineResource, ReservationResource, RoleResource (+4 more)
 
 ### Community 177 - "inventory/mock.ts"
-Cohesion: 0.33
-Nodes (8): find(), IngredientInput, inventory, isLow(), move(), round3(), state, useStockForOrder()
+Cohesion: 0.25
+Nodes (14): assertPlateFits(), assertStock(), available(), countOf(), find(), IngredientInput, inventory, isLow() (+6 more)
 
 ### Community 178 - "IngredientModals.tsx"
 Cohesion: 0.29
 Nodes (4): ACTIONS, qtyText(), StockAction, StockActionForm()
 
 ## Knowledge Gaps
-- **385 isolated node(s):** `$schema`, `name`, `type`, `description`, `laravel` (+380 more)
+- **403 isolated node(s):** `$schema`, `name`, `type`, `description`, `laravel` (+398 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **50 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **55 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `BaseController` connect `BaseController` to `OrderService`, `HandlesFileUploads.php`, `ApiException`, `StoredFile`, `Illuminate\Http\Resources\Json\JsonResource`, `FloorController`, `RoleController`, `Illuminate\Http\Request`, `FoodController`, `Order`, `Reservation`, `UserController`, `api.php`, `DiningTable`, `Illuminate\Http\JsonResponse`?**
+- **Why does `BaseController` connect `BaseController` to `Illuminate\Http\JsonResponse`, `UserController`, `StoredFile`, `PaymentMethodController`, `DiscountController.php`, `RoleController`, `Illuminate\Http\Request`, `FoodController`, `Reservation`, `Illuminate\Database\Eloquent\Model`, `StockService`, `ApiException`, `DiningTable`, `IngredientController`?**
+  _High betweenness centrality (0.011) - this node is a cross-community bridge._
+- **Why does `User` connect `StoredFile` to `UserController`, `Food`, `ApiException`, `Reservation`?**
   _High betweenness centrality (0.010) - this node is a cross-community bridge._
-- **Why does `User` connect `User` to `Food`, `Illuminate\Database\Eloquent\Relations\HasMany`, `UserController`, `StoredFile`?**
-  _High betweenness centrality (0.005) - this node is a cross-community bridge._
-- **Why does `StoredFile` connect `StoredFile` to `HandlesFileUploads.php`, `OrderService`, `User`, `FoodController`, `Illuminate\Support\Facades\DB`?**
-  _High betweenness centrality (0.005) - this node is a cross-community bridge._
+- **Why does `Money` connect `Money` to `Illuminate\Http\JsonResponse`, `Food`, `StockService`, `DiningTable`?**
+  _High betweenness centrality (0.007) - this node is a cross-community bridge._
 - **What connects `$schema`, `name`, `type` to the rest of the system?**
-  _385 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _403 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Should `Illuminate\Http\JsonResponse` be split into smaller, more focused modules?**
+  _Cohesion score 0.14623655913978495 - nodes in this community are weakly interconnected._
 - **Should `devDependencies` be split into smaller, more focused modules?**
   _Cohesion score 0.044444444444444446 - nodes in this community are weakly interconnected._
 - **Should `Illuminate\Database\Migrations\Migration` be split into smaller, more focused modules?**
   _Cohesion score 0.06648936170212766 - nodes in this community are weakly interconnected._
-- **Should `restaurant.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.0625 - nodes in this community are weakly interconnected._

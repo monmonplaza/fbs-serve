@@ -1,7 +1,16 @@
 // Domain types. These mirror what the backend should return; ids are strings, times are epoch milliseconds.
 
 export type ModuleId =
-    "dashboard" | "orders" | "reservations" | "kitchen" | "foods" | "tables" | "inventory" | "settings" | "guide";
+    | "dashboard"
+    | "orders"
+    | "reservations"
+    | "kitchen"
+    | "foods"
+    | "tables"
+    | "inventory"
+    | "reports"
+    | "settings"
+    | "guide";
 /** A staff page: a module, or the profile page every signed-in user can open. */
 export type PageId = ModuleId | "profile";
 
@@ -247,4 +256,42 @@ export interface StockMovement {
     ref: string | null;
     by: string | null;
     at: number;
+}
+
+/** Totals of a sales report period. Net is what was paid (VAT included); gross is before discounts. */
+export interface SalesTotals {
+    orders: number;
+    gross: number;
+    discounts: number;
+    net: number;
+    /** The sales without VAT, and the 12% VAT inside the net. */
+    vatable: number;
+    vat: number;
+    avgOrder: number;
+    guests: number;
+    itemsSold: number;
+}
+export interface SalesPeriod {
+    key: string;
+    from: string;
+    to: string;
+    orders: number;
+    gross: number;
+    discounts: number;
+    net: number;
+}
+export type ReportGroup = "day" | "week" | "month";
+/** Sales for a date range, counted on the day each order was paid (restaurant time zone). */
+export interface SalesReport {
+    range: { from: string; to: string; days: number; group: ReportGroup; timezone: string };
+    totals: SalesTotals;
+    previous: SalesTotals & { from: string; to: string };
+    series: SalesPeriod[];
+    byHour: { hour: number; orders: number; net: number }[];
+    byPayment: { method: string; name: string; count: number; amount: number }[];
+    byChannel: { channel: string; name: string; orders: number; net: number }[];
+    byCategory: { category: string; qty: number; sales: number }[];
+    items: { name: string; category: string; qty: number; sales: number }[];
+    byTable: { table: string; floor: string | null; orders: number; guests: number; net: number }[];
+    discounts: { name: string; pct: number; orders: number; amount: number }[];
 }

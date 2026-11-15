@@ -37,6 +37,7 @@ export const IC: Record<string, string> = {
     plate: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/>',
     chev: '<path d="M6 9l6 6 6-6"/>',
     arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
+    chart: '<path d="M4 20V11M10 20V4M16 20v-6M22 20H2"/>',
     store: '<path d="M3 9l2-5h14l2 5M4 9v11h16V9M3 9h18"/><path d="M9 20v-6h6v6"/>',
     cup: '<path d="M5 8h12v6a5 5 0 0 1-5 5h-2a5 5 0 0 1-5-5z"/><path d="M17 10h2a2 2 0 0 1 0 4h-2M8 3v2M12 3v2"/>',
     bowl: '<path d="M3 11h18a9 9 0 0 1-18 0z"/><path d="M8 7c0-1 1-2 2-2M13 7c0-2 2-3 3-3"/>',

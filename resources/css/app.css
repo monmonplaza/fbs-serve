@@ -93,7 +93,7 @@
   html,body{height:auto;background:#fff!important}
   body::before{display:none}
   /* Print only the bill: hide the app (Inertia mounts it in #app) and every portal (modals, toasts) next to it. */
-  body > :not(#bill-print):not(#qr-print){display:none!important}
+  body > :not(#bill-print):not(#qr-print):not(#report-print){display:none!important}
   #qr-print .qr{width:100%;height:auto;border-radius:0}
 }
 *{box-sizing:border-box}
@@ -116,6 +116,8 @@ button,input,select,textarea{font:inherit;color:inherit}
 }
 
 @layer components {
+/* Report tables sit side by side only when each has room; otherwise they stack. */
+.rpt-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,400px),1fr));gap:16px}
 /* Dashboard charts (hand-drawn SVG). */
 .chart-filters{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .chart-filters .input{width:auto;min-height:40px}
@@ -321,6 +323,10 @@ button,input,select,textarea{font:inherit;color:inherit}
 /* Tables: 10px corners and a header in the sidebar green (white text, 6.4:1), in light and dark mode. */
 .tbl-scroll{overflow-x:auto;border-radius:10px;background:var(--surface-card);box-shadow:var(--shadow-card)}
 table.data{width:100%;border-collapse:collapse;min-width:720px}
+table.data.compact{min-width:0}
+.data.compact th,.data.compact td{padding:10px 12px}
+.data.compact tfoot td{border-top:2px solid var(--nav-bg);border-bottom:0}
+@media (max-width:560px){.data.compact th,.data.compact td{padding:10px 6px;font-size:13px}}
 .data th{text-align:left;font-size:14px;line-height:20px;font-weight:500;color:var(--nav-ink);padding:12px 16px;border-bottom:1px solid var(--nav-bg);background:var(--nav-bg);white-space:nowrap}
 .data td{padding:12px 16px;border-bottom:1px solid var(--hairline);vertical-align:middle}
 .data td .link{min-height:0}

@@ -6,6 +6,7 @@ import { useReservationNotices } from "@/hooks/useReservationNotices";
 import { useUi } from "@/context/ui";
 import { BillPrintHost } from "@/components/BillPrintHost";
 import { QrPrintHost } from "@/components/tables/QrPrintHost";
+import { ReportPrintHost } from "@/components/reports/ReportPrintHost";
 import { LightboxHost } from "@/components/foods/Lightbox";
 import { ModalHost } from "@/components/ModalHost";
 import { Toast } from "@/components/Toast";
@@ -40,6 +41,7 @@ function Hosts({ children }: { children: ReactNode }) {
             <ModalHost />
             <BillPrintHost />
             <QrPrintHost />
+            <ReportPrintHost />
             <Toast />
         </>
     );

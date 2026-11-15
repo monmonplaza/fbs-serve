@@ -1,5 +1,6 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousData, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/api-service";
+import type { SalesQuery } from "@/api-service/reports/mock";
 
 /** One key per resource. Mutations call `invalidate('orders', 'tables')` so every screen showing that data refreshes. */
 export const keys = {
@@ -38,6 +39,19 @@ export const useUsers = () => list(keys.users, api.admin.users);
 export const useSettings = () => useQuery({ queryKey: keys.settings, queryFn: api.admin.settings }).data;
 export const useIngredients = () => list(keys.ingredients, api.inventory.ingredients);
 export const useMovements = () => list(keys.movements, () => api.inventory.movements());
+/**
+ * A sales report. Unlike the other lists it is not refreshed every few seconds: a report is a snapshot you ask for, and it can
+ * be heavy. The previous report stays on screen while a new range loads.
+ */
+export const useSalesReport = (q: SalesQuery, enabled = true) =>
+    useQuery({
+        enabled,
+        queryKey: ["reports", "sales", q],
+        queryFn: () => api.reports.sales(q),
+        refetchInterval: false,
+        refetchOnWindowFocus: false,
+        placeholderData: keepPreviousData,
+    });
 export const usePlate = (tableId: string) => list(keys.plate(tableId), () => api.guest.plate(tableId));
 
 type KeyName = Exclude<keyof typeof keys, "plate"> | "plate";

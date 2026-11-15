@@ -297,7 +297,11 @@ export const discounts: Discount[] = [
 
 export const roles: Role[] = [
     { id: "admin", name: "Admin", modules: NAV.map((n) => n.id), admin: true },
-    { id: "manager", name: "Manager", modules: ["dashboard", "orders", "reservations", "foods", "tables", "guide"] },
+    {
+        id: "manager",
+        name: "Manager",
+        modules: ["dashboard", "orders", "reservations", "foods", "tables", "reports", "guide"],
+    },
     { id: "waiter", name: "Waiter", modules: ["orders", "reservations", "kitchen", "tables", "guide"] },
     { id: "kitchen", name: "Kitchen staff", modules: ["kitchen", "guide"] },
     { id: "cashier", name: "Cashier", modules: ["dashboard", "orders", "reservations", "tables", "guide"] },

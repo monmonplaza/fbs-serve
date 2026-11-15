@@ -9,6 +9,7 @@ use App\Http\Controllers\v1\Menu\FoodController;
 use App\Http\Controllers\v1\Orders\DiscountController;
 use App\Http\Controllers\v1\Orders\OrderController;
 use App\Http\Controllers\v1\Orders\PaymentMethodController;
+use App\Http\Controllers\v1\Reports\ReportController;
 use App\Http\Controllers\v1\Reservations\ReservationController;
 use App\Http\Controllers\v1\Settings\SettingsController;
 use App\Http\Controllers\v1\Staff\ProfileController;
@@ -62,6 +63,7 @@ Route::middleware('dev.open')->group(function () {
     Route::get('/foods/{id}/recipe', [IngredientController::class, 'recipe'])->whereNumber('id');
     Route::post('/foods/{id}/recipe', [IngredientController::class, 'saveRecipe'])->whereNumber('id');
     Route::get('/stock-movements', [IngredientController::class, 'movements']);
+    Route::get('/reports/sales', [ReportController::class, 'sales']);
     Route::post('/ingredients/{id}/receive', [IngredientController::class, 'receive'])->whereNumber('id');
     Route::post('/ingredients/{id}/waste', [IngredientController::class, 'waste'])->whereNumber('id');
     Route::post('/ingredients/{id}/count', [IngredientController::class, 'count'])->whereNumber('id');
