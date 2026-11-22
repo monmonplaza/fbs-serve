@@ -18,7 +18,7 @@ final class OrderService
      * Turns plate lines (one per guest) or staff-entered lines into order items: one per food, variant and note.
      * Names and prices come from the menu, never from the client.
      *
-     * @param  iterable<array{food_id: int|string, variant_id?: int|string|null, qty: int, note?: ?string}>  $lines
+     * @param  iterable<array{food_id: int|string, variant_id?: int|string|null, qty: int, note?: ?string, by?: ?string}>  $lines  `by` is who added the line; the item keeps a count per person.
      * @param  bool  $checkStock  False for an advance reservation order: it is a plan for another day, not an order for today's stock.
      * @return array{items: array<int, array<string, mixed>>, eta: int}
      */
@@ -45,14 +45,19 @@ final class OrderService
             $note = isset($l['note']) ? mb_substr(trim((string) $l['note']), 0, 120) : null;
             $note = $note === '' ? null : $note;
             $key = $f->id.'|'.$vid.'|'.$note; // lines with different notes stay separate so the kitchen sees each request
+            $by = isset($l['by']) && trim((string) $l['by']) !== '' ? mb_substr(trim((string) $l['by']), 0, 60) : null;
             if (isset($items[$key])) {
                 $items[$key]['qty'] += (int) $l['qty'];
+                if ($by !== null) {
+                    $items[$key]['added_by'][$by] = ($items[$key]['added_by'][$by] ?? 0) + (int) $l['qty'];
+                }
 
                 continue;
             }
             $items[$key] = [
                 'food_id' => $f->id, 'variant_id' => $vid, 'name' => $f->itemName($vid), 'price' => $f->unitPrice($vid),
                 'qty' => max(1, (int) $l['qty']), 'note' => $note, 'eta' => (int) $f->eta_minutes,
+                'added_by' => $by !== null ? [$by => max(1, (int) $l['qty'])] : null,
             ];
         }
         if (! $items) {
@@ -80,7 +85,7 @@ final class OrderService
                 throw new ApiException('Your plate is empty');
             }
             ['items' => $items, 'eta' => $eta] = self::buildItems($lines->map(fn (PlateLine $l) => [
-                'food_id' => $l->food_id, 'variant_id' => $l->variant_id, 'qty' => $l->qty, 'note' => $l->note,
+                'food_id' => $l->food_id, 'variant_id' => $l->variant_id, 'qty' => $l->qty, 'note' => $l->note, 'by' => $l->added_by,
             ]));
 
             $order = $session->order ?? self::newOrder(['session_id' => $session->id, 'table_id' => $table->id, 'type' => 'dine_in', 'created_by' => $by]);

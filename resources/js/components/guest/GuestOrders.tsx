@@ -3,7 +3,8 @@ import { ItemNote } from "@/components/ItemNote";
 import { GSTEPS, GSTEP_L, OSTAT, TO_STEPS, TO_STEP_L } from "@/lib/constants";
 import { Icon } from "@/components/Icon";
 import { useNow } from "@/hooks/useNow";
-import { mins, peso, tm } from "@/lib/format";
+import { mins, peso, sum, tm } from "@/lib/format";
+import { useUi } from "@/context/ui";
 import { oMeta, orderEta, orderTag, total } from "@/lib/domain";
 
 function Empty({ icon, title, text }: { icon: string; title: string; text: string }) {
@@ -84,10 +85,68 @@ function Track({ o, takeout }: { o: Order; takeout: boolean }) {
     );
 }
 
+/** What this guest added themselves across the table's orders: the dishes, their prices and their own total. */
+export function mineOf(orders: Order[], me: string) {
+    return orders
+        .flatMap((o) =>
+            o.items.flatMap((i) => {
+                const qty = i.addedBy?.[me] ?? 0;
+                return qty > 0 ? [{ o, i, qty }] : [];
+            }),
+        )
+        .sort((a, b) => b.o.createdAt - a.o.createdAt);
+}
+
+/** "Your items": every dish this guest added, with its price, and the total of their own dishes (so a table can split the bill). */
+function YourItems({ orders, me }: { orders: Order[]; me: string }) {
+    const mine = mineOf(orders, me);
+    if (!mine.length) return null;
+    const total = sum(mine.map(({ i, qty }) => i.price * qty));
+    const count = sum(mine.map((m) => m.qty));
+    return (
+        <section className="card" style={{ padding: 16 }} aria-label="Your items">
+            <div className="flex items-baseline justify-between gap-2">
+                <h3>Your items</h3>
+                <span className="caption muted">{me}</span>
+            </div>
+            <p className="caption muted">
+                What you added yourself, {count} {count === 1 ? "dish" : "dishes"}. Prices include VAT, before any
+                discount.
+            </p>
+            <ul className="items">
+                {mine.map(({ o, i, qty }, x) => {
+                    const m = OSTAT[o.status];
+                    return (
+                        <li key={x} style={{ alignItems: "flex-start" }}>
+                            <b className="num">{qty}×</b>
+                            <span>
+                                {i.name}
+                                <ItemNote note={i.note} />
+                                <span className="caption muted num" style={{ display: "block" }}>
+                                    {peso(i.price)} each{m ? ` · ${m.l}` : ""}
+                                </span>
+                            </span>
+                            <span className="num">{peso(qty * i.price)}</span>
+                        </li>
+                    );
+                })}
+            </ul>
+            <div className="sum">
+                <div className="total">
+                    <span>Your total so far</span>
+                    <span className="num">{peso(total)}</span>
+                </div>
+            </div>
+        </section>
+    );
+}
+
 /** Orders the table's session has sent (dine-in), or the takeout orders this phone placed. */
 export function GuestOrders({ orders, takeout }: { orders: Order[]; takeout: boolean }) {
     useNow(30000);
+    const me = useUi((s) => s.guest.name);
     const os = [...orders].sort((a, b) => b.createdAt - a.createdAt);
+    const hasMine = !takeout && mineOf(orders, me).length > 0;
     if (!os.length)
         return takeout ? (
             <Empty
@@ -100,6 +159,8 @@ export function GuestOrders({ orders, takeout }: { orders: Order[]; takeout: boo
         );
     return (
         <>
+            {takeout ? null : <YourItems orders={orders} me={me} />}
+            {hasMine ? <h4 style={{ marginTop: 4 }}>All orders at your table</h4> : null}
             {os.map((o) => (
                 <Track key={o.id} o={o} takeout={takeout} />
             ))}

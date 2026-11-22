@@ -30,7 +30,7 @@ export const oMeta = (o: Order): OrderStatusMeta => ((isTO(o) && TO_OSTAT[o.stat
 export const orderEta = (items: OrderItem[], foods: Food[]) =>
     Math.max(1, ...items.map((i) => foods.find((f) => f.id === i.foodId)?.eta || 15));
 
-/** Merges plate lines (one per guest) into order items, one per food and variant. */
+/** Merges plate lines (one per guest) into order items, one per food and variant, remembering who added how many. */
 export function plateItems(plate: PlateLine[], foods: Food[]): OrderItem[] {
     const items: OrderItem[] = [];
     plate.forEach((l) => {
@@ -39,8 +39,11 @@ export function plateItems(plate: PlateLine[], foods: Food[]): OrderItem[] {
         // Lines with different notes stay separate so the kitchen sees each request.
         const note = l.note?.trim() || undefined;
         const e = items.find((i) => i.foodId === f.id && i.variantId === l.variantId && i.note === note);
-        if (e) e.qty += l.qty;
-        else
+        const by = l.by?.trim();
+        if (e) {
+            e.qty += l.qty;
+            if (by) e.addedBy = { ...e.addedBy, [by]: (e.addedBy?.[by] ?? 0) + l.qty };
+        } else
             items.push({
                 foodId: f.id,
                 variantId: l.variantId,
@@ -48,6 +51,7 @@ export function plateItems(plate: PlateLine[], foods: Food[]): OrderItem[] {
                 price: unitPrice(f, l.variantId),
                 qty: l.qty,
                 ...(note ? { note } : {}),
+                ...(by ? { addedBy: { [by]: l.qty } } : {}),
             });
     });
     return items;

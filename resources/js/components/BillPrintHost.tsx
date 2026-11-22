@@ -5,6 +5,7 @@ import { peso, r2, sum, tm } from "@/lib/format";
 import { usePayName, useTableName } from "@/lib/ordersHelpers";
 import { usePrint } from "@/context/print";
 import { VAT_RATE } from "@/lib/constants";
+import { guestShares, hasBreakdown } from "@/lib/guestShares";
 
 /**
  * The printable bill. It lives in <body> (outside the app) and is hidden on screen; when printing, app.css hides everything else in <body>.
@@ -52,6 +53,8 @@ export function BillPrintHost() {
         vat = r2(due - vatable);
     const now = Date.now();
     const qr = job.payWith?.qr ? job.payWith : null;
+    // Who ordered what: each guest's dishes and their part of the bill (after the discount), adding up to the amount due.
+    const shares = guestShares(orders, pct);
     const row = "flex justify-between gap-3";
     const rule = "my-2 border-0 border-t border-dashed border-black";
 
@@ -98,6 +101,33 @@ export function BillPrintHost() {
                     </li>
                 ))}
             </ul>
+            {hasBreakdown(shares) ? (
+                <>
+                    <div className={rule} />
+                    <div className="font-bold">PER GUEST</div>
+                    {shares.map((s) => (
+                        <div key={s.key} className="mt-1 break-inside-avoid">
+                            <div className={`${row} font-bold`}>
+                                <span>{s.label}</span>
+                                <span>{peso(pct ? s.net : s.subtotal)}</span>
+                            </div>
+                            {s.lines.map((l) => (
+                                <div key={l.name} className={`${row} pl-2 text-[11px]`}>
+                                    <span>
+                                        {l.qty} × {l.name}
+                                    </span>
+                                    <span>{peso(l.amount)}</span>
+                                </div>
+                            ))}
+                            {pct && discount ? (
+                                <div className="pl-2 text-[11px]">
+                                    {peso(s.subtotal)} less {discount.name} {pct}%
+                                </div>
+                            ) : null}
+                        </div>
+                    ))}
+                </>
+            ) : null}
             <div className={rule} />
             <div className={row}>
                 <span>Subtotal</span>

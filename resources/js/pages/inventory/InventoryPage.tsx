@@ -150,7 +150,18 @@ function StockTable({ ingredients }: { ingredients: Ingredient[] }) {
                     <thead>
                         <tr>
                             <th>Ingredient</th>
-                            <th className="r">On hand</th>
+                            <th
+                                className="r"
+                                title="On the shelf now. It goes down when the kitchen sends an order out."
+                            >
+                                On hand
+                            </th>
+                            <th className="r" title="Promised to orders in the kitchen that are not sent out yet.">
+                                Reserved
+                            </th>
+                            <th className="r" title="On hand minus reserved: what can still be sold.">
+                                Available
+                            </th>
                             <th className="r">Reorder level</th>
                             <th>Status</th>
                             <th className="r">Actions</th>
@@ -164,6 +175,8 @@ function StockTable({ ingredients }: { ingredients: Ingredient[] }) {
                                     {i.active ? null : <span className="caption muted"> · not in use</span>}
                                 </td>
                                 <td className="r num">{qtyText(i.onHand, i.unit)}</td>
+                                <td className="r num">{i.reserved > 0 ? qtyText(i.reserved, i.unit) : "—"}</td>
+                                <td className="r num">{qtyText(i.available, i.unit)}</td>
                                 <td className="r num">{i.reorderLevel > 0 ? qtyText(i.reorderLevel, i.unit) : "—"}</td>
                                 <td>
                                     {i.onHand <= 0 ? (
@@ -215,7 +228,7 @@ function StockTable({ ingredients }: { ingredients: Ingredient[] }) {
                         ))}
                         {!pg.rows.length ? (
                             <tr>
-                                <td colSpan={5}>
+                                <td colSpan={7}>
                                     <div className="empty">
                                         {ingredients.length
                                             ? "No ingredient matches."
@@ -228,6 +241,10 @@ function StockTable({ ingredients }: { ingredients: Ingredient[] }) {
                 </table>
             </div>
             {pg.bar}
+            <p className="caption muted" style={{ marginTop: 8 }}>
+                <b>Reserved</b> is promised to orders in the kitchen. It leaves the shelf (<b>On hand</b>) when the
+                kitchen sends the order out. <b>Available</b> is what can still be sold.
+            </p>
         </>
     );
 }

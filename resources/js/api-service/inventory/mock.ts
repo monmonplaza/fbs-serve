@@ -15,6 +15,9 @@ import type {
     StockMovementType,
 } from "@/types/restaurant";
 
+/** What the mock keeps per ingredient. Reserved and available are worked out when the list is asked for. */
+type StoredIngredient = Omit<Ingredient, "reserved" | "available">;
+
 export interface IngredientInput {
     name: string;
     unit: string;
@@ -24,7 +27,7 @@ export interface IngredientInput {
     active: boolean;
 }
 
-const isLow = (i: Ingredient) => i.onHand <= 0 || (i.reorderLevel > 0 && i.onHand <= i.reorderLevel);
+const isLow = (i: StoredIngredient) => i.onHand <= 0 || (i.reorderLevel > 0 && i.onHand <= i.reorderLevel);
 const round3 = (n: number) => Math.round(n * 1000) / 1000;
 
 const state = (() => {
@@ -36,16 +39,18 @@ const state = (() => {
         Pork: ["g", 15000, 4000, 0.32],
         Squid: ["g", 5000, 1200, 0.35],
     };
-    const ingredients: Ingredient[] = Object.entries(seed).map(([name, [unit, onHand, reorderLevel, cost]], i) => ({
-        id: "i" + (i + 1),
-        name,
-        unit,
-        onHand,
-        reorderLevel,
-        cost,
-        active: true,
-        low: false,
-    }));
+    const ingredients: StoredIngredient[] = Object.entries(seed).map(
+        ([name, [unit, onHand, reorderLevel, cost]], i) => ({
+            id: "i" + (i + 1),
+            name,
+            unit,
+            onHand,
+            reorderLevel,
+            cost,
+            active: true,
+            low: false,
+        }),
+    );
     const byName = (n: string) => ingredients.find((x) => x.name === n)!.id;
     const recipes: Record<string, RecipeLine[]> = {};
     const dish = (name: string, lines: [string, number][]) => {
@@ -74,10 +79,16 @@ const state = (() => {
     return { ingredients, recipes, movements };
 })();
 
-const find = (id: string) => state.ingredients.find((i) => i.id === id) ?? fail("Ingredient not found");
+/** One ingredient as the API returns it, with what is reserved for orders in the kitchen and what is still available. */
+const view = (i: StoredIngredient): Ingredient => {
+    const r = reserved().get(i.id) ?? 0;
+    return { ...i, reserved: round3(r), available: round3(i.onHand - r) };
+};
+const find = (id: string): StoredIngredient =>
+    state.ingredients.find((i) => i.id === id) ?? fail("Ingredient not found");
 
 function move(
-    i: Ingredient,
+    i: StoredIngredient,
     type: StockMovementType,
     qty: number,
     note: string | null,
@@ -217,13 +228,24 @@ export function assertPlateFits(
 }
 
 export const inventory = {
-    ingredients: async () => out([...state.ingredients].sort((a, b) => a.name.localeCompare(b.name))),
+    ingredients: async () => {
+        const r = reserved();
+        return out(
+            [...state.ingredients]
+                .sort((a, b) => a.name.localeCompare(b.name))
+                .map((i) => ({
+                    ...i,
+                    reserved: round3(r.get(i.id) ?? 0),
+                    available: round3(i.onHand - (r.get(i.id) ?? 0)),
+                })),
+        );
+    },
     saveIngredient: async (id: string | null, v: IngredientInput) => {
         const name = v.name.trim();
         if (!name || !v.unit.trim()) fail("Enter a name and a unit.");
         if (state.ingredients.some((i) => i.id !== id && i.name.toLowerCase() === name.toLowerCase()))
             fail("The name has already been taken.");
-        let i: Ingredient;
+        let i: StoredIngredient;
         if (id) {
             i = find(id);
             Object.assign(i, {
@@ -248,7 +270,7 @@ export const inventory = {
             if ((v.onHand ?? 0) > 0) move(i, "received", v.onHand!, "Opening stock", null, "Staff");
         }
         i.low = isLow(i);
-        return out(i);
+        return out(view(i));
     },
     deleteIngredient: async (id: string) => {
         const used = Object.values(state.recipes).some((lines) => lines.some((l) => l.ingredientId === id));
@@ -258,18 +280,18 @@ export const inventory = {
     receive: async (id: string, qty: number, note: string) => {
         const i = find(id);
         move(i, "received", positive(qty), note, null, "Staff");
-        return out(i);
+        return out(view(i));
     },
     waste: async (id: string, qty: number, note: string) => {
         const i = find(id);
         move(i, "waste", -positive(qty), note, null, "Staff");
-        return out(i);
+        return out(view(i));
     },
     count: async (id: string, counted: number, note: string) => {
         const i = find(id);
         if (!(counted >= 0)) fail("Enter the counted amount.");
         move(i, "count", counted - i.onHand, note, null, "Staff");
-        return out(i);
+        return out(view(i));
     },
     movements: async (ingredientId?: string) =>
         out(state.movements.filter((m) => !ingredientId || m.ingredientId === ingredientId).slice(0, 200)),

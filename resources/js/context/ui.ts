@@ -1,5 +1,5 @@
 import { router } from "@inertiajs/react";
-import { savedKey } from "@/lib/guestLink";
+import { guestNameFor, savedKey } from "@/lib/guestLink";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { ModuleId, PageId } from "@/types/restaurant";
@@ -73,7 +73,7 @@ export const bootFromHash = () => {
         useUi.setState({
             guestOnly: true,
             mode: "guest",
-            guest: { table: t, name: "Guest " + (10 + Math.floor(Math.random() * 90)), tab: "menu", cat: "all" },
+            guest: { table: t, name: guestNameFor(t), tab: "menu", cat: "all" },
         });
     else if (q.has("takeout"))
         useUi.setState({

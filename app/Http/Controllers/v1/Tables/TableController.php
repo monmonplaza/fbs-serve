@@ -100,7 +100,7 @@ class TableController extends BaseController
         ]);
         $session = DiningTable::query()->findOrFail($id)->openSession ?? throw new ApiException('Activate the table first.');
         $round = OrderService::sendForTable($session, collect($v['items'])->map(fn ($i) => [
-            'food_id' => $i['foodId'], 'variant_id' => $i['variantId'] ?? null, 'qty' => (int) $i['qty'], 'note' => $i['note'] ?? null,
+            'food_id' => $i['foodId'], 'variant_id' => $i['variantId'] ?? null, 'qty' => (int) $i['qty'], 'note' => $i['note'] ?? null, 'by' => trim($v['by'] ?? '') ?: 'Staff',
         ]), trim($v['by'] ?? '') ?: 'Staff');
 
         return $this->sendResponse((new OrderRoundResource(OrderService::findRound($round->code)))->resolve(), 'Sent to the kitchen', 201);

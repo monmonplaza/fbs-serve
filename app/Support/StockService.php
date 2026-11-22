@@ -87,6 +87,17 @@ final class StockService
             ->map(fn ($n) => (float) $n)->all();
     }
 
+    /** The same as reserved(), worked out once per request (the stock list asks for every ingredient). */
+    public static function reservedForRequest(): array
+    {
+        $attributes = request()->attributes;
+        if (! $attributes->has('stock.reserved')) {
+            $attributes->set('stock.reserved', self::reserved());
+        }
+
+        return $attributes->get('stock.reserved');
+    }
+
     /**
      * What can still be sold: on hand minus reserved.
      *

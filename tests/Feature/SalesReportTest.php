@@ -172,3 +172,25 @@ it('is a module for the Admin and the Manager, not for the other seeded roles', 
     $id = Role::where('name', 'Cashier')->value('id');
     $this->postJson("/api/roles/{$id}", ['name' => 'Cashier', 'modules' => ['orders', 'reports']])->assertOk()->assertJsonPath('data.modules', ['orders', 'reports']);
 });
+
+it('lists orders that are not paid yet apart from the sales, and moves them in when they are paid', function () {
+    $table = DiningTable::where('status', 'inactive')->firstOrFail();
+    $this->postJson("/api/tables/{$table->id}/activate", ['guests' => 2])->assertOk();
+    $code = $this->postJson("/api/tables/{$table->id}/order", ['items' => [['foodId' => Food::where('name', 'Kare-Kare')->value('id'), 'qty' => 1], ['foodId' => Food::where('name', 'Garlic Rice')->value('id'), 'qty' => 2]]])->assertCreated()->json('data.id');
+    foreach (range(1, 3) as $_) {
+        $this->patchJson("/api/orders/{$code}/advance")->assertOk();
+    }
+    $this->patchJson("/api/orders/{$code}/serve")->assertOk();
+    $today = now('Asia/Manila')->toDateString();
+
+    $r = salesReport($this, $today, $today);
+    expect($r['totals']['orders'])->toBe(0)->and($r['totals']['net'])->toEqual(0)
+        ->and($r['open'])->toMatchArray(['orders' => 1, 'amount' => 690.0])
+        ->and($r['open']['list'][0])->toMatchArray(['code' => $code, 'table' => $table->name, 'amount' => 690.0]);
+    // Another day does not list it.
+    expect(salesReport($this, now('Asia/Manila')->subDays(3)->toDateString(), now('Asia/Manila')->subDays(2)->toDateString())['open']['orders'])->toBe(0);
+
+    $this->postJson("/api/tables/{$table->id}/pay", ['pays' => [['method' => money('Cash'), 'amount' => 690]]])->assertOk();
+    $paid = salesReport($this, $today, $today);
+    expect($paid['open']['orders'])->toBe(0)->and($paid['totals']['orders'])->toBe(1)->and($paid['totals']['net'])->toEqual(690);
+});

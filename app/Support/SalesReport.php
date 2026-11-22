@@ -42,7 +42,37 @@ final class SalesReport
             'items' => self::items($now),
             'byTable' => self::byTable($now),
             'discounts' => self::discounts($now),
+            'open' => self::open($from->startOfDay(), $to->endOfDay()),
         ];
+    }
+
+    /**
+     * Orders placed in the range that are not paid yet. They are not sales until the bill is paid (a sale is counted on the day it
+     * is paid), so the report lists them apart: they will appear in the totals on the day they are paid. Amounts are before any
+     * discount, which is chosen when the bill is paid.
+     *
+     * @return array{orders: int, amount: float, list: array<int, array{code: string, table: ?string, at: int, amount: float}>}
+     */
+    private static function open(CarbonInterface $start, CarbonInterface $end): array
+    {
+        $a = $start->clone()->utc()->format('Y-m-d H:i:s');
+        $b = $end->clone()->utc()->format('Y-m-d H:i:s');
+        $orders = DB::table('app_orders as o')
+            ->leftJoin('app_dining_tables as t', 't.id', '=', 'o.table_id')
+            ->whereNull('o.paid_at')->where('o.created_at', '>=', $a)->where('o.created_at', '<=', $b)
+            ->orderByDesc('o.id')->get(['o.id', 'o.code', 'o.type', 'o.pickup_code', 't.name as table_name', 'o.created_at']);
+        if ($orders->isEmpty()) {
+            return ['orders' => 0, 'amount' => 0.0, 'list' => []];
+        }
+        $amounts = DB::table('app_order_items as oi')->join('app_order_rounds as r', 'r.id', '=', 'oi.round_id')
+            ->whereIn('r.order_id', $orders->pluck('id'))->get(['r.order_id', 'oi.price', 'oi.qty'])
+            ->groupBy('order_id')->map(fn ($rows) => Money::r2($rows->sum(fn ($i) => (float) $i->price * (int) $i->qty)));
+        $list = $orders->map(fn ($o) => [
+            'code' => $o->code, 'table' => $o->type === 'takeout' ? 'Takeout '.($o->pickup_code ?? '') : $o->table_name,
+            'at' => (int) CarbonImmutable::parse($o->created_at, 'UTC')->valueOf(), 'amount' => (float) ($amounts[$o->id] ?? 0),
+        ]);
+
+        return ['orders' => $list->count(), 'amount' => Money::r2($list->sum('amount')), 'list' => $list->take(10)->values()->all()];
     }
 
     /** day for up to a month, week for up to about half a year, month beyond that. */

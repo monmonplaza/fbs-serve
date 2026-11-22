@@ -5,7 +5,7 @@ import type { ReportGroup, SalesReport } from "@/types/restaurant";
 import { Icon } from "@/components/Icon";
 import { BarChart, type Bar } from "@/components/reports/BarChart";
 import { printSalesReport } from "@/context/print";
-import { peso } from "@/lib/format";
+import { peso, tm } from "@/lib/format";
 import { downloadCsv, salesCsv, salesCsvName } from "@/lib/reportCsv";
 import {
     PRESETS,
@@ -343,6 +343,30 @@ function ReportBody({ r, comparedWith, updating }: { r: SalesReport; comparedWit
                 </Kpi>
             </div>
 
+            {r.open.orders > 0 ? (
+                <div className="alert warn" role="status">
+                    <Icon name="clock" />
+                    <div>
+                        <p>
+                            <b>
+                                {r.open.orders} {r.open.orders === 1 ? "order is" : "orders are"} not paid yet
+                            </b>{" "}
+                            ({peso(r.open.amount)} before any discount), so {r.open.orders === 1 ? "it is" : "they are"}{" "}
+                            not in these numbers. A sale counts on the day its bill is paid.
+                        </p>
+                        <ul className="caption num" style={{ margin: "4px 0 0", paddingLeft: 16 }}>
+                            {r.open.list.map((o) => (
+                                <li key={o.code}>
+                                    {o.code} · {o.table ?? "No table"} · {tm(o.at)} · {peso(o.amount)}
+                                </li>
+                            ))}
+                            {r.open.orders > r.open.list.length ? (
+                                <li>and {r.open.orders - r.open.list.length} more</li>
+                            ) : null}
+                        </ul>
+                    </div>
+                </div>
+            ) : null}
             {t.orders === 0 ? (
                 <div className="card">
                     <div className="empty">

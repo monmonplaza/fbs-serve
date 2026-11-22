@@ -42,3 +42,21 @@ export const saveKey = (tableId: string, token: string | null) => {
         /* private mode: the guest types the code again after a reload */
     }
 };
+
+/** The name this phone gave itself at a table ("Guest 482"), kept so a reload does not make the guest a stranger to their own items. */
+const nameKey = (tableId: string) => "fbs-guest-name:" + tableId;
+export const guestNameFor = (tableId: string): string => {
+    try {
+        const saved = localStorage.getItem(nameKey(tableId));
+        if (saved) return saved;
+    } catch {
+        /* private mode: a new name after a reload */
+    }
+    const name = "Guest " + (100 + Math.floor(Math.random() * 900));
+    try {
+        localStorage.setItem(nameKey(tableId), name);
+    } catch {
+        /* ignore */
+    }
+    return name;
+};

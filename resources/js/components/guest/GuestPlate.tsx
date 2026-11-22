@@ -66,7 +66,18 @@ const Empty = ({ icon, title, text, browse }: { icon: string; title: string; tex
 );
 
 /** The shared plate. At a table every guest sees who added each line; the Takeout plate belongs to one customer. */
-export function GuestPlate({ plate, tableId, tableName }: { plate: PlateLine[]; tableId: string; tableName?: string }) {
+export function GuestPlate({
+    plate,
+    tableId,
+    tableName,
+    sent = 0,
+}: {
+    plate: PlateLine[];
+    tableId: string;
+    tableName?: string;
+    /** How many dishes this guest has already sent to the kitchen, so an empty plate points to them. */
+    sent?: number;
+}) {
     const foods = useFoods().data,
         invalidate = useInvalidate(),
         me = useUi((s) => s.guest.name);
@@ -80,12 +91,28 @@ export function GuestPlate({ plate, tableId, tableName }: { plate: PlateLine[]; 
                 browse
             />
         ) : (
-            <Empty
-                icon="plate"
-                title="Your plate is empty"
-                text={`Everyone at ${tableName} adds to the same plate. Pick food from the menu.`}
-                browse
-            />
+            <>
+                <Empty
+                    icon="plate"
+                    title="Your plate is empty"
+                    text={
+                        sent > 0
+                            ? `You sent ${sent} ${sent === 1 ? "dish" : "dishes"} to the kitchen. Everyone at ${tableName} adds to the same plate.`
+                            : `Everyone at ${tableName} adds to the same plate. Pick food from the menu.`
+                    }
+                    browse
+                />
+                {sent > 0 ? (
+                    <button
+                        className="btn btn-outline block"
+                        style={{ marginTop: 8 }}
+                        onClick={() => useUi.getState().setGuest({ tab: "orders" })}
+                    >
+                        <Icon name="clock" size={20} />
+                        See what I ordered
+                    </button>
+                ) : null}
+            </>
         );
     const qty = async (id: string, d: number) => {
         try {

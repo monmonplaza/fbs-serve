@@ -28,6 +28,7 @@ export function salesCsv(r: SalesReport, comparedWith: string): string {
         line("Average order", n(t.avgOrder), n(p.avgOrder)),
         line("Guests", t.guests, p.guests),
         line("Items sold", t.itemsSold, p.itemsSold),
+        line("Not paid yet (not in the totals)", `${r.open.orders} orders`, n(r.open.amount)),
         "",
         line(`By ${r.range.group}`, "From", "To", "Orders", "Gross", "Discounts", "Net"),
         ...r.series.map((s) => line(s.key, s.from, s.to, s.orders, n(s.gross), n(s.discounts), n(s.net))),

@@ -13,6 +13,7 @@ import { aggregate, billKey, isTO, oMeta, orderTag, subtotal, total } from "@/li
 import { dt, peso, sum, tm } from "@/lib/format";
 import { ChTag, chanOf, isPlatform, sod, usePayName, useTableName } from "@/lib/ordersHelpers";
 import { PayForm } from "@/components/orders/PayForm";
+import { GuestBreakdown } from "@/components/orders/GuestBreakdown";
 
 const useMethods = (activeOnly: boolean): PaymentMethod[] => {
     const all = usePayments().data;
@@ -102,15 +103,18 @@ export function PayTableModal({ tableId }: { tableId: string }) {
             hint={`Guest chose ${payName(t.bill?.method)}.`}
             printable
             before={
-                <ul className="items items-box">
-                    {aggregate(os).map((i) => (
-                        <li key={i.name}>
-                            <b className="num">{i.qty}×</b>
-                            <span>{i.name}</span>
-                            <span className="num">{peso(i.qty * i.price)}</span>
-                        </li>
-                    ))}
-                </ul>
+                <>
+                    <ul className="items items-box">
+                        {aggregate(os).map((i) => (
+                            <li key={i.name}>
+                                <b className="num">{i.qty}×</b>
+                                <span>{i.name}</span>
+                                <span className="num">{peso(i.qty * i.price)}</span>
+                            </li>
+                        ))}
+                    </ul>
+                    <GuestBreakdown orders={os} collapsible />
+                </>
             }
             cancelLabel="Cancel"
             submitLabel="Payment received"

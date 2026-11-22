@@ -13,7 +13,7 @@ import { useUi } from "@/context/ui";
 import { unitPrice } from "@/lib/domain";
 import { GuestMenu } from "@/components/guest/GuestMenu";
 import { GuestPlate } from "@/components/guest/GuestPlate";
-import { GuestOrders } from "@/components/guest/GuestOrders";
+import { GuestOrders, mineOf } from "@/components/guest/GuestOrders";
 import { GuestBill, GuestClosed } from "@/components/guest/GuestBill";
 import { CodeEntry } from "@/components/guest/CodeEntry";
 import { PickSheet } from "@/components/guest/PickSheet";
@@ -67,6 +67,7 @@ function Phone({ tableId }: { tableId: string }) {
     const live = takeout || (!!t?.token && !["inactive", "cleaning"].includes(t.status));
     const needsCode = live && !joined;
     const sessionOrders = t ? orders.filter((o) => o.table === t.id && !!t.token && o.session === t.token) : [];
+    const sentByMe = sum(mineOf(sessionOrders, name).map((m) => m.qty));
     const tabs: [Tab, string, string][] = [
         ["menu", "Menu", "utensils"],
         ["plate", "Plate", "plate"],
@@ -78,7 +79,7 @@ function Phone({ tableId }: { tableId: string }) {
         tab === "menu" ? (
             <GuestMenu onAdd={onAdd} />
         ) : tab === "plate" ? (
-            <GuestPlate plate={plate} tableId={tableId} tableName={t?.name} />
+            <GuestPlate plate={plate} tableId={tableId} tableName={t?.name} sent={sentByMe} />
         ) : tab === "orders" ? (
             <GuestOrders
                 takeout={takeout}

@@ -4,6 +4,7 @@ use App\Models\DiningTable;
 use App\Models\Discount;
 use App\Models\Food;
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\PaymentMethod;
 use Database\Seeders\RestaurantSeeder;
 use Tests\Support\OrderingHelpers;
@@ -214,4 +215,37 @@ it('a gcash payment can be confirmed without a reference', function () {
 
     $this->postJson("/api/tables/{$this->table->id}/pay", ['pays' => [['method' => $gcash, 'amount' => 65]]])->assertOk();
     expect($this->getJson('/api/orders')->json('data.0.payRef'))->toBeNull();
+});
+
+it('keeps who added each dish, so every guest can still see their own after the plate is sent', function () {
+    $this->add('Garlic Rice', 'Guest 482');
+    $this->add('Garlic Rice', 'Guest 117');
+    $this->add('Garlic Rice', 'Guest 117');
+    $this->add('Kare-Kare', 'Guest 117');
+    $first = $this->postJson($this->url('send'), ['by' => 'Guest 117'])->assertCreated();
+
+    $items = collect($first->json('data.items'));
+    $rice = $items->firstWhere('name', 'Garlic Rice');
+    expect($rice['qty'])->toBe(3)->and($rice['addedBy'])->toBe(['Guest 482' => 1, 'Guest 117' => 2])
+        ->and($items->firstWhere('name', 'Kare-Kare')['addedBy'])->toBe(['Guest 117' => 1]);
+    // The counts add up to the quantity on every item.
+    $items->each(fn ($i) => expect(array_sum($i['addedBy']))->toBe($i['qty']));
+
+    // The next send is its own round with its own names, and the staff list shows them too.
+    $this->add('Garlic Rice', 'Guest 482');
+    $second = $this->postJson($this->url('send'), ['by' => 'Guest 482'])->assertCreated();
+    expect($second->json('data.items.0.addedBy'))->toBe(['Guest 482' => 1]);
+    $orders = collect($this->getJson('/api/orders')->assertOk()->json('data'));
+    expect($orders)->toHaveCount(2)->and($orders->pluck('items')->flatten(1)->every(fn ($i) => isset($i['addedBy'])))->toBeTrue();
+});
+
+it('records the staff name on an order taken by hand, and nothing for an old item', function () {
+    $table = DiningTable::where('status', 'inactive')->firstOrFail();
+    $this->postJson("/api/tables/{$table->id}/activate", ['guests' => 2])->assertOk();
+    $order = $this->postJson("/api/tables/{$table->id}/order", ['by' => 'Jun', 'items' => [['foodId' => Food::where('name', 'Garlic Rice')->value('id'), 'qty' => 2]]])->assertCreated();
+    expect($order->json('data.items.0.addedBy'))->toBe(['Jun' => 2]);
+
+    OrderItem::query()->update(['added_by' => null]); // an item from before this existed
+    $old = collect($this->getJson('/api/orders')->json('data'))->first();
+    expect($old['items'][0])->not->toHaveKey('addedBy');
 });

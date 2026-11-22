@@ -207,3 +207,17 @@ it('does not block an advance reservation order, which is a plan for another day
         'order' => [['foodId' => Food::where('name', 'Garlic Rice')->value('id'), 'variantId' => null, 'qty' => 2]],
     ])->assertCreated();
 });
+
+it('shows reserved and available beside what is on the shelf', function () {
+    setRice($this, 360);
+    $rice = fn () => collect($this->getJson('/api/ingredients')->assertOk()->json('data'))->firstWhere('name', 'Rice');
+    expect($rice())->toMatchArray(['onHand' => 360.0, 'reserved' => 0.0, 'available' => 360.0]);
+
+    $code = orderLines($this, ['Garlic Rice' => 1])->assertCreated()->json('data.id');
+    // Sent to the kitchen: the shelf is the same, but 180 g is promised to the order.
+    expect($rice())->toMatchArray(['onHand' => 360.0, 'reserved' => 180.0, 'available' => 180.0]);
+
+    bump($this, $code);
+    // Sent out: it leaves the shelf, and nothing is reserved any more.
+    expect($rice())->toMatchArray(['onHand' => 180.0, 'reserved' => 0.0, 'available' => 180.0]);
+});

@@ -10,7 +10,7 @@ class OrderItem extends Model
 
     protected $table = 'app_order_items';
 
-    protected $fillable = ['round_id', 'food_id', 'variant_id', 'name', 'price', 'qty', 'note'];
+    protected $fillable = ['round_id', 'food_id', 'variant_id', 'name', 'price', 'qty', 'note', 'added_by'];
 
-    protected $casts = ['price' => 'decimal:2'];
+    protected $casts = ['price' => 'decimal:2', 'added_by' => 'array'];
 }

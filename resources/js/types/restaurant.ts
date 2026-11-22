@@ -123,6 +123,8 @@ export interface OrderItem {
     qty: number;
     /** Guest's cooking request for the kitchen, e.g. "Less spicy, no onion". */
     note?: string;
+    /** Who added it and how many each, e.g. { "Guest 482": 2, "Guest 117": 1 }. Absent on items from before this existed. */
+    addedBy?: Record<string, number>;
 }
 export interface Payment {
     method: string;
@@ -229,7 +231,12 @@ export interface Ingredient {
     id: string;
     name: string;
     unit: string;
+    /** On the shelf now. It goes down when the kitchen sends an order out. */
     onHand: number;
+    /** Promised to orders that are in the kitchen and not sent out yet. */
+    reserved: number;
+    /** On hand minus reserved: what can still be sold. */
+    available: number;
     reorderLevel: number;
     cost: number | null;
     active: boolean;
@@ -294,4 +301,10 @@ export interface SalesReport {
     items: { name: string; category: string; qty: number; sales: number }[];
     byTable: { table: string; floor: string | null; orders: number; guests: number; net: number }[];
     discounts: { name: string; pct: number; orders: number; amount: number }[];
+    /** Orders placed in the range that are not paid yet. They count as sales on the day they are paid. */
+    open: {
+        orders: number;
+        amount: number;
+        list: { code: string; table: string | null; at: number; amount: number }[];
+    };
 }

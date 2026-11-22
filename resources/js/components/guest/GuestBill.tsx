@@ -6,6 +6,8 @@ import { aggregate, total } from "@/lib/domain";
 import { peso, sum } from "@/lib/format";
 import { openModal } from "@/context/modal";
 import { BillModal } from "@/components/guest/GuestModals";
+import { GuestBreakdown } from "@/components/orders/GuestBreakdown";
+import { useUi } from "@/context/ui";
 
 /** `paid`: this phone was part of the group that just paid (a phone that never joined sees "not active yet" instead). */
 export function GuestClosed({ t, paid = true }: { t: DiningTable; paid?: boolean }) {
@@ -38,6 +40,7 @@ export function GuestClosed({ t, paid = true }: { t: DiningTable; paid?: boolean
 
 export function GuestBill({ t, orders }: { t: DiningTable; orders: Order[] }) {
     const payments = usePayments().data,
+        me = useUi((s) => s.guest.name),
         tot = sum(orders.map(total));
     if (t.status === "billout") {
         const id = t.bill?.method ?? "";
@@ -89,6 +92,7 @@ export function GuestBill({ t, orders }: { t: DiningTable; orders: Order[] }) {
                     </div>
                 </div>
             </div>
+            <GuestBreakdown orders={orders} me={me} />
             {waiting && (
                 <div className="alert warn">
                     <Icon name="alert" />

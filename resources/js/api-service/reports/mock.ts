@@ -82,6 +82,22 @@ const tally = <T>(sales: Sale[], key: (s: Sale) => string, make: (k: string, row
     return [...groups].map(([k, rows]) => make(k, rows));
 };
 
+/** Orders placed in the range that are not paid yet (amounts before any discount, which is chosen when the bill is paid). */
+const openOrders = (from: Date, to: Date): SalesReport["open"] => {
+    const list = db.orders
+        .filter((o) => o.status !== "paid" && o.createdAt >= +from && o.createdAt < +addDays(to, 1))
+        .sort((a, b) => b.createdAt - a.createdAt)
+        .map((o) => ({
+            code: o.code ?? o.id,
+            table: isTO(o)
+                ? `Takeout ${o.pickup ?? ""}`.trim()
+                : (db.tables.find((t) => t.id === o.table)?.name ?? null),
+            at: o.createdAt,
+            amount: r2(subtotal(o)),
+        }));
+    return { orders: list.length, amount: r2(sum(list.map((o) => o.amount))), list: list.slice(0, 10) };
+};
+
 export const reports = {
     sales: async (q: SalesQuery) => {
         const from = parse(q.from),
@@ -180,6 +196,7 @@ export const reports = {
                     net: r2(sum(rs.map((s) => s.net))),
                 }),
             ).sort((a, b) => b.net - a.net),
+            open: openOrders(from, to),
             discounts: tally(
                 sales.filter((s) => s.o.discount && s.gross > s.net),
                 (s) => s.o.discount!.name,

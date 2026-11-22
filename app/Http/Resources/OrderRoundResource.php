@@ -33,6 +33,8 @@ class OrderRoundResource extends JsonResource
                 'foodId' => $i->food_id ? (string) $i->food_id : '',
                 'variantId' => $i->variant_id ? (string) $i->variant_id : null,
                 'name' => $i->name, 'price' => (float) $i->price, 'qty' => (int) $i->qty, 'note' => $i->note,
+                // Who added it and how many each, so a guest can see their own dishes after the plate is sent.
+                'addedBy' => $i->added_by ?: null,
             ], fn ($v) => $v !== null))->all(),
             'status' => $paid ? 'paid' : $this->status,
             'createdAt' => $ms($this->created_at),

@@ -96,6 +96,12 @@ export function ReportPrintHost() {
                     ["Items sold", t.itemsSold, p.itemsSold, pct(t.itemsSold, p.itemsSold)],
                 ]}
             />
+            {r.open.orders > 0 ? (
+                <p className="mt-2">
+                    Not paid yet, so not in the totals: {r.open.orders} {r.open.orders === 1 ? "order" : "orders"},{" "}
+                    {peso(r.open.amount)} before any discount. They count on the day they are paid.
+                </p>
+            ) : null}
             <Section
                 title={`By ${unit.toLowerCase()}`}
                 head={[unit, "Orders", "Gross", "Discounts", "Net"]}
