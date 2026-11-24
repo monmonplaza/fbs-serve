@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Support\Money;
 use App\Support\Settlement;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -17,6 +18,8 @@ class OrderRoundResource extends JsonResource
         $o = $this->order;
         $paid = $o->isPaid();
         $shares = $paid ? Settlement::shares($o)[$this->id] ?? [] : [];
+        // Per-guest payments: the discount is an amount (guests can have different ones), spread over the rounds.
+        $guestDiscount = $paid && $o->discount_total !== null ? Money::r2($this->subtotal() - (Settlement::roundTotals($o)[$o->rounds->search(fn ($r) => $r->id === $this->id)] ?? 0)) : null;
         $ms = fn ($t) => $t ? (int) $t->valueOf() : null;
 
         return array_filter([
@@ -44,7 +47,13 @@ class OrderRoundResource extends JsonResource
             'payment' => $paid ? $o->payment_method : null,
             'payments' => $paid ? $shares : null,
             // Present (null when no discount) once paid, like the mock.
-            'discount' => $paid ? ($o->discount_name ? ['name' => $o->discount_name, 'pct' => (float) $o->discount_pct] : null) : null,
+            'discount' => $paid ? ($o->discount_name ? array_filter(['name' => $o->discount_name, 'pct' => (float) $o->discount_pct, 'amount' => $guestDiscount], fn ($v) => $v !== null) : null) : null,
+            // Pay per guest: who has paid so far (the order is open until every guest has).
+            'guestPaid' => $o->guestPayments->isEmpty() ? null : $o->guestPayments->map(fn ($p) => array_filter([
+                'guest' => $p->guest, 'method' => $p->method, 'gross' => (float) $p->gross, 'amount' => (float) $p->amount,
+                'discount' => $p->discount_name ? ['name' => $p->discount_name, 'pct' => (float) $p->discount_pct] : null,
+                'ref' => $p->reference,
+            ], fn ($v) => $v !== null))->all(),
             'payRef' => $paid ? ($o->payments->pluck('reference')->filter()->implode(', ') ?: null) : null,
             'received' => $paid && $o->received !== null ? (float) $o->received : null,
             'change' => $paid && $o->change_given !== null ? (float) $o->change_given : null,

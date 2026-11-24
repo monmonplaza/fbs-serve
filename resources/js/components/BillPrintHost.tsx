@@ -1,9 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { aggregate, isTO, subtotal } from "@/lib/domain";
 import { peso, r2, sum, tm } from "@/lib/format";
 import { usePayName, useTableName } from "@/lib/ordersHelpers";
-import { usePrint } from "@/context/print";
+import { usePrint, type PrintJob } from "@/context/print";
 import { VAT_RATE } from "@/lib/constants";
 import { guestShares, hasBreakdown } from "@/lib/guestShares";
 
@@ -11,41 +11,26 @@ import { guestShares, hasBreakdown } from "@/lib/guestShares";
  * The printable bill. It lives in <body> (outside the app) and is hidden on screen; when printing, app.css hides everything else in <body>.
  * 80 mm wide, so it suits a receipt printer and also prints fine on A4.
  */
-export function BillPrintHost() {
-    const job = usePrint((s) => s.job);
+/** The bill itself, 80 mm wide. `print` is the hidden copy the print dialog uses; otherwise it is the on-screen preview. */
+export function BillSheet({ job, print = false }: { job: PrintJob; print?: boolean }) {
     const payName = usePayName(),
         tName = useTableName();
-
-    useEffect(() => {
-        if (!job) return;
-        const done = () => usePrint.setState({ job: null });
-        window.addEventListener("afterprint", done, { once: true });
-        // Wait one frame (and the QR image) so the bill is complete before the print dialog snapshots the page.
-        let id = 0,
-            live = true;
-        const go = () => {
-            if (live) id = requestAnimationFrame(() => window.print());
-        };
-        const qr = job.payWith?.qr;
-        if (qr) {
-            const im = new Image();
-            im.src = qr;
-            im.decode().then(go, go);
-        } else go();
-        return () => {
-            live = false;
-            cancelAnimationFrame(id);
-            window.removeEventListener("afterprint", done);
-        };
-    }, [job]);
-
-    if (!job || !job.orders.length) return null;
     const { orders, discount } = job;
     const first = orders[0],
-        paid = orders.every((o) => o.status === "paid");
+        paid = !!job.guest || orders.every((o) => o.status === "paid");
+    // One guest's own receipt: only their dishes, what they paid and how.
+    const allPaid = orders.find((o) => o.guestPaid?.length)?.guestPaid ?? [];
+    const mine = job.guest ? allPaid.filter((p) => p.guest === job.guest) : [];
+    const mineShare = job.guest ? guestShares(orders).find((s) => s.key === job.guest) : undefined;
     const pct = discount?.pct ?? 0;
-    const sub = sum(orders.map(subtotal));
-    const due = r2(sum(orders.map((o) => r2(subtotal(o) * (1 - pct / 100)))));
+    const sub = mineShare ? r2(sum(mine.map((p) => p.gross))) : sum(orders.map(subtotal));
+    // Guests who paid separately: the amount due is what they paid, each with their own method and discount.
+    const gp = paid ? (allPaid.length ? allPaid : null) : null;
+    const due = mineShare
+        ? r2(sum(mine.map((p) => p.amount)))
+        : gp
+          ? r2(sum(gp.map((p) => p.amount)))
+          : r2(sum(orders.map((o) => r2(subtotal(o) * (1 - pct / 100)))));
     const codes = [...new Set(orders.map((o) => o.code ?? o.id))].join(", ");
     const where = isTO(first) ? `Takeout ${first.pickup ?? ""}`.trim() : tName(first.table);
     // Menu prices include VAT, so the VAT part is taken out of the amount due.
@@ -54,15 +39,19 @@ export function BillPrintHost() {
     const now = Date.now();
     const qr = job.payWith?.qr ? job.payWith : null;
     // Who ordered what: each guest's dishes and their part of the bill (after the discount), adding up to the amount due.
-    const shares = guestShares(orders, pct);
+    const shares = guestShares(orders, gp ? 0 : pct);
+    const shownDiscount = mineShare ? (mine.find((p) => p.discount)?.discount ?? null) : discount;
     const row = "flex justify-between gap-3";
     const rule = "my-2 border-0 border-t border-dashed border-black";
 
-    return createPortal(
+    return (
         <div
-            id="bill-print"
-            className="hidden print:block mx-auto w-[80mm] bg-white p-2 font-mono text-[12px] leading-[16px] text-black"
-            aria-hidden="true"
+            id={print ? "bill-print" : undefined}
+            className={
+                (print ? "hidden print:block p-2 " : "p-4 ") +
+                "mx-auto w-[80mm] bg-white font-mono text-[12px] leading-[16px] text-black"
+            }
+            aria-hidden={print ? "true" : undefined}
         >
             <div className="text-center">
                 <div className="text-[16px] font-bold">FBS Serve</div>
@@ -83,13 +72,19 @@ export function BillPrintHost() {
                 <span>Time</span>
                 <span>{tm(now)}</span>
             </div>
+            {mineShare ? (
+                <div className={row}>
+                    <span>Guest</span>
+                    <span className="font-bold">{mineShare.label}</span>
+                </div>
+            ) : null}
             <div className={row}>
                 <span>Order no.</span>
                 <span className="text-right">{codes}</span>
             </div>
             <div className={rule} />
             <ul className="m-0 list-none p-0">
-                {aggregate(orders).map((i) => (
+                {(mineShare ? mineShare.lines : aggregate(orders)).map((i) => (
                     <li key={i.name} className="mb-1">
                         <div className={row}>
                             <span>
@@ -101,31 +96,44 @@ export function BillPrintHost() {
                     </li>
                 ))}
             </ul>
-            {hasBreakdown(shares) ? (
+            {!mineShare && hasBreakdown(shares) ? (
                 <>
                     <div className={rule} />
                     <div className="font-bold">PER GUEST</div>
-                    {shares.map((s) => (
-                        <div key={s.key} className="mt-1 break-inside-avoid">
-                            <div className={`${row} font-bold`}>
-                                <span>{s.label}</span>
-                                <span>{peso(pct ? s.net : s.subtotal)}</span>
+                    {shares.map((s) => {
+                        const mineP = gp?.filter((p) => p.guest === s.key) ?? [];
+                        return (
+                            <div key={s.key} className="mt-1 break-inside-avoid">
+                                <div className={`${row} font-bold`}>
+                                    <span>{s.label}</span>
+                                    <span>{peso(gp ? sum(mineP.map((p) => p.amount)) : pct ? s.net : s.subtotal)}</span>
+                                </div>
+                                {s.lines.map((l) => (
+                                    <div key={l.name} className={`${row} pl-2 text-[11px]`}>
+                                        <span>
+                                            {l.qty} × {l.name}
+                                        </span>
+                                        <span>{peso(l.amount)}</span>
+                                    </div>
+                                ))}
+                                {gp ? (
+                                    mineP.map((p, i) => (
+                                        <div key={i} className="pl-2 text-[11px]">
+                                            {p.discount
+                                                ? `${peso(p.gross)} less ${p.discount.name} ${p.discount.pct}%. `
+                                                : ""}
+                                            Paid with {payName(p.method)}
+                                            {p.ref ? ` (ref. ${p.ref})` : ""}
+                                        </div>
+                                    ))
+                                ) : pct && discount ? (
+                                    <div className="pl-2 text-[11px]">
+                                        {peso(s.subtotal)} less {discount.name} {pct}%
+                                    </div>
+                                ) : null}
                             </div>
-                            {s.lines.map((l) => (
-                                <div key={l.name} className={`${row} pl-2 text-[11px]`}>
-                                    <span>
-                                        {l.qty} × {l.name}
-                                    </span>
-                                    <span>{peso(l.amount)}</span>
-                                </div>
-                            ))}
-                            {pct && discount ? (
-                                <div className="pl-2 text-[11px]">
-                                    {peso(s.subtotal)} less {discount.name} {pct}%
-                                </div>
-                            ) : null}
-                        </div>
-                    ))}
+                        );
+                    })}
                 </>
             ) : null}
             <div className={rule} />
@@ -133,10 +141,11 @@ export function BillPrintHost() {
                 <span>Subtotal</span>
                 <span>{peso(sub)}</span>
             </div>
-            {discount ? (
+            {shownDiscount ? (
                 <div className={row}>
                     <span>
-                        {discount.name} ({discount.pct}%)
+                        {shownDiscount.name}
+                        {"amount" in shownDiscount && shownDiscount.amount != null ? "" : ` (${shownDiscount.pct}%)`}
                     </span>
                     <span>−{peso(r2(sub - due))}</span>
                 </div>
@@ -154,7 +163,21 @@ export function BillPrintHost() {
                 <span>VAT ({Math.round(VAT_RATE * 100)}%)</span>
                 <span>{peso(vat)}</span>
             </div>
-            {paid && first.payment ? (
+            {mineShare ? (
+                <>
+                    <div className={rule} />
+                    {mine.map((p, i) => (
+                        <div key={i} className={row}>
+                            <span>Paid with</span>
+                            <span>
+                                {payName(p.method)}
+                                {p.ref ? ` (ref. ${p.ref})` : ""}
+                            </span>
+                        </div>
+                    ))}
+                </>
+            ) : null}
+            {paid && first.payment && !gp ? (
                 <>
                     <div className={rule} />
                     <div className={row}>
@@ -163,13 +186,13 @@ export function BillPrintHost() {
                     </div>
                 </>
             ) : null}
-            {paid && first.payRef ? (
+            {paid && !mineShare && first.payRef ? (
                 <div className={row}>
                     <span>Ref. no.</span>
                     <span>{first.payRef}</span>
                 </div>
             ) : null}
-            {paid && first.received != null ? (
+            {paid && !mineShare && first.received != null ? (
                 <>
                     <div className={row}>
                         <span>Amount received</span>
@@ -199,7 +222,79 @@ export function BillPrintHost() {
                 {paid ? "Thank you for dining with us!" : "Please pay at the counter or to your waiter."}
             </p>
             <p className="mt-1 text-center text-[10px]">This is not an official receipt.</p>
-        </div>,
+        </div>
+    );
+}
+
+export function BillPrintHost() {
+    const job = usePrint((s) => s.job);
+    useEffect(() => {
+        if (!job) return;
+        const done = () => usePrint.setState({ job: null });
+        window.addEventListener("afterprint", done, { once: true });
+        // Wait one frame (and the QR image) so the bill is complete before the print dialog snapshots the page.
+        let id = 0,
+            live = true;
+        const go = () => {
+            if (live) id = requestAnimationFrame(() => window.print());
+        };
+        const qr = job.payWith?.qr;
+        if (qr) {
+            const im = new Image();
+            im.src = qr;
+            im.decode().then(go, go);
+        } else go();
+        return () => {
+            live = false;
+            cancelAnimationFrame(id);
+            window.removeEventListener("afterprint", done);
+        };
+    }, [job]);
+
+    if (!job || !job.orders.length) return null;
+    return createPortal(<BillSheet job={job} print />, document.body);
+}
+
+/** Shows the bill on screen first, so it can be checked (or kept) without a printer. Print then opens the print dialog. */
+export function BillPreviewHost() {
+    const preview = usePrint((s) => s.preview);
+    const close = () => usePrint.setState({ preview: null });
+    const ref = useRef<HTMLDialogElement>(null);
+    // A native dialog goes in the top layer, so it shows above the app's own windows (which are dialogs too).
+    useEffect(() => {
+        const d = ref.current;
+        if (preview && d && !d.open) d.showModal();
+    }, [preview]);
+    if (!preview || !preview.orders.length) return null;
+    const paid = !!preview.guest || preview.orders.every((o) => o.status === "paid");
+    return createPortal(
+        <dialog
+            ref={ref}
+            className="print:hidden m-auto max-h-[92vh] w-[min(420px,calc(100vw-24px))] overflow-hidden rounded-xl border-0 bg-transparent p-0 backdrop:bg-black/50"
+            aria-label={paid ? "Receipt preview" : "Bill preview"}
+            onClose={close}
+            onCancel={close}
+            onClick={(e) => e.target === e.currentTarget && close()}
+        >
+            <div className="flex max-h-[92vh] w-full flex-col overflow-hidden rounded-xl bg-card text-ink shadow-xl">
+                <div className="flex items-center justify-between gap-2 border-b border-hairline px-4 py-3">
+                    <b>{paid ? "Receipt preview" : "Bill preview"}</b>
+                </div>
+                <div className="overflow-auto bg-sunken p-3">
+                    <div className="shadow-md">
+                        <BillSheet job={preview} />
+                    </div>
+                </div>
+                <div className="flex justify-end gap-2 border-t border-hairline px-4 py-3">
+                    <button className="btn btn-outline" onClick={close}>
+                        Close
+                    </button>
+                    <button className="btn btn-primary" onClick={() => usePrint.setState({ job: preview })}>
+                        Print
+                    </button>
+                </div>
+            </div>
+        </dialog>,
         document.body,
     );
 }

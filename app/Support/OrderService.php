@@ -164,13 +164,13 @@ final class OrderService
     /** A round with everything its Resource needs, found by the code the UI uses as the order id. */
     public static function findRound(string $code): OrderRound
     {
-        return OrderRound::query()->with(['order.rounds.items', 'order.payments', 'order.session', 'items'])->where('code', $code)->first()
+        return OrderRound::query()->with(['order.rounds.items', 'order.payments', 'order.guestPayments', 'order.session', 'items'])->where('code', $code)->first()
             ?? throw new ApiException('Order not found', 404);
     }
 
     /** @return Collection<int, OrderRound> */
     public static function rounds(): Collection
     {
-        return OrderRound::query()->with(['order.rounds.items', 'order.payments', 'order.session', 'items'])->get();
+        return OrderRound::query()->with(['order.rounds.items', 'order.payments', 'order.guestPayments', 'order.session', 'items'])->get();
     }
 }

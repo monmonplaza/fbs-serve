@@ -7,12 +7,18 @@ export interface PrintJob {
     discount: AppliedDiscount | null;
     /** The method the guest pays (or paid) with. When it has a QR code (GCash, Maya), the QR is printed on the bill. */
     payWith?: PaymentMethod | null;
+    /** Print only this guest's receipt (a share key) of a bill paid guest by guest. */
+    guest?: string;
 }
 
-export const usePrint = create<{ job: PrintJob | null }>(() => ({ job: null }));
+/** `preview` is the bill shown on screen; `job` is the one being sent to the printer. */
+export const usePrint = create<{ job: PrintJob | null; preview: PrintJob | null }>(() => ({
+    job: null,
+    preview: null,
+}));
 
-/** Opens the browser's print dialog with the bill. Needs a mounted <BillPrintHost />. */
-export const printBill = (job: PrintJob) => usePrint.setState({ job });
+/** Shows the bill on screen, with a Print button for the browser's print dialog. Needs a mounted <BillPrintHost /> and <BillPreviewHost />. */
+export const printBill = (job: PrintJob) => usePrint.setState({ preview: job });
 
 /** Printed table QR cards: one card per table, the code that never changes. */
 export const useQrPrint = create<{ tables: { id: string; name: string }[] | null }>(() => ({ tables: null }));

@@ -17,6 +17,11 @@ export const ordersHttp = {
         unwrap<{ count: number; payment: string; table: DiningTable | null }>(
             await http.post(`/orders/${orderId}/pay`, payBody(discountId, pays)),
         ),
+    /** One guest pays for the dishes they added. `closed` is true when that was the last guest and the table is done. */
+    payGuest: async (orderId: string, guest: string, discountId: string | null, pay: Payment) =>
+        unwrap<{ closed: boolean; table: DiningTable | null }>(
+            await http.post(`/orders/${orderId}/pay-guest`, { guest, discountId, pay }),
+        ),
     payPickup: async (orderId: string, discountId: string | null, pays: Payment[]) =>
         unwrap<Order>(await http.post(`/orders/${orderId}/pickup`, payBody(discountId, pays))),
     handover: async (orderId: string) => unwrap<Order>(await http.post(`/orders/${orderId}/handover`)),

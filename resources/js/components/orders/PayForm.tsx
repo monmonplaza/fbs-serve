@@ -19,6 +19,8 @@ interface Props {
     /** Shown above the method and discount fields (items, order details). */
     before: ReactNode;
     cancelLabel: string;
+    /** What Cancel does; closes the window by default. */
+    onCancel?: () => void;
     submitLabel: string;
     onSubmit: (discountId: string | null, pays: Payment[]) => Promise<void> | void;
 }
@@ -32,6 +34,7 @@ export function PayForm({
     printable,
     before,
     cancelLabel,
+    onCancel = closeModal,
     submitLabel,
     onSubmit,
 }: Props) {
@@ -198,7 +201,7 @@ export function PayForm({
                 </div>
             </div>
             <div className="m-foot">
-                <button type="button" className="btn btn-outline" onClick={closeModal}>
+                <button type="button" className="btn btn-outline" onClick={onCancel}>
                     {cancelLabel}
                 </button>
                 {printable ? (

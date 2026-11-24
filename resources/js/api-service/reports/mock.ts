@@ -6,7 +6,7 @@
 
 import { db } from "@/api-service/mock/db";
 import { out, fail } from "@/api-service/mock/core";
-import { isTO, subtotal } from "@/lib/domain";
+import { isTO, subtotal, total } from "@/lib/domain";
 import { r2, sum } from "@/lib/format";
 import type { Order, ReportGroup, SalesPeriod, SalesReport, SalesTotals } from "@/types/restaurant";
 
@@ -53,7 +53,7 @@ const load = (from: Date, to: Date): Sale[] =>
                 o,
                 paid: new Date(o.paidAt!),
                 gross,
-                net: r2(gross * (1 - (o.discount?.pct ?? 0) / 100)),
+                net: total(o),
                 channel: isTO(o) ? (o.channel ?? "walkin") : "dine_in",
             };
         })

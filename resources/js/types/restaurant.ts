@@ -137,6 +137,18 @@ export interface Payment {
 export interface AppliedDiscount {
     name: string;
     pct: number;
+    /** Set when guests paid separately with their own discounts: this order's part of all the discounts, in pesos. */
+    amount?: number;
+}
+/** One guest's payment for their own dishes (pay per guest). `guest` is the share key: "Guest 482", "staff" or "table". */
+export interface GuestPaid {
+    guest: string;
+    method: string;
+    /** Their dishes before the discount, and what they paid after it. */
+    gross: number;
+    amount: number;
+    discount?: { name: string; pct: number };
+    ref?: string;
 }
 export interface Order {
     /** Unique per round. With the HTTP backend one order (`code`) has several rounds, one per send to the kitchen. */
@@ -168,6 +180,8 @@ export interface Order {
     payment?: string;
     payments?: Payment[];
     discount?: AppliedDiscount | null;
+    /** Guests who already paid for their own dishes. The order stays open until every guest has paid. */
+    guestPaid?: GuestPaid[] | null;
     /** Amount the customer handed over and the change given back. Bill-level: the same on every order paid together. */
     received?: number;
     change?: number;

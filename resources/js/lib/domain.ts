@@ -19,7 +19,10 @@ export const unitPrice = (f: Food, vid?: string) => (hasV(f) ? vOf(f, vid).price
 export const itemName = (f: Food, vid?: string) => (hasV(f) ? `${f.name} (${vOf(f, vid).name})` : f.name);
 
 export const subtotal = (o: Pick<Order, "items">) => sum(o.items.map((i) => i.price * i.qty));
-export const total = (o: Pick<Order, "items" | "discount">) => r2(subtotal(o) * (1 - (o.discount?.pct || 0) / 100));
+export const total = (o: Pick<Order, "items" | "discount">) =>
+    o.discount?.amount != null
+        ? r2(subtotal(o) - o.discount.amount)
+        : r2(subtotal(o) * (1 - (o.discount?.pct || 0) / 100));
 /** What to print as the order id: the order's single code, plus the round when the order has several. */
 export const orderTag = (o: Pick<Order, "id" | "code" | "round" | "rounds">, wholeOrder = false) =>
     !o.code ? o.id : wholeOrder || (o.rounds ?? 1) < 2 ? o.code : `${o.code} · Round ${o.round}`;

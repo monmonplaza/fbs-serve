@@ -106,10 +106,10 @@ final class SalesReport
             ->leftJoin('app_floors as fl', 'fl.id', '=', 't.floor_id')
             ->leftJoin('app_table_sessions as s', 's.id', '=', 'o.session_id')
             ->whereNotNull('o.paid_at')->where('o.paid_at', '>=', $a)->where('o.paid_at', '<=', $b)
-            ->get(['o.id', 'o.type', 'o.channel', 'o.discount_name', 'o.discount_pct', 'o.paid_at', 't.name as table_name', 'fl.name as floor_name', 's.guests'])
+            ->get(['o.id', 'o.type', 'o.channel', 'o.discount_name', 'o.discount_pct', 'o.discount_total', 'o.paid_at', 't.name as table_name', 'fl.name as floor_name', 's.guests'])
             ->map(function ($o) use ($gross, $tz) {
                 $g = (float) ($gross[$o->id] ?? 0);
-                $net = Money::r2($g * (1 - (float) ($o->discount_pct ?? 0) / 100));
+                $net = $o->discount_total !== null ? Money::r2($g - (float) $o->discount_total) : Money::r2($g * (1 - (float) ($o->discount_pct ?? 0) / 100));
                 $paid = CarbonImmutable::parse($o->paid_at, 'UTC')->setTimezone($tz);
 
                 return [

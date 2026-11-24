@@ -13,6 +13,8 @@ import { aggregate, billKey, isTO, oMeta, orderTag, subtotal, total } from "@/li
 import { dt, peso, sum, tm } from "@/lib/format";
 import { ChTag, chanOf, isPlatform, sod, usePayName, useTableName } from "@/lib/ordersHelpers";
 import { PayForm } from "@/components/orders/PayForm";
+import { PayBill } from "@/components/orders/PayBill";
+import { guestShares } from "@/lib/guestShares";
 import { GuestBreakdown } from "@/components/orders/GuestBreakdown";
 
 const useMethods = (activeOnly: boolean): PaymentMethod[] => {
@@ -21,6 +23,7 @@ const useMethods = (activeOnly: boolean): PaymentMethod[] => {
     const a = all.filter((x) => x.active);
     return a.length ? a : all;
 };
+const guestLabel = (orders: Order[], key: string) => guestShares(orders).find((s) => s.key === key)?.label ?? key;
 const fail = (e: unknown) => toast(e instanceof ApiError ? e.message : "Something went wrong. Please try again.");
 
 /** One detail of an order: a small label above its value. */
@@ -96,12 +99,11 @@ export function PayTableModal({ tableId }: { tableId: string }) {
     if (!t) return null;
     const os = t.token ? orders.filter((o) => o.table === t.id && o.session === t.token && o.status !== "paid") : [];
     return (
-        <PayForm
+        <PayBill
             orders={os}
             methods={methods}
             defaultMethod={t.bill?.method}
             hint={`Guest chose ${payName(t.bill?.method)}.`}
-            printable
             before={
                 <>
                     <ul className="items items-box">
@@ -116,9 +118,7 @@ export function PayTableModal({ tableId }: { tableId: string }) {
                     <GuestBreakdown orders={os} collapsible />
                 </>
             }
-            cancelLabel="Cancel"
-            submitLabel="Payment received"
-            onSubmit={async (disc, pays) => {
+            onPayAll={async (disc, pays) => {
                 try {
                     await api.orders.payTable(t.id, disc, pays);
                     useUi.getState().notify("check", `${t.name} paid. Ready for cleanup`, "tables");
@@ -127,6 +127,21 @@ export function PayTableModal({ tableId }: { tableId: string }) {
                     toast(`${t.name} paid. Clean the table, then mark it clean.`);
                 } catch (e) {
                     fail(e);
+                }
+            }}
+            onPayGuest={async (guest, label, disc, pay) => {
+                try {
+                    const r = await api.orders.payGuest(os[0].id, guest, disc, pay);
+                    await invalidate("orders", "tables");
+                    if (r.closed) {
+                        useUi.getState().notify("check", `${t.name} paid. Ready for cleanup`, "tables");
+                        closeModal();
+                        toast(`${t.name} paid. Clean the table, then mark it clean.`);
+                    } else toast(`${label} paid`);
+                    return r.closed;
+                } catch (e) {
+                    fail(e);
+                    return false;
                 }
             }}
         />
@@ -326,7 +341,8 @@ export function OrderModal({ id, solo = false }: { id: string; solo?: boolean })
                 ) : null}
                 {o.discount ? (
                     <KV label="Discount">
-                        {o.discount.name} ({o.discount.pct}%)
+                        {o.discount.name}
+                        {o.discount.amount == null ? ` (${o.discount.pct}%)` : ""}
                     </KV>
                 ) : null}
             </div>
@@ -351,16 +367,13 @@ export function OrderModal({ id, solo = false }: { id: string; solo?: boolean })
 
     if (payable) {
         return (
-            <PayForm
+            <PayBill
                 orders={unpaid}
                 methods={methods}
                 defaultMethod={t?.bill?.method}
-                printable
                 hint={t?.bill ? `Guest chose ${payName(t.bill.method)}.` : undefined}
                 before={details}
-                cancelLabel="Close"
-                submitLabel="Payment received"
-                onSubmit={async (disc, pays) => {
+                onPayAll={async (disc, pays) => {
                     try {
                         const r = await api.orders.payBill(o.id, disc, pays);
                         const split = pays.length > 1;
@@ -372,6 +385,20 @@ export function OrderModal({ id, solo = false }: { id: string; solo?: boolean })
                         );
                     } catch (e) {
                         fail(e);
+                    }
+                }}
+                onPayGuest={async (guest, label, disc, pay) => {
+                    try {
+                        const r = await api.orders.payGuest(o.id, guest, disc, pay);
+                        await invalidate("orders", "tables");
+                        if (r.closed) {
+                            closeModal();
+                            toast(`${tName(o.table)} paid${r.table?.status === "cleaning" ? ". Ready to clean." : ""}`);
+                        } else toast(`${label} paid`);
+                        return r.closed;
+                    } catch (e) {
+                        fail(e);
+                        return false;
                     }
                 }}
             />
@@ -431,6 +458,18 @@ export function OrderModal({ id, solo = false }: { id: string; solo?: boolean })
                         Print receipt
                     </button>
                 ) : null}
+                {grp.every((x) => x.status === "paid") && o.guestPaid?.length
+                    ? [...new Set(o.guestPaid.map((p) => p.guest))].map((g) => (
+                          <button
+                              key={g}
+                              className="btn btn-outline"
+                              onClick={() => printBill({ orders: grp, discount: o.discount ?? null, guest: g })}
+                          >
+                              <Icon name="receipt" size={20} />
+                              Receipt: {guestLabel(grp, g)}
+                          </button>
+                      ))
+                    : null}
                 {isTO(o) && o.status === "ready" ? (
                     <button className="btn btn-primary" onClick={() => openPickup(o)}>
                         <Icon name={isPlatform(o) ? "bag" : "wallet"} size={20} />

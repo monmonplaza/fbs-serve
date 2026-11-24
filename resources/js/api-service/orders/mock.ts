@@ -15,7 +15,8 @@ import {
     syncTable,
     newTakeout,
 } from "@/api-service/mock/core";
-import type { AppliedDiscount, Order, OrderItem, Payment, TakeoutChannel } from "@/types/restaurant";
+import type { AppliedDiscount, GuestPaid, Order, OrderItem, Payment, TakeoutChannel } from "@/types/restaurant";
+import { guestDues } from "@/lib/guestPay";
 import { r2, sum } from "@/lib/format";
 import { subtotal } from "@/lib/domain";
 
@@ -70,6 +71,74 @@ export const orders = {
             else Object.assign(t, { status: "cleaning", bill: null });
         }
         return out({ count: grp.length, payment: o.payment ?? "", table: t ?? null });
+    },
+
+    /**
+     * One guest pays for the dishes they added (a whole share, one method, their own discount). The bill closes when the last
+     * guest has paid; the discounts of all guests are then spread over its orders.
+     */
+    payGuest: async (orderId: string, guest: string, discountId: string | null, pay: Payment) => {
+        const o = orderOf(orderId) ?? fail("Order not found");
+        const grp = billOf(o).filter((x) => x.status !== "paid");
+        if (!grp.length || grp.some((x) => x.status !== "served"))
+            fail("Some food is not served yet. Serve every order before taking payment.");
+        const due = guestDues(grp).find((g) => g.share.key === guest);
+        if (!due || !(due.remaining > 0)) fail("This guest has nothing left to pay.");
+        const d = discountOf(discountId);
+        const amount = r2(due!.remaining * (1 - (d?.pct || 0) / 100));
+        if (r2(pay.amount) !== amount) fail(`The payment must be ₱${amount.toFixed(2)}`);
+        if (pay.received != null && pay.received < amount)
+            fail(`The amount received is less than the amount due (₱${amount.toFixed(2)})`);
+        const paid: GuestPaid[] = grp.find((x) => x.guestPaid)?.guestPaid ?? [];
+        paid.push({
+            guest,
+            method: pay.method,
+            gross: due!.remaining,
+            amount,
+            ...(d ? { discount: d } : {}),
+            ...(pay.ref?.trim() ? { ref: pay.ref.trim().slice(0, 40) } : {}),
+        });
+        grp.forEach((x) => (x.guestPaid = paid));
+        let closed = false;
+        if (guestDues(grp).every((g) => g.remaining <= 0)) {
+            closed = true;
+            const gross = r2(sum(paid.map((p) => p.gross))),
+                net = r2(sum(paid.map((p) => p.amount)));
+            const names = [...new Set(paid.flatMap((p) => (p.discount ? [p.discount.name] : [])))];
+            const methods = [...new Set(paid.map((p) => p.method))];
+            let left = r2(gross - net);
+            grp.forEach((x, i) => {
+                const off = i === grp.length - 1 ? left : r2(((gross - net) * subtotal(x)) / (gross || 1));
+                left = r2(left - off);
+                Object.assign(x, {
+                    status: "paid",
+                    paidAt: Date.now(),
+                    payment: methods.length > 1 ? "split" : methods[0],
+                    payments: methods.map((m) => ({
+                        method: m,
+                        amount: r2(
+                            (sum(paid.filter((p) => p.method === m).map((p) => p.amount)) * (subtotal(x) - off)) /
+                                (net || 1),
+                        ),
+                    })),
+                    discount: gross > net ? { name: names.join(", "), pct: 0, amount: off } : null,
+                });
+            });
+            const refs = paid.flatMap((p) => (p.ref ? [p.ref] : [])).join(", ");
+            if (refs) grp.forEach((x) => (x.payRef = refs));
+        }
+        const t = tableOf(o.table);
+        if (
+            closed &&
+            t &&
+            t.token &&
+            o.session === t.token &&
+            ["active", "ordering", "eating", "billout"].includes(t.status)
+        ) {
+            if (sessionOrders(t).some((x) => x.status !== "paid")) syncTable(t);
+            else Object.assign(t, { status: "cleaning", bill: null });
+        }
+        return out({ closed, table: t ?? null });
     },
 
     /** Pay on pickup: one takeout order, paid and handed over at the counter. */

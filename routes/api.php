@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('dev.open')->group(function () {
     Route::get('/orders', [OrderController::class, 'index']);
     Route::post('/orders/{code}/pay', [OrderController::class, 'pay']);
+    Route::post('/orders/{code}/pay-guest', [OrderController::class, 'payGuest']);
     Route::post('/orders/{code}/pickup', [OrderController::class, 'pickup']);
     Route::post('/orders/{code}/handover', [OrderController::class, 'handover']);
     Route::post('/takeout', [OrderController::class, 'takeout']);

@@ -7,6 +7,8 @@ use App\Http\Controllers\v1\BaseController;
 use App\Http\Controllers\v1\Tables\TableController;
 use App\Http\Resources\OrderRoundResource;
 use App\Http\Resources\TableResource;
+use App\Models\DiningTable;
+use App\Models\Order;
 use App\Models\OrderRound;
 use App\Support\OrderService;
 use App\Support\Settlement;
@@ -23,7 +25,7 @@ class OrderController extends BaseController
             'today' => now()->startOfDay(), 'week' => now()->subDays(6)->startOfDay(), 'month' => now()->subDays(29)->startOfDay(), default => null,
         };
         $q = trim((string) $request->query('q', ''));
-        $rounds = OrderRound::query()->with(['order.rounds.items', 'order.payments', 'order.session', 'items'])
+        $rounds = OrderRound::query()->with(['order.rounds.items', 'order.payments', 'order.guestPayments', 'order.session', 'items'])
             ->when($from, fn ($qb) => $qb->where('created_at', '>=', $from))
             ->when($q !== '', fn ($qb) => $qb->where(fn ($w) => $w->where('code', 'like', "%{$q}%")->orWhere('created_by', 'like', "%{$q}%")
                 ->orWhereHas('order', fn ($o) => $o->where('code', 'like', "%{$q}%")->orWhere('pickup_code', 'like', "%{$q}%")->orWhere('customer', 'like', "%{$q}%"))))
@@ -39,16 +41,47 @@ class OrderController extends BaseController
         $round = OrderService::findRound($code);
         $order = Settlement::pay($round->order, $request->input('discountId') ? (int) $request->input('discountId') : null, $request->input('pays'));
 
+        $table = $this->releaseTable($order);
+
+        return $this->sendResponse([
+            'count' => $order->rounds->count(), 'payment' => $order->payment_method ?? '',
+            'table' => $table ? (new TableResource($table->fresh('openSession')))->resolve() : null,
+        ], 'Paid');
+    }
+
+    /** One guest pays for their own dishes. The table is released when the last guest has paid. */
+    public function payGuest(Request $request, string $code): JsonResponse
+    {
+        $request->validate([
+            'guest' => ['required', 'string', 'max:60'],
+            'discountId' => ['nullable', 'exists:app_discounts,id'],
+            'pay' => ['required', 'array'],
+            'pay.method' => ['required', 'string', 'max:40'],
+            'pay.amount' => ['required', 'numeric', 'gt:0'],
+            'pay.received' => ['nullable', 'numeric', 'gt:0'],
+            'pay.ref' => ['nullable', 'string', 'max:40'],
+        ]);
+        $round = OrderService::findRound($code);
+        $order = Settlement::payGuest($round->order, (string) $request->input('guest'), $request->input('discountId') ? (int) $request->input('discountId') : null, $request->input('pay'));
+        $closed = $order->isPaid();
+        $table = $closed ? $this->releaseTable($order) : ($order->table_id ? $order->table : null);
+
+        return $this->sendResponse([
+            'closed' => $closed,
+            'table' => $table ? (new TableResource($table->fresh('openSession')))->resolve() : null,
+        ], $closed ? 'Paid' : 'Guest paid');
+    }
+
+    /** After the last payment of a dine-in order the table waits to be cleaned. */
+    private function releaseTable(Order $order): ?DiningTable
+    {
         $table = $order->table_id ? $order->table : null;
         if ($table && $table->openSession?->id === $order->session_id && in_array($table->status, ['active', 'ordering', 'eating', 'billout'], true)) {
             $table->update(['status' => 'cleaning']);
             $table->openSession->update(['bill_method' => null, 'bill_requested_at' => null]);
         }
 
-        return $this->sendResponse([
-            'count' => $order->rounds->count(), 'payment' => $order->payment_method ?? '',
-            'table' => $table ? (new TableResource($table->fresh('openSession')))->resolve() : null,
-        ], 'Paid');
+        return $table;
     }
 
     /** Pay on pickup: one takeout order, paid and handed over at the counter. */

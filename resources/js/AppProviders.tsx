@@ -4,7 +4,7 @@ import { USE_HTTP } from "@/api-service/client";
 import { clientRef } from "@/hooks/useApi";
 import { useReservationNotices } from "@/hooks/useReservationNotices";
 import { useUi } from "@/context/ui";
-import { BillPrintHost } from "@/components/BillPrintHost";
+import { BillPreviewHost, BillPrintHost } from "@/components/BillPrintHost";
 import { QrPrintHost } from "@/components/tables/QrPrintHost";
 import { ReportPrintHost } from "@/components/reports/ReportPrintHost";
 import { LightboxHost } from "@/components/foods/Lightbox";
@@ -40,6 +40,7 @@ function Hosts({ children }: { children: ReactNode }) {
             <LightboxHost />
             <ModalHost />
             <BillPrintHost />
+            <BillPreviewHost />
             <QrPrintHost />
             <ReportPrintHost />
             <Toast />
