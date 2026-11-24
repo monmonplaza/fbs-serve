@@ -40,6 +40,7 @@ export function BillSheet({ job, print = false }: { job: PrintJob; print?: boole
     const qr = job.payWith?.qr ? job.payWith : null;
     // Who ordered what: each guest's dishes and their part of the bill (after the discount), adding up to the amount due.
     const shares = guestShares(orders, gp ? 0 : pct);
+    const listAll = !!mineShare || !hasBreakdown(shares);
     const shownDiscount = mineShare ? (mine.find((p) => p.discount)?.discount ?? null) : discount;
     const row = "flex justify-between gap-3";
     const rule = "my-2 border-0 border-t border-dashed border-black";
@@ -83,22 +84,25 @@ export function BillSheet({ job, print = false }: { job: PrintJob; print?: boole
                 <span className="text-right">{codes}</span>
             </div>
             <div className={rule} />
-            <ul className="m-0 list-none p-0">
-                {(mineShare ? mineShare.lines : aggregate(orders)).map((i) => (
-                    <li key={i.name} className="mb-1">
-                        <div className={row}>
-                            <span>
-                                {i.qty} × {i.name}
-                            </span>
-                            <span>{peso(i.qty * i.price)}</span>
-                        </div>
-                        {i.qty > 1 ? <div className="pl-4 text-[11px]">@ {peso(i.price)} each</div> : null}
-                    </li>
-                ))}
-            </ul>
+            {/* With a per-guest section every dish is listed under its guest, so the combined list is left out. */}
+            {listAll ? (
+                <ul className="m-0 list-none p-0">
+                    {(mineShare ? mineShare.lines : aggregate(orders)).map((i) => (
+                        <li key={i.name} className="mb-1">
+                            <div className={row}>
+                                <span>
+                                    {i.qty} × {i.name}
+                                </span>
+                                <span>{peso(i.qty * i.price)}</span>
+                            </div>
+                            {i.qty > 1 ? <div className="pl-4 text-[11px]">@ {peso(i.price)} each</div> : null}
+                        </li>
+                    ))}
+                </ul>
+            ) : null}
             {!mineShare && hasBreakdown(shares) ? (
                 <>
-                    <div className={rule} />
+                    {listAll ? <div className={rule} /> : null}
                     <div className="font-bold">PER GUEST</div>
                     {shares.map((s) => {
                         const mineP = gp?.filter((p) => p.guest === s.key) ?? [];
